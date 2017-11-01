@@ -13,13 +13,15 @@ class UploadController extends Controller
 	}
 	 
 	public function uploadSubmit(Request $request)
-	{
+	{   
 	    $archivos = [];
 	    foreach ($request->archivos as $archivo) {
 
 	        $filename = $archivo->store('archivos');
+	        $nombre = $archivo->getClientOriginalName();
 	        $nota_archivo = Archivo::create([
-	            'filename' => $filename
+	            'filename' => $filename,
+	            'nombre' => $nombre
 	        ]);
 	 
 	        $archivo_object = new \stdClass();

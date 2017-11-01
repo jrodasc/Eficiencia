@@ -110,9 +110,9 @@ desired effect
 
 <!-- REQUIRED JS SCRIPTS -->
 
-<!-- jQuery 2.2.3 -->
+<!-- jQuery 2.2.3 
 <script src="/adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
-
+-->
 <!-- iCheck -->
 <script src="/adminlte/plugins/iCheck/icheck.js"></script>
 <!-- Bootstrap 3.3.6 -->

@@ -22,7 +22,7 @@
 <script src="/js/upload/jquery.fileupload.js"></script>
 <script>
     $(function () {
-        $('#fileupload').fileupload({
+        $('#fileupload').fileupload({ 
             dataType: 'json',
             add: function (e, data) {
                 $('#loading').text('Uploading...');

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Archivo extends Model
 {
-    protected $fillable = ['nota_id', 'filename'];
+    protected $fillable = ['nota_id', 'filename','nombre'];
  
     public function nota()
     {

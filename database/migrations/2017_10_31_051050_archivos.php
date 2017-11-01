@@ -18,6 +18,7 @@ class Archivos extends Migration
             $table->integer('nota_id')->unsigned()->nullable();
             $table->foreign('nota_id')->references('id')->on('notas');
             $table->string('filename');
+            $table->string('nombre');
             $table->timestamps();
         });
     }

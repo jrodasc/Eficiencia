@@ -62,7 +62,8 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::get('/admin/articulos/changeStatus/{id}', array('as' => 'changeStatus', 'uses' => 'ArticulosController@changeStatus'))->name('changeStatus');
     
     Route::resource('/admin/archivos', 'ArchivosController');
-    //Route::get('/admin/archivos', 'UploadController@uploadForm');
+    Route::get('/admin/archivos-notas/{id}','ArchivosController@ajaxNota');
+    Route::get('/admin/upload', 'UploadController@uploadForm');
     Route::post('/admin/archivos/upload', 'UploadController@uploadSubmit');
     Route::post('/admin/archivos/nota', 'UploadController@postProduct');
 

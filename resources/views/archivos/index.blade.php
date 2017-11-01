@@ -8,10 +8,10 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding">
                         <h2 class="m0 text-uppercase pull-left xs-fix">Administrador de Archivos</h2>
                         
-                        <!--<a class="btn btn-primary pull-right xs-fix" href="#">
+                        <a class="add-modal btn btn-primary pull-right xs-fix" href="#">
                         <span class="glyphicon glyphicon-plus"></span>
                         Agregar Categoria
-                        </a>-->
+                        </a>
                     </div>
                     {{-- @if ($message = Session::get('success'))
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -36,7 +36,7 @@
                                 @foreach($archivos as $indexKey => $archivo)
                                     <tr>
                                         <td class="col1">{{ $indexKey+1 }}</td>
-                                    <td>{{$archivo->filename}}</td>
+                                    <td>{{$archivo->nombre}}</td>
                                     <td>{{$archivo->created_at}}</td>
                                         <td>
                                             <a class="btn btn-info" href="#">Descargar</a>
@@ -55,9 +55,20 @@
                 </div>
             </div>
         </div>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="/js/upload/vendor/jquery.ui.widget.js"></script>
+<script src="/js/upload/jquery.iframe-transport.js"></script>
+<script src="/js/upload/jquery.fileupload.js"></script>
+        @include('archivos.agregar')
         @include('archivos.editar')
         @include('archivos.eliminar')
         <script type="text/javascript">
+            $('.add-modal').on('click',function(){
+            $('.modal-title').text('Agregar');
+            $('#nombre_add').val("");
+            $('#fecha_add').val("");
+            $('#addModal').modal('show');
+        });
             $(document).on('click', '.edit-modal', function() {
             $('.modal-title').text('Edit');
             
@@ -78,6 +89,27 @@
             $('#deleteModal').modal('show');
             id = $('#id_delete').val();
         });
+        $(document).ready(function() {
+        $('select[id="articulo_add"]').on('change',function(e){
+            var articuloID = $(this).val();
+
+            if(articuloID){ 
+                $.ajax({
+                    url: '/admin/archivos-notas/'+articuloID,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data){ 
+                        $('select[id="nota"]').empty(); 
+                        $.each(data, function(key, value){
+                            $('select[id="nota"]').append('<option value="'+ key +'">'+ value + '</option>');
+                        });
+                    }
+                });
+            }else{
+                $('select[id="estado"]').empty();
+            }
+        });
+    });
 
             
         </script>
