@@ -1,4 +1,4 @@
-<div id="addModal" class="modal fade" role="dialog">
+<div id="addModal_archivos" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -6,51 +6,41 @@
                     <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form">
+                    <form action="#" method="post">
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Articulos:</label>
+                            <label class="control-label col-sm-2" for="articulos">Articulos:</label>
                             <div class="col-sm-10">
-                                {!! Form::select('articulo', $articulos, null, ['placeholder' => '', 'class' => 'form-control gray-input','id' => 'articulo_add']); !!}
-                               
+                                {!! Form::select('articulo_add', $articulos, null, ['placeholder' => '', 'class' => 'form-control gray-input','id' => 'articulo_add']); !!}
                                 <small>Min: 2, Max: 12, Solo Números</small>
-                                <p class="errorref text-center alert alert-danger hidden"></p>
+                                <p class="errorarticulo text-center alert alert-danger hidden"></p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Notas:</label>
+                            <label class="control-label col-sm-2" for="notas">Notas:</label>
                             <div class="col-sm-10">
-                                 {!! Form::select('nota', array('0' => 'Seleccionar nota'), null, ['placeholder' => '', 'class' => 'form-control gray-input','id' => 'nota']); !!}
+                                 {!! Form::select('nota_add', array('0' => 'Seleccionar nota'), null, ['placeholder' => '', 'class' => 'form-control gray-input','id' => 'nota_add']); !!}
                                 
                                 <small>Min: 2, Max: 12, Solo Números</small>
-                                <p class="errorref text-center alert alert-danger hidden"></p>
+                                <p class="errornota text-center alert alert-danger hidden"></p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Subir <form action="/admin/archivos/nota" method="post">
-    {{ csrf_field() }}
-    Product name:
-    <br />
-    <input type="text" name="name" />
-    <br /><br />
-    Product photos (can add more than one):
-    <br />
-    <input type="file" id="fileupload" name="archivos[]" data-url="/admin/archivos/upload" multiple />
-    <br />
-    <div id="files_list"></div>
-    <p id="loading"></p>
-    <input type="hidden" name="file_ids" id="file_ids" value="" />
-    <input type="submit" value="Upload" />
-</form>
-                        </div>
-                       
-                        <!--<div class="form-group">
-                            <label class="control-label col-sm-2" for="content">Notas:</label>
+                            <label class="control-label col-sm-2" for="title">Subir 
+                            </label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" id="notas_add" cols="40" rows="5"></textarea>
-                                <small>Min: 2, Max: 128, Solo Téxto</small>
-                                <p class="errorContent text-center alert alert-danger hidden"></p>
-                            </div>
-                        </div> -->
+                            
+                            {{ csrf_field() }}
+                            
+                            
+                            <input type="file" id="fileupload" name="archivos[]" data-url="/admin/archivos/upload" multiple />
+                            
+                            <div id="files_list"></div>
+                            <p id="loading"></p>
+                            <input type="hidden" name="file_ids" id="file_ids" value="" />
+                            <input type="hidden" name="archivo_id" id="archivo_id" value="" />
+                            
+                        </div>
+                        </div>
                     </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success add" data-dismiss="modal">
@@ -66,14 +56,14 @@
     </div>
     
     <script>
-    $(function () { alert("dffgh");
+    $(function () { 
         $('#fileupload').fileupload({ 
             dataType: 'json',
             add: function (e, data) {
                 $('#loading').text('Uploading...');
                 data.submit();
             },
-            done: function (e, data) { alert("hola");
+            done: function (e, data) { 
                 $.each(data.result.files, function (index, file) {
                     $('<p/>').html(file.name + ' (' + file.size + ' KB)').appendTo($('#files_list'));
                     if ($('#file_ids').val() != '') {
@@ -82,6 +72,9 @@
                     $('#file_ids').val($('#file_ids').val() + file.fileID);
                 });
                 $('#loading').text('');
+            },
+            success: function(data) {
+                $('#archivo_id').val(data.archivo_id);
             }
         });
     });

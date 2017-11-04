@@ -31,7 +31,7 @@ class UploadController extends Controller
 	        $archivos[] = $archivo_object;
 	    }
 	 
-	    return response()->json(array('files' => $archivos), 200);
+	    return response()->json(array('files' => $archivos,'archivo_id' => $nota_archivo->id), 200);
 	}
 	 
 	public function postProduct(Request $request)

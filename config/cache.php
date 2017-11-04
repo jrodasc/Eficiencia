@@ -85,7 +85,7 @@ return [
     | value to get prefixed to all our keys so we can avoid collisions.
     |
     */
-
+    'default' => env('CACHE_DRIVER', 'array'),
     'prefix' => 'laravel',
 
 ];

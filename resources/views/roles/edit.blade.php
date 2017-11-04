@@ -43,25 +43,15 @@
               </div>
               
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<div class="form-group">
-								<p>Menus:</p> 
-								@foreach($menu as $value)
-                                <ul>
-                                    <label class="mr15">{{  Form::checkbox('menu[]', $value->id, in_array($value->id, $roleMenus) ? true : false, array('class' => 'name')) }}
-                                    {{ $value->name }}</label><br>
-	                                    @foreach($submenu as $valuesub)
-	                                 		<ul>
-	                                 			
-	                                 			@if ($valuesub->menu_id == $value->id)
-			                                        <label class="mr15">{{  Form::checkbox('menu[]', $valuesub->id, in_array($valuesub->id, $roleMenus) ? true : false, array('class' => 'name')) }}
-				                                    {{ $valuesub->name }}</label><br>
-		                                    	@endif
-		                                    </ul>
-		                                @endforeach
-                                </ul>
-                                @endforeach
-									
-								</div>
+							<div class="form-group">
+                                    <p>Categorias que puede visualizar:</p>
+                                    @foreach($permission as $value)
+                                        <label class="mr15">{{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermisos) ? true : false, array('class' => 'name')) }}
+                                    {{ $value->name }}</label>
+                                    
+                                    @endforeach
+                                </div>
+                            </div>
               </div>
 						</div>
 						<div class="col-xs-12 col-sm-12 col-md-12 text-right">

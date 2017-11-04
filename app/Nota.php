@@ -13,4 +13,9 @@ class Nota extends Model
 
         
     }
+    public function archivo(){
+        return $this->hasOne('App\Archivo','id', 'id');
+    }
+
+   
 }

@@ -10,6 +10,7 @@ class Archivo extends Model
  
     public function nota()
     {
-        return $this->belongsTo('App\Nota');
+        return $this->hasOne('App\Nota', 'id', 'nota_id');
     }
+    
 }

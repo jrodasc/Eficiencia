@@ -27,7 +27,11 @@ Route::group(['middleware' => ['auth',]], function () {
 	Route::get('/home', 'HomeController@index');
     Route::get('/admin','HomeController@index');
     Route::resource('/admin/users','UserController');
+    Route::get('user',['as'=>'user.index','uses'=>'UserController@index','middleware' => ['role:administrador|role-create|role-edit|role-delete']]);
     Route::resource('/admin/roles','RoleController');
+    Route::get('roles',['as'=>'roles.index','uses'=>'RoleController@index','middleware' => ['permission:role-list|role-create|role-edit|role-delete']]);
+   
+  
     
    /* Route::get('/admin/archivos', 'StorageController@index');
     Route::post('/admin/archivos/create', 'StorageController@save');
@@ -65,6 +69,7 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::get('/admin/archivos-notas/{id}','ArchivosController@ajaxNota');
     Route::get('/admin/upload', 'UploadController@uploadForm');
     Route::post('/admin/archivos/upload', 'UploadController@uploadSubmit');
-    Route::post('/admin/archivos/nota', 'UploadController@postProduct');
+    Route::post('/admin/archivos/nota', 'ArchivosController@postArchivo');
+    Route::get('/admin/archivos-descargar/archivos/{$file}' , 'ArchivosController@DescargaArchivo');
 
 });

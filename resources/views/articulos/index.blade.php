@@ -1,6 +1,7 @@
 @extends('admin.layout')
 
 @section('content')
+
 <style>
         .panel-heading {
             padding: 0;
@@ -155,7 +156,7 @@
                     
                 },
                 success: function(data) {
-                    $('.errorTitle').addClass('hidden');
+                    $('.errorref').addClass('hidden');
                     $('.errorContent').addClass('hidden');
 
                     if ((data.errors)) {
@@ -165,12 +166,12 @@
                         }, 500);
 
                         if (data.errors.ref) {
-                            $('.errorTitle').removeClass('hidden');
-                            $('.errorTitle').text(data.errors.ref);
+                            $('.errorref').removeClass('hidden');
+                            $('.errorref').text(data.errors.ref);
                         }
                         if (data.errors.nombre) {
-                            $('.errorContent').removeClass('hidden');
-                            $('.errorContent').text(data.errors.nombre);
+                            $('.errornombre').removeClass('hidden');
+                            $('.errornombre').text(data.errors.nombre);
                         }
                     } else {
                         toastr.success('¡Articulo Guardado!', 'Success Alert', {timeOut: 5000});

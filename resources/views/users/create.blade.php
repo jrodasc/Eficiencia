@@ -63,6 +63,7 @@
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">
+                                    
                                     <p>Role:</p>
                                     {!! Form::select('roles[]', $roles,[], array('class' => 'form-control gray-input', 'required')) !!}
                                 </div>

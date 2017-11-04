@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">
-                                    <p>Menus:</p>
+                                    <p>Categorias que puede visualizar:</p>
                                     @foreach($permission as $value)
                                         <label class="mr15">{{ Form::checkbox('permission[]', $value->id, false, array('class' => 'name')) }}
                                     {{ $value->name }}</label>

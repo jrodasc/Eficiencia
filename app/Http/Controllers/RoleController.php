@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Role;
 use App\Permission;
-use App\Menu;
+
 use App\Submenus;
 use DB;
 
@@ -54,7 +54,7 @@ class RoleController extends Controller
         $this->validate($request, [
             'name' => 'required|unique:roles,name',
             'display_name' => 'required',
-            'menu' => 'required',
+            
         ]);
 
         
@@ -65,8 +65,8 @@ class RoleController extends Controller
         $role->save();
 
 
-        foreach ($request->input('menu') as $key => $value) {
-            $role->menus()->attach($value);
+        foreach ($request->input('permission') as $key => $value) {
+            $role->permisos()->attach($value);
 
         }
 
@@ -108,13 +108,15 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::find($id);
-        $menu = Menu::where("menus.menu_id","=","0")->get(); 
-        $submenu = Menu::where("menus.menu_id","<>","0")->get(); 
-        $roleMenus = DB::table("role_menu")->where("role_menu.role_id",$id)->pluck('role_menu.menu_id')->toArray();
+        $permission = Permission::get();
+        /*$menu = Menu::where("menus.menu_id","=","0")->get(); 
+        $submenu = Menu::where("menus.menu_id","<>","0")->get(); */
+        
+        $rolePermisos = DB::table("permission_role")->where("permission_role.role_id",$id)->pluck('permission_role.permission_id')->toArray();
         /*$roleMenus = Menu::join("role_menu","role_menu.menu_id","=","menus.id")->where("role_menu.role_id",$id)->get();*/
        
        
-        return view('roles.edit',compact('role','menu','roleMenus','submenu'));
+        return view('roles.edit',compact('role','permission','rolePermisos','submenu'));
 
     }
 
@@ -147,10 +149,10 @@ class RoleController extends Controller
         $role->description = $request->input('description');
         $role->save();
 
-        DB::table("role_menu")->where("role_menu.role_id",$id)->delete();
+        DB::table("permission_role")->where("permission_role.role_id",$id)->delete();
 
-        foreach ($request->input('menu') as $key => $value) {
-            $role->menus()->attach($value);
+        foreach ($request->input('permission') as $key => $value) {
+            $role->permisos()->attach($value);
 
         }
        

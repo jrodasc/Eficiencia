@@ -8,28 +8,34 @@
                 <div class="modal-body">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="id">ID:</label>
+                            <label class="control-label col-sm-2" for="articulos">Articulos:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="id_edit" disabled>
+                                {!! Form::select('articulo_edit', $articulos, null, ['placeholder' => '', 'class' => 'form-control gray-input','id' => 'articulo_edit']); !!}
+                                <small>Min: 2, Max: 12, Solo Números</small>
+                                <p class="errorarticulo text-center alert alert-danger hidden"></p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Nombre:</label>
+                            <label class="control-label col-sm-2" for="title">Nota:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="nombre_delete" autofocus>
-                                <small>Min: 2, Max: 32, Solo Texto y Números</small>
-                                <p class="errornombre text-center alert alert-danger hidden"></p>
+                                 {!! Form::select('nota_add', array('0' => 'Seleccionar nota'), null, ['placeholder' => '', 'class' => 'form-control gray-input','id' => 'nota_add']); !!}
+                                
+                                <small>Min: 2, Max: 12, Solo Números</small>
+                                <p class="errornota text-center alert alert-danger hidden"></p>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Fecha:</label>
+                        <div class="for-group">
+                            <label class="control-label col-sm-2" for="title">Subir 
+                            </label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="fecha_delete" autofocus>
-                                <small>Solo Fecha</small>
-                                <p class="errorTitle text-center alert alert-danger hidden"></p>
+                                {{ csrf_field() }}
+                                <input type="file" id="fileupload" name="archivos[]" data-url="/admin/archivos/upload" multiple />
+                                <div id="files_list"></div>
+                                <p id="loading"></p>
+                                <input type="hidden" name="file_ids" id="file_ids" value="" />
+                                <input type="hidden" name="archivo_id" id="archivo_id" value="" />
                             </div>
                         </div>
-                        
                     </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary delete" data-dismiss="modal">

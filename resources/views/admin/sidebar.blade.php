@@ -35,6 +35,7 @@
                     <span>Menú</span>
                 </a>
             </li> --}}
+           
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-user-circle"></i>
@@ -53,14 +54,15 @@
                             </a>
                         </li>  </ul>  
             </li>
+           
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-user-circle"></i>
+                    <i class="fa  fa-file-archive-o"></i>
                     <span>Articulos</span>
                     </a><ul class="treeview-menu"><a href="#">
                     </a><li><a href="/admin/articulos">
                             </a><a href="/admin/archivos">
-                            <i class="fa fa-user"></i>
+                            <i class="fa  fa-arrow-up"></i>
                             <span>Subir archivos</span>
                             </a>
                         </li>    
