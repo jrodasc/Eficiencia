@@ -112,24 +112,25 @@
         @include('articulos.agregar')
         @include('articulos.editar')
         @include('articulos.eliminar')
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-        {{-- <script type="text/javascript" src="{{ asset('toastr/toastr.min.js') }}"></script> --}}
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    {{-- <link rel="styleeheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> --}}
+         {{-- <script type="text/javascript" src="{{ asset('toastr/toastr.min.js') }}"></script> --}}
+    
+     <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
+    {{-- <link rel="styleeheet" href="asset('bootstrap3.3.5.min.css')"> --}}
 
     <!-- icheck checkboxes -->
-    <link rel="stylesheet" href="{{ asset('icheck/square/yellow.css') }}">
-    {{-- <link rel="stylesheet" href="https://raw.githubusercontent.com/fronteed/icheck/1.x/skins/square/yellow.css"> --}}
+    <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
+    {{-- <link rel="stylesheet" href="asset('css/yellow.css')"> --}}
 
     <!-- toastr notifications -->
     {{-- <link rel="stylesheet" href="{{ asset('toastr/toastr.min.css') }}"> --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
 
 
     <!-- Font Awesome -->
     {{-- <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}"> --}}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+   
         <script>
         $(window).load(function(){
             $('#postTable').removeAttr('style');
@@ -175,7 +176,7 @@
                         }
                     } else {
                         toastr.success('¡Articulo Guardado!', 'Success Alert', {timeOut: 5000});
-                        $('#postTable').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.ref + "</td><td>" + data.nombre + "</td><td><a class='show-modal btn btn-success' data-id='" + data.id + "' data-ref='" + data.ref +"'' data-nombre='" + data.nombre + "'' data-categoria='"+ data.categoria +"' href='{{ route('articulos.notas','"+ data.id +"') }}''><span class='glyphicon glyphicon-eye-open'></span> Notas</a> <button class='edit-modal btn btn-info' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-edit'></span> Editar</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-trash'></span> Eliminar</button></td></tr>");
+                        $('#postTable').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.ref + "</td><td>" + data.nombre + "</td><td><a class='show-modal btn btn-success' data-id='" + data.id + "' data-ref='" + data.ref +"' data-nombre='" + data.nombre + "'  href='/admin/articulos/notas/" + data.id + "'><span class='glyphicon glyphicon-eye-open'></span> Notas</a> <button class='edit-modal btn btn-info' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-edit'></span> Editar</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-trash'></span> Eliminar</button></td></tr>");
                         
                          $('.new_published').on('ifToggled', function(event){
                             $(this).closest('tr').toggleClass('warning');

@@ -2,12 +2,7 @@
 
 @section('content')
   <!-- icheck checkboxes -->
-    <link rel="stylesheet" href="{{ asset('icheck/square/yellow.css') }}">
-    {{-- <link rel="stylesheet" href="https://raw.githubusercontent.com/fronteed/icheck/1.x/skins/square/yellow.css"> --}}
-
-    <!-- toastr notifications -->
-    {{-- <link rel="stylesheet" href="{{ asset('toastr/toastr.min.css') }}"> --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    
 <style>
         .panel-heading {
             padding: 0;
@@ -207,19 +202,18 @@
     </div>
             </div><!-- /.panel-body -->
         </div>
-         <!-- jQuery -->
-    {{-- <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script> --}}
-    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
-
-    <!-- Bootstrap JavaScript -->
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.1/js/bootstrap.min.js"></script>
-
-    <!-- toastr notifications -->
-    {{-- <script type="text/javascript" src="{{ asset('toastr/toastr.min.js') }}"></script> --}}
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+          {{-- <script type="text/javascript" src="{{ asset('toastr/toastr.min.js') }}"></script> --}}
+    
+     <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
+    {{-- <link rel="styleeheet" href="asset('bootstrap3.3.5.min.css')"> --}}
 
     <!-- icheck checkboxes -->
-    <script type="text/javascript" src="{{ asset('icheck/icheck.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
+    {{-- <link rel="stylesheet" href="asset('css/yellow.css')"> --}}
+
+    <!-- toastr notifications -->
+    {{-- <link rel="stylesheet" href="{{ asset('toastr/toastr.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
 @include('articulos.agregar-notas')
 @include('articulos.agregar-notas-categorias')
 @include('articulos.editar-notas')

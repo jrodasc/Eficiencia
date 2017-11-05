@@ -66,24 +66,24 @@
         @include('archivos.editar')
         @include('archivos.eliminar')
         
-         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+        
         {{-- <script type="text/javascript" src="{{ asset('toastr/toastr.min.js') }}"></script> --}}
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    {{-- <link rel="styleeheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> --}}
+    
+     <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
+    {{-- <link rel="styleeheet" href="asset('bootstrap3.3.5.min.css')"> --}}
 
     <!-- icheck checkboxes -->
-    <link rel="stylesheet" href="{{ asset('icheck/square/yellow.css') }}">
-    {{-- <link rel="stylesheet" href="https://raw.githubusercontent.com/fronteed/icheck/1.x/skins/square/yellow.css"> --}}
+    <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
+    {{-- <link rel="stylesheet" href="asset('css/yellow.css')"> --}}
 
     <!-- toastr notifications -->
     {{-- <link rel="stylesheet" href="{{ asset('toastr/toastr.min.css') }}"> --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
 
 
     <!-- Font Awesome -->
     {{-- <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}"> --}}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    
         <script type="text/javascript">
             $('.add-modal-archivos').on('click',function(){
             $('.modal-title').text('Agregar');

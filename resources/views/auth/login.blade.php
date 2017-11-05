@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
     <style>
         body {
-            background-image:url('http://www.doctec.com.ar/wp-content/uploads/2014/09/Control-contratistas.jpg');
+            background-image:url('{{ asset('img/inicio.jpg') }}');
             background-color: #FFFFFF;
         }
         .login-sidebar:after {
@@ -28,7 +28,7 @@
 
     </style>
 
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+   
 </head>
 <body>
 <!-- Designed with ♥ by Frondor -->
