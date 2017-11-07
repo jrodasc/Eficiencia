@@ -312,10 +312,10 @@ $(window).load(function(){
                             toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
                         }, 500);
 
-                        if (data.errors.ref) {
+                        /*if (data.errors.ref) {
                             $('.errorref').removeClass('hidden');
                             $('.errorref').text(data.errors.ref);
-                        }
+                        }*/
                         if (data.errors.nombre) {
                             $('.errornombre').removeClass('hidden');
                             $('.errornombre').text(data.errors.nombre);
@@ -356,14 +356,14 @@ $(window).load(function(){
                             toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
                         }, 500);
 
-                        if (data.errors.ref) {
+                       /* if (data.errors.ref) {
                             $('.errorref').removeClass('hidden');
                             $('.errorref').text(data.errors.ref);
                         }
                         if (data.errors.horamaquina) {
                             $('.errorhoramaquina').removeClass('hidden');
                             $('.errorhoramaquina').text(data.errors.horamaquina);
-                        }
+                        }*/
                         if (data.errors.nombre) {
                             $('.errornombre').removeClass('hidden');
                             $('.errornombre').text(data.errors.nombre);
@@ -439,10 +439,10 @@ $(window).load(function(){
                             toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
                         }, 500);
 
-                        if (data.errors.ref) {
+                       /*if (data.errors.ref) {
                             $('.errorref').removeClass('hidden');
                             $('.errorref').text(data.errors.ref);
-                        }
+                        }*/
                         if (data.errors.nombre) {
                             $('.errornombre').removeClass('hidden');
                             $('.errornombre').text(data.errors.nombre);
@@ -508,7 +508,7 @@ $(window).load(function(){
                             toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
                         }, 500);
 
-                        if (data.errors.ref) {
+                      /*  if (data.errors.ref) {
                             $('.errorref').removeClass('hidden');
                             $('.errorref').text(data.errors.ref);
                             
@@ -516,7 +516,7 @@ $(window).load(function(){
                         if (data.errors.horamaquina) {
                             $('.errorhoramaquina').removeClass('hidden');
                             $('.errorhoramaquina').text(data.errors.horamaquina);
-                        }
+                        }*/
                         if (data.errors.nombre) {
                             $('.errornombre').removeClass('hidden');
                             $('.errornombre').text(data.errors.nombre);

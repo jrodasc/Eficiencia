@@ -15,7 +15,7 @@ class Articulos extends Migration
     {
         Schema::create('articulos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('ref')->unique();
+            $table->string('ref');
             $table->string('nombre');
             
             $table->timestamps();

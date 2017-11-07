@@ -16,7 +16,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Usuarios Registrados</span>
-              <span class="info-box-number">2</span>
+              <span class="info-box-number">{{ $usuarios}}</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -27,7 +27,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Archivos</span>
-              <span class="info-box-number">13,648</span>
+              <span class="info-box-number">{{ $archivos}}</span>
             </div>
             <!-- /.info-box-content -->
           </div>

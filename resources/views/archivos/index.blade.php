@@ -14,17 +14,8 @@
                         Subir Archivo
                         </a>
                     </div>
-                    {{-- @if ($message = Session::get('success'))
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="alert alert-success alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <h4><i class="icon fa fa-check"></i> ¡Genial!</h4>
-                                <p>{{ $message }}</p>
-                            </div>
-                        </div>
-                    @endif --}}
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m20 xs-scroll">
-                        <table id="dtTalleres" class="display table table-bordered table-hover table-responsive compact" cellspacing="0" width="100%">
+                        <table id="postTable" class="display table table-bordered table-hover table-responsive compact" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -51,7 +42,6 @@
                                    @endforeach
                             </tbody>
                         </table>
-                        {{-- {!! $data->render() !!} --}}
                     </div>
                 </div>
             </div>
@@ -62,28 +52,15 @@
 <script src="/js/upload/vendor/jquery.ui.widget.js"></script>
 <script src="/js/upload/jquery.iframe-transport.js"></script>
 <script src="/js/upload/jquery.fileupload.js"></script>
-        @include('archivos.agregar')
-        @include('archivos.editar')
-        @include('archivos.eliminar')
-        
-        
-        {{-- <script type="text/javascript" src="{{ asset('toastr/toastr.min.js') }}"></script> --}}
-    
-     <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
-    {{-- <link rel="styleeheet" href="asset('bootstrap3.3.5.min.css')"> --}}
-
+    @include('archivos.agregar')
+    @include('archivos.editar')
+    @include('archivos.eliminar')
+    <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
     <!-- icheck checkboxes -->
     <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
-    {{-- <link rel="stylesheet" href="asset('css/yellow.css')"> --}}
-
     <!-- toastr notifications -->
-    {{-- <link rel="stylesheet" href="{{ asset('toastr/toastr.min.css') }}"> --}}
     <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
 
-
-    <!-- Font Awesome -->
-    {{-- <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}"> --}}
-    
         <script type="text/javascript">
             $('.add-modal-archivos').on('click',function(){
             $('.modal-title').text('Agregar');
@@ -159,7 +136,7 @@ alert($('#archivo_id').val());
                         }
                     } else { */
                         toastr.success('¡Articulo Guardado!', 'Success Alert', {timeOut: 5000});
-                        $('#postTable').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.ref + "</td><td>" + data.nombre + "</td><td><a class='show-modal btn btn-success' data-id='" + data.id + "' data-ref='" + data.ref +"'' data-nombre='" + data.nombre + "'' data-categoria='"+ data.categoria +"' href='{{ route('articulos.notas','"+ data.id +"') }}''><span class='glyphicon glyphicon-eye-open'></span> Notas</a> <button class='edit-modal btn btn-info' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-edit'></span> Editar</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-trash'></span> Eliminar</button></td></tr>");
+                        $('#postTable').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.nombre + "</td><td>" + data.created_at + "</td><td><a class='btn btn-info' href='/storage/" + data.filename + "'>Descargar</a> <button class='edit-modal btn btn-info' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-edit'></span> Editar</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-trash'></span> Eliminar</button></td></tr>");
                         
                          $('.new_published').on('ifToggled', function(event){
                             $(this).closest('tr').toggleClass('warning');

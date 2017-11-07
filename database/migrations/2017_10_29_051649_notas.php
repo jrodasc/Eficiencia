@@ -15,11 +15,12 @@ class Notas extends Migration
     {
         Schema::create('notas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('ref')->unique();
+            $table->string('ref');
             $table->string('nombre');
             $table->integer('categoria_id')->unsigned();
             $table->foreign('categoria_id')->references('id')->on('categorias');
             $table->integer('horamaquina');
+            $table->date('fecha');
             $table->boolean('revision')->default(false);
             $table->timestamps();
         });

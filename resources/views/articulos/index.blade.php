@@ -42,17 +42,8 @@
                         
                         
                     </div>
-                    {{-- @if ($message = Session::get('success'))
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="alert alert-success alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <h4><i class="icon fa fa-check"></i> ¡Genial!</h4>
-                                <p>{{ $message }}</p>
-                            </div>
-                        </div>
-                    @endif --}}
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m20 xs-scroll">
-                      <div class="col-md-8 col-md-offset-2">
+                    <div class="col-md-8 col-md-offset-2">
         
         <br />
         <div class="panel panel-default">
@@ -62,18 +53,15 @@
                     <a href="#" class="add-modal"><li>Agregar</li></a>
                 </ul>
             </div>
-        
-            
-                    <form class="m20 "  role="Buscar" >
-                    <table class="display table table-bordered table-hover table-responsive compact" id="postTable"  cellspacing="0" width="100%">
-                     
-                        <thead>
-                            <tr>
-                                <th valign="middle">#</th>
-                                <th>REF</th>
-                                <th>Articulo</th>
-                                <th>Acciones</th>
-                            </tr>
+            <form class="m20 "  role="Buscar" >
+                <table class="display table table-bordered table-hover table-responsive compact" id="postTable"  cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th valign="middle">#</th>
+                            <th>REF</th>
+                            <th>Articulo</th>
+                            <th>Acciones</th>
+                        </tr>
                             {{ csrf_field() }}
                         </thead>
                         <tbody>
@@ -101,35 +89,20 @@
             
         </div><!-- /.panel panel-default -->
     </div><!-- /.col-md-8 -->
-                        
-                        {{-- {!! $data->render() !!} --}}
                     </div>
                 </div>
             </div>
         </div>
         
-        
         @include('articulos.agregar')
         @include('articulos.editar')
         @include('articulos.eliminar')
-         {{-- <script type="text/javascript" src="{{ asset('toastr/toastr.min.js') }}"></script> --}}
     
-     <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
-    {{-- <link rel="styleeheet" href="asset('bootstrap3.3.5.min.css')"> --}}
-
+    <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
     <!-- icheck checkboxes -->
     <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
-    {{-- <link rel="stylesheet" href="asset('css/yellow.css')"> --}}
-
     <!-- toastr notifications -->
-    {{-- <link rel="stylesheet" href="{{ asset('toastr/toastr.min.css') }}"> --}}
     <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
-
-
-    <!-- Font Awesome -->
-    {{-- <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}"> --}}
-
-
    
         <script>
         $(window).load(function(){
