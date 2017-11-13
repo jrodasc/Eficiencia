@@ -34,6 +34,28 @@ class UploadController extends Controller
 	    return response()->json(array('files' => $archivos,'archivo_id' => $nota_archivo->id), 200);
 	}
 	 
+	 public function uploadarticulosSubmit(Request $request)
+	{   
+	    $archivos = [];
+	    foreach ($request->archivos as $archivo) {
+
+	        $filename = $archivo->store('archivos');
+	        $nombre = $archivo->getClientOriginalName();
+	        $nota_archivo = Archivo::create([
+	            'filename' => $filename,
+	            'nombre' => $nombre
+	        ]);
+	 
+	        $archivo_object = new \stdClass();
+	        $archivo_object->name = str_replace('archivos/', '',$archivo->getClientOriginalName());
+	        $archivo_object->size = round(Storage::size($filename) / 1024, 2);
+	        $archivo_object->fileID = $nota_archivo->id;
+	        $archivos[] = $archivo_object;
+	    }
+	 
+	    return response()->json(array('files' => $archivos,'archivo_id' => $nota_archivo->id), 200);
+	}
+	 
 	public function postProduct(Request $request)
 	{
 	    $nota = Nota::create([

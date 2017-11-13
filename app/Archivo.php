@@ -13,4 +13,8 @@ class Archivo extends Model
         return $this->hasOne('App\Nota', 'id', 'nota_id');
     }
     
+    public function articulo()
+    {
+        return $this->hasOne('App\articulo', 'id', 'articulo_id');
+    }
 }

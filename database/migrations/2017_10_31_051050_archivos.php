@@ -17,6 +17,8 @@ class Archivos extends Migration
             $table->increments('id');
             $table->integer('nota_id')->unsigned()->nullable();
             $table->foreign('nota_id')->references('id')->on('notas');
+            $table->integer('articulo_id')->unsigned()->nullable();
+            $table->foreign('articulo_id')->references('id')->on('articulos');
             $table->string('filename');
             $table->string('nombre');
             $table->timestamps();

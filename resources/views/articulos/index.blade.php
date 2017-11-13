@@ -39,85 +39,96 @@
                 <div class="row custom-wrapper">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding">
                         <h2 class="m0 text-uppercase pull-left xs-fix">Articulos</h2>
-                        
-                        
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m20 xs-scroll">
-                    <div class="col-md-8 col-md-offset-2">
-        
-        <br />
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <ul>
-                    <li><i class="fa fa-file-text-o"></i> Todos los articulos actuales</li>
-                    <a href="#" class="add-modal"><li>Agregar</li></a>
-                </ul>
-            </div>
-            <form class="m20 "  role="Buscar" >
-                <table class="display table table-bordered table-hover table-responsive compact" id="postTable"  cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th valign="middle">#</th>
-                            <th>REF</th>
-                            <th>Articulo</th>
-                            <th>Acciones</th>
-                        </tr>
-                            {{ csrf_field() }}
-                        </thead>
-                        <tbody>
-                          @foreach($articulos as $indexKey => $articulo)
-                          <tr class="item{{$articulo->id}}">
-                                  
-                                    <td class="col1">{{ $indexKey+1 }}</td>
-                                    <td>{{$articulo->ref}}</td>
-                                    <td>{{$articulo->nombre}}</td>
-                                   
-                                    <td>
-                                      
-                                        <a class="show-modal btn btn-success" data-id="{{$articulo->id}}" data-ref="{{$articulo->ref}}" data-nombre="{{$articulo->nombre}}" data-categoria="{{$articulo->categoria_id}}" href="{{ route('articulos.notas',$articulo->id) }}">
-                                        <span class="glyphicon glyphicon-eye-open"></span> Notas</a>
-                                        <button class="edit-modal btn btn-info" data-id="{{$articulo->id}}" data-ref="{{$articulo->ref}}" data-nombre="{{$articulo->nombre}}" data-categoria="{{$articulo->categoria_id}}">
-                                        <span class="glyphicon glyphicon-edit"></span> Editar</button>
-                                        <button class="delete-modal btn btn-danger" data-id="{{$articulo->id}}" data-ref="{{$articulo->ref}}" data-nombre="{{$articulo->nombre}}" data-categoria="{{$articulo->categoria_id}}">
-                                        <span class="glyphicon glyphicon-trash"></span> Eliminar</button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                  </form>
+                        <div class="col-md-8 col-md-offset-2">
+                            <br />
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <ul>
+                                        <li><i class="fa fa-file-text-o"></i> Todos los articulos actuales</li>
+                                        <a href="#" class="add-modal"><li>Agregar</li></a>
+                                        
+                                    </ul>
+                                </div>
+                                <form class="m20 " role="Buscar" >
+                                    <table class="display table table-bordered table-hover table-responsive compact" id="postTable"  cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th valign="middle">#</th>
+                                        <th>REF</th>
+                                        <th>Articulo</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    {{ csrf_field() }}
+                                    </thead>
+                                    <tbody>
+                                      @foreach($articulos as $indexKey => $articulo)
+                                      <tr class="item{{$articulo->id}}">
+                                              
+                                                <td class="col1">{{ $indexKey+1 }}</td>
+                                                <td>{{$articulo->ref}}</td>
+                                                <td>{{$articulo->nombre}}</td>
+                                               
+                                                <td>
+                                                    @foreach($archivos as $index => $archivo)
+                                                        @if($articulo->id==$archivo->articulo_id)
+                                                            <a class="btn btn-info" href="/storage/{{$archivo->filename}}">Descargar</a>
+                                                        @endif
+                                                    @endforeach
+                                                    <a class="show-modal btn btn-success" data-id="{{$articulo->id}}" data-ref="{{$articulo->ref}}" data-nombre="{{$articulo->nombre}}" data-categoria="{{$articulo->categoria_id}}" href="{{ route('articulos.notas',$articulo->id) }}">
+                                                    <span class="glyphicon glyphicon-eye-open"></span> Notas</a>
+                                                    <button class="edit-modal btn btn-info" data-id="{{$articulo->id}}" data-ref="{{$articulo->ref}}" data-nombre="{{$articulo->nombre}}" data-categoria="{{$articulo->categoria_id}}">
+                                                    <span class="glyphicon glyphicon-edit"></span> Editar</button>
+                                                    <button class="delete-modal btn btn-danger" data-id="{{$articulo->id}}" data-ref="{{$articulo->ref}}" data-nombre="{{$articulo->nombre}}" data-categoria="{{$articulo->categoria_id}}">
+                                                    <span class="glyphicon glyphicon-trash"></span> Eliminar</button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    </table>
+                                </form>
             
-        </div><!-- /.panel panel-default -->
-    </div><!-- /.col-md-8 -->
+                            </div><!-- /.panel panel-default -->
+                        </div><!-- /.col-md-8 -->
                     </div>
                 </div>
             </div>
         </div>
-        
+        <script src="/js/libs/jquery/jquery-1.9.1.min.js"></script>
+        <script src="/js/upload/vendor/jquery.ui.widget.js"></script>
+        <script src="/js/upload/jquery.iframe-transport.js"></script>
+        <script src="/js/upload/jquery.fileupload.js"></script>
         @include('articulos.agregar')
         @include('articulos.editar')
         @include('articulos.eliminar')
     
-    <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
-    <!-- icheck checkboxes -->
-    <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
-    <!-- toastr notifications -->
-    <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
+        <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
+        <!-- icheck checkboxes -->
+        <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
+        <!-- toastr notifications -->
+        <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
    
         <script>
-        $(window).load(function(){
-            $('#postTable').removeAttr('style');
-        })
-    </script>
-    <script type="text/javascript">
+            $(window).load(function(){
+                $('#postTable').removeAttr('style');
+            })
+        </script>
+        <script type="text/javascript">
             $('.add-modal').on('click',function(){
             $('.modal-title').text('Agregar');
             $('#REF_add').val("");
             $('#nombre_add').val("");
             $('#addModal').modal('show');
         });
+
+            $('.add-modal-archivos').on('click',function(){
+            $('.modal-title').text('Agregar');
+            $('#articulo_add').val("");
+            $('#nota_add').val("");
+            $('#addModal_archivos').modal('show');
+        });
        
-        
         $('.modal-footer').on('click', '.add', function() {
             $.ajax({
                 type: 'POST',
@@ -126,8 +137,7 @@
                     '_token': $('input[name=_token]').val(),
                     'ref': $('#REF_add').val(),
                     'nombre': $('#nombre_add').val(),
-                    
-                    
+                    'archivo_id': $('#archivo_id').val(),
                 },
                 success: function(data) {
                     $('.errorref').addClass('hidden');
@@ -164,16 +174,13 @@
         // Edit a post
         $(document).on('click', '.edit-modal', function() {
             $('.modal-title').text('Edit');
-            
             $('#id_edit').val($(this).data('id'));
             $('#REF_edit').val($(this).data('ref'));
             $('#nombre_edit').val($(this).data('nombre'));
-            $('#categorias_id_edit').val($(this).data('categoria_id'));
             id = $('#id_edit').val();
             $('#editModal').modal('show');
         });
         $('.modal-footer').on('click', '.edit', function() {
-            
             $.ajax({
                 type: 'PUT',
                 url: '/admin/articulos/' + id,
@@ -182,7 +189,7 @@
                     'id': $("#id_edit").val(),
                     'ref': $('#REF_edit').val(),
                     'nombre': $('#nombre_edit').val(),
-                    'categorias_id': document.getElementById("categorias_id_edit").value
+                     'archivo_id': $('#archivo_id_edit').val(),
                 },
                 success: function(data) {
                     $('.errorTitle').addClass('hidden');
@@ -194,19 +201,17 @@
                             toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
                         }, 500);
 
-                        if (data.errors.title) {
-                            $('.errorTitle').removeClass('hidden');
-                            $('.errorTitle').text(data.errors.title);
+                       if (data.errors.ref) {
+                            $('.errorref').removeClass('hidden');
+                            $('.errorref').text(data.errors.ref);
                         }
-                        if (data.errors.content) {
-                            $('.errorContent').removeClass('hidden');
-                            $('.errorContent').text(data.errors.content);
+                        if (data.errors.nombre) {
+                            $('.errornombre').removeClass('hidden');
+                            $('.errornombre').text(data.errors.nombre);
                         }
                     } else { 
                         toastr.success('¡El articulo ha sido actualizado!', 'Success Alert', {timeOut: 5000});
                         $('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.ref + "</td><td>" + data.nombre + "</td><td><button class='show-modal btn btn-success' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-eye-open'></span> Show</button> <button class='edit-modal btn btn-info' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
-                        
-
                        
                         $('.col1').each(function (index) {
                             $(this).html(index+1);
@@ -241,6 +246,28 @@
                 }
             });
         });
+
+        $(document).ready(function() { 
+            $('select[id="articuloarchivo_add"]').on('change',function(e){ 
+                var articuloID = $(this).val(); 
+
+                if(articuloID){ 
+                    $.ajax({
+                        url: '/admin/archivos-notas/'+articuloID,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data){ 
+                            $('select[id="nota"]').empty(); 
+                            $.each(data, function(key, value){
+                                $('select[id="nota_add"]').append('<option value="'+ key +'">'+ value + '</option>');
+                            });
+                        }
+                    });
+                }else{
+                    $('select[id="estado"]').empty();
+                }
+            });
+    });
         </script>
     </div>
 @stop

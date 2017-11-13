@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::get('/admin/archivos-notas/{id}','ArchivosController@ajaxNota');
     Route::get('/admin/upload', 'UploadController@uploadForm');
     Route::post('/admin/archivos/upload', 'UploadController@uploadSubmit');
+    Route::post('/admin/articulos/upload', 'UploadController@uploadarticulosSubmit');
     Route::post('/admin/archivos/nota', 'ArchivosController@postArchivo');
     Route::get('/admin/archivos-descargar/archivos/{$file}' , 'ArchivosController@DescargaArchivo');
 

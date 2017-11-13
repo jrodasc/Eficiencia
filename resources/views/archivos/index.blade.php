@@ -164,6 +164,27 @@ alert($('#archivo_id').val());
                 }
             });
         });
+       $(document).ready(function() {
+        $('select[id="articulo_add"]').on('change',function(e){
+            var articuloID = $(this).val(); 
+
+            if(articuloID){ 
+                $.ajax({
+                    url: '/admin/archivos-notas/'+articuloID,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data){ 
+                        $('select[id="nota"]').empty(); 
+                        $.each(data, function(key, value){
+                            $('select[id="nota_add"]').append('<option value="'+ key +'">'+ value + '</option>');
+                        });
+                    }
+                });
+            }else{
+                $('select[id="estado"]').empty();
+            }
+        });
+    });
             
         </script>
     </div>

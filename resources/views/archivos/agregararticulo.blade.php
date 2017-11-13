@@ -1,4 +1,4 @@
-<div id="addModal" class="modal fade" role="dialog">
+<div id="addModal_archivos" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -8,19 +8,20 @@
                 <div class="modal-body">
                     <form action="#" method="post">
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">REF:</label>
+                            <label class="control-label col-sm-2" for="articulos">Articulos:</label>
                             <div class="col-sm-10">
-                                <input type="number" minlength="2" maxlength="12" class="form-control" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"   id="REF_add" autofocus>
+                                {!! Form::select('articuloarchivo_add', $listaarticulos, null, ['placeholder' => '', 'class' => 'form-control gray-input','id' => 'articuloarchivo_add']); !!}
                                 <small>Min: 2, Max: 12, Solo Números</small>
-                                <p class="errorref text-center alert alert-danger hidden"></p>
+                                <p class="errorarticulo text-center alert alert-danger hidden"></p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Nombre:</label>
+                            <label class="control-label col-sm-2" for="notas">Notas:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="nombre_add" autofocus>
-                                <small>Min: 2, Max: 32, Solo Texto</small>
-                                <p class="errornombre text-center alert alert-danger hidden"></p>
+                                 {!! Form::select('nota_add', array('0' => 'Seleccionar nota'), null, ['placeholder' => '', 'class' => 'form-control gray-input','id' => 'nota_add']); !!}
+                                
+                                <small>Min: 2, Max: 12, Solo Números</small>
+                                <p class="errornota text-center alert alert-danger hidden"></p>
                             </div>
                         </div>
                         <div class="form-group">
@@ -53,7 +54,8 @@
             </div>
         </div>
     </div>
-     <script>
+    
+    <script>
     $(function () { 
         $('#fileupload').fileupload({ 
             dataType: 'json',
@@ -76,4 +78,5 @@
             }
         });
     });
+     
 </script>

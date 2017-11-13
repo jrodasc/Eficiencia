@@ -28,45 +28,22 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="content">Notas:</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" id="notas_add_categoria" cols="40" rows="5"></textarea>
+                                <textarea class="form-control" id="nombre_add_categoria" cols="40" rows="5"></textarea>
                                 <small>Min: 2, Max: 128, Solo Téxto</small>
                                 <p class="errornombre text-center alert alert-danger hidden"></p>
                             </div>
                         </div> 
                         <div class="form-group">
-
-                            <label class="control-label col-sm-2" for="content">Subir Archivo:</label>
+                            <label class="control-label col-sm-2" for="content">Fecha:</label>
                             <div class="col-sm-10">
-                                <span class="btn btn-success fileinput-button">
-                    <i class="icon-plus icon-white"></i>
-                    <span>Add files...</span>
-                    <input type="file" name="files[]" multiple>
-                </span>
-                <button type="submit" class="btn btn-primary start">
-                    <i class="icon-upload icon-white"></i>
-                    <span>Start upload</span>
-                </button>
-                <button type="reset" class="btn btn-warning cancel">
-                    <i class="icon-ban-circle icon-white"></i>
-                    <span>Cancel upload</span>
-                </button>
-                <button type="button" class="btn btn-danger delete">
-                    <i class="icon-trash icon-white"></i>
-                    <span>Delete</span>
-</button><div class="span5 fileupload-progress fade">
-                <!-- The global progress bar -->
-                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                    <div class="bar" style="width:0%;"></div>
-                </div>
-                <!-- The extended global progress information -->
-                <div class="progress-extended">&nbsp;</div>
-</div>
-
-                                <input type="file" class="form-control" name="file" >
-                                <small>Min: 2, Max: 128, Solo Téxto</small>
-                                <p class="errorContent text-center alert alert-danger hidden"></p>
-                            </div>
-                        </div> 
+                                <div class='input-group date' id='datetimepicker7'>
+                                    <input type='text' class="form-control" id="fecha_add_categoria" name="fecha_add_categoria"  />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div> 
+                        </div>
 
                     </form>
                     <div class="modal-footer-categoria">
@@ -83,3 +60,25 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    
+        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+            <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+
+    <script type="text/javascript">
+    $(function () {
+        
+        $('#datetimepicker7').datetimepicker({ format: 'YYYY-MM-DD HH:mm'
+    });
+
+        
+        
+
+
+
+        
+
+    });
+</script>

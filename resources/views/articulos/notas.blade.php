@@ -36,12 +36,14 @@
     </style>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <ul>
-            <a href="/admin/articulos" class=""><li>Regresar</li></a>
-            <a href="#" class="add-modal-notas "><li>Agregar</li></a>
-        </ul>
+        <div class="container">
+            <ul>
+                <a href="/admin/articulos" class=""><li>Regresar</li></a>
+                <a href="#" class="add-modal-notas "><li>Agregar</li></a>
+            </ul>
+        </div>
     </div>
-    <div class="panel-body">
+    <div class="container">
         <div   role="dialog">
             <div class="">
                 <div class="modal-content">
@@ -103,7 +105,7 @@
                           <tr class="item-cat1{{$notacategoria->id}}">
                                   
                                     <td class="col-neu1">{{ $indexCategoriaKey+1 }}</td>
-                                    <td>{{$notacategoria->created_at}}</td>
+                                    <td>{{$notacategoria->fecha}}</td>
                                     <td>{{$notacategoria->horamaquina}}</td>
                                     
                                     <td class="text-center"><input type="checkbox" class="revision" id="" data-id="{{$notacategoria->id}}" @if ($notacategoria->revision) checked @endif></td>
@@ -115,7 +117,7 @@
                                       
                                         <button class="edit-Modal-notas btn btn-info" data-id="{{$notacategoria->id}}" data-ref="{{$notacategoria->ref}}" data-nombre="{{$notacategoria->nombre}}" data-horamaquina="{{$notacategoria->horamaquina}}" >
                                         <span class="glyphicon glyphicon-edit"></span> Editar</button>
-                                        <button class="delete-modal-notas btn btn-danger"  data-id="{{$notacategoria->id}}" data-ref="{{$notacategoria->ref}}" data-nombre="{{$notacategoria->nombre}}" data-horamaquina="{{$notacategoria->horamaquina}}">
+                                        <button class="delete-modal-notas btn btn-danger"  data-id="{{$notacategoria->id}}" data-ref="{{$notacategoria->ref}}" data-nombre="{{$notacategoria->nombre}}" data-horamaquina="{{$notacategoria->horamaquina}}" data-fecha="{{$notacategoria->fecha}}">
                                         <span class="glyphicon glyphicon-trash"></span> Eliminar</button>
                                     </td>
                                 </tr>
@@ -145,14 +147,14 @@
                               @foreach($notas_hidraulicas as $indexCategoriahidraKey => $notacategoriahidra)
                           <tr class="item-cat2{{$notacategoriahidra->id}}">
                                     <td class="col-neu1">{{ $indexCategoriahidraKey+1 }}</td>
-                                    <td>{{$notacategoriahidra->created_at}}</td>
+                                    <td>{{$notacategoriahidra->fecha}}</td>
                                     <td>{{$notacategoriahidra->horamaquina}}</td>
                                     <td class="text-center"><input type="checkbox" class="revision" id="" data-id="{{$notacategoriahidra->id}}" @if ($notacategoriahidra->revision) checked @endif></td>
                                     <td>{{$notacategoriahidra->nombre}}</td>
                                     <td>
                                         <button class="edit-Modal-notas btn btn-info" data-id="{{$notacategoriahidra->id}}" data-ref="{{$notacategoriahidra->ref}}" data-nombre="{{$notacategoriahidra->nombre}}" data-horamaquina="{{$notacategoriahidra->horamaquina}}" >
                                         <span class="glyphicon glyphicon-edit"></span> Editar</button>
-                                        <button class="delete-modal-notas btn btn-danger"  data-id="{{$notacategoriahidra->id}}" data-ref="{{$notacategoriahidra->ref}}" data-nombre="{{$notacategoriahidra->nombre}}" data-horamaquina="{{$notacategoriahidra->horamaquina}}">
+                                        <button class="delete-modal-notas btn btn-danger"  data-id="{{$notacategoriahidra->id}}" data-ref="{{$notacategoriahidra->ref}}" data-nombre="{{$notacategoriahidra->nombre}}" data-horamaquina="{{$notacategoriahidra->horamaquina}}" data-fecha="{{$notacategoriahidra->fecha}}">
                                         <span class="glyphicon glyphicon-trash"></span> Eliminar</button>
                                     </td>
                                 </tr>
@@ -182,7 +184,7 @@
                           <tr class="item-cat3{{$notacategoriaotra->id}}">
                                   
                                     <td class="col-neu1">{{ $indexCategoriaotraKey+1 }}</td>
-                                    <td>{{$notacategoriaotra->created_at}}</td>
+                                    <td>{{$notacategoriaotra->fecha}}</td>
                                     <td>{{$notacategoriaotra->horamaquina}}</td>
                                     
                                     <td class="text-center"><input type="checkbox" class="revision" id="" data-id="{{$notacategoriaotra->id}}" @if ($notacategoriaotra->revision) checked @endif></td>
@@ -190,7 +192,7 @@
                                     <td>
                                         <button class="edit-Modal-notas btn btn-info" data-id="{{$notacategoriaotra->id}}" data-ref="{{$notacategoriaotra->ref}}" data-fecha="{{$notacategoriaotra->fecha}}" data-revision="{{$notacategoriaotra->revision}}" data-nombre="{{$notacategoriaotra->nombre}}" data-horamaquina="{{$notacategoriaotra->horamaquina}}">
                                         <span class="glyphicon glyphicon-edit"></span> Editar</button>
-                                        <button class="delete-modal-notas btn btn-danger"  data-id="{{$notacategoriaotra->id}}" data-ref="{{$notacategoriaotra->ref}}" data-nombre="{{$notacategoriaotra->nombre}}" data-horamaquina="{{$notacategoriaotra->horamaquina}}">
+                                        <button class="delete-modal-notas btn btn-danger"  data-id="{{$notacategoriaotra->id}}" data-ref="{{$notacategoriaotra->ref}}" data-nombre="{{$notacategoriaotra->nombre}}" data-horamaquina="{{$notacategoriaotra->horamaquina}}" data-fecha="{{$notacategoriaotra->fecha}}">
                                         <span class="glyphicon glyphicon-trash"></span> Eliminar</button>
                                     </td>
                                 </tr>
@@ -257,7 +259,7 @@ $(window).load(function(){
     $('.add-modal-notas').on('click',function(){
         $('.modal-title').text('Agregar');
         $('#REF_add').val("");
-        $('#notas_add').val("");
+        $('#nombre_add').val("");
         $('#addModal-notas').modal('show');
     });
 
@@ -299,6 +301,7 @@ $(window).load(function(){
                     'categoria_id': "4",
                     'horamaquina': "0",
                     'revision': "0",
+                    'fecha': "2017-11-07",
                     
                     
                 },
@@ -306,7 +309,7 @@ $(window).load(function(){
                     $('.errorref').addClass('hidden');
                     $('.errornombre').addClass('hidden');
 
-                    if ((data.errors)) {
+                    if ((data.errors)) { 
                         setTimeout(function () {
                             $('#addModal-notas').modal('show');
                             toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
@@ -316,11 +319,12 @@ $(window).load(function(){
                             $('.errorref').removeClass('hidden');
                             $('.errorref').text(data.errors.ref);
                         }*/
+
                         if (data.errors.nombre) {
                             $('.errornombre').removeClass('hidden');
                             $('.errornombre').text(data.errors.nombre);
                         }
-                    } else {
+                    } else { 
                         toastr.success('¡Nota Guardada Guardado!', 'Success Alert', {timeOut: 5000});
                         $('#postTable').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>"+ data.ref +"</td><td>" + data.nombre + "</td><td> <button class='edit-modal btn btn-info' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-edit'></span> Editar</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-ref='" + data.ref + "' data-nombre='" + data.nombre + "'><span class='glyphicon glyphicon-trash'></span> Eliminar</button></td></tr>");
                         
@@ -340,23 +344,24 @@ $(window).load(function(){
                 data: {
                     '_token': $('input[name=_token]').val(),
                     'ref': $('#REF_add_categoria').val(),
-                    'nombre': $('#notas_add_categoria').val(),
+                    'nombre': $('#nombre_add_categoria').val(),
                     'articulo_id': $('#articulo_id').val(),
                     'categoria_id': $('#categoria_id_notas').val(),
                     'horamaquina': $('#horamaquina_add_categoria').val(),
+                    'fecha': $('#fecha_add_categoria').val(),
                     'revision': "0"
                 },
                 success: function(data) {
-                    $('.errorTitle').addClass('hidden');
-                    $('.errorContent').addClass('hidden');
-                    
+                    $('.errornombre').addClass('hidden');
+                   //$('.errorContent').addClass('hidden');
+                  //  alert(data.errors.nombre);
                     if ((data.errors)) {
                         setTimeout(function () {
                             $('#addModal-notas-categorias').modal('show');
                             toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
                         }, 500);
 
-                       /* if (data.errors.ref) {
+                      /* if (data.errors.ref) {
                             $('.errorref').removeClass('hidden');
                             $('.errorref').text(data.errors.ref);
                         }
@@ -414,6 +419,7 @@ $(window).load(function(){
             $('#REF_edit_categoria').val($(this).data('ref'));
             $('#horamaquina_edit_categoria').val($(this).data('horamaquina'));
             $('#nombre_edit_categoria').val($(this).data('nombre'));
+            $('#fecha_edit_categoria').val($(this).data('fecha'));
             id = $('#id_edit_categoria').val();
             $('#editModal-notas').modal('show');
         });
@@ -496,6 +502,7 @@ $(window).load(function(){
                     'ref': $('#REF_edit_categoria').val(),
                     'horamaquina': $('#horamaquina_edit_categoria').val(),
                     'nombre': $('#nombre_edit_categoria').val(),
+                    'fecha': $('#fecha_edit_categoria').val(),
                     },
                 success: function(data) {
                     $('.errorref').addClass('hidden');

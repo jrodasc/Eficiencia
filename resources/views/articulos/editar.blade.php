@@ -31,14 +31,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="title">Categoria:</label>
+                            <label class="control-label col-sm-2" for="title">Subir 
+                            </label>
                             <div class="col-sm-10">
-                                {!! Form::select('categorias_id_edit',array('0' => 'Seleccione Opcion', '1' => 'Hidraulica', '2' => 'Neumatica', '3' => 'Otras Intervenciones' ), 0,[], array('class' => 'form-control gray-input', 'id' => 'categorias_id_edit')) !!}
-                                 <select class="form-control gray-input" required=""  id="categorias_id_edit">
-                                    <option value="0">Seleccionar opción</option>
-                                    <option value="1">Hidraulica</option>
-                                    <option value="2">Neumaticos</option>
-                                    <option value="3">Otras intervenciones</option></select>
+                            {{ csrf_field() }}
+                            <input type="file" id="fileupload_edit" name="archivos[]" data-url="/admin/archivos/upload" multiple />
+                            <div id="files_list_edit"></div>
+                            <p id="loading"></p>
+                            <input type="hidden" name="file_ids_edit" id="file_ids_edit" value="" />
+                            <input type="text" name="archivo_id_edit" id="archivo_id_edit" value="" />
                             </div>
                         </div>
                     </form>
@@ -54,3 +55,28 @@
             </div>
         </div>
     </div>
+    <script>
+    $(function () { 
+        $('#fileupload_edit').fileupload({ 
+            dataType: 'json',
+            add: function (e, data) {
+                $('#loading').text('Uploading...');
+                data.submit();
+            },
+            done: function (e, data) { 
+                $.each(data.result.files, function (index, file) {
+                    $('<p/>').html(file.name + ' (' + file.size + ' KB)').appendTo($('#files_list_edit'));
+                    if ($('#file_ids_edit').val() != '') {
+                        $('#file_ids_edit').val($('#file_ids_edit').val() + ',');
+                    }
+                    $('#file_ids_edit').val($('#file_ids_edit').val() + file.fileID);
+                });
+                $('#loading').text('');
+            },
+            success: function(data) {
+                $('#archivo_id_edit').val(data.archivo_id);
+            }
+        });
+    });
+     
+</script>

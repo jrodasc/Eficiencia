@@ -127,15 +127,6 @@
 	padding: 0 10px;
 }
 
-/*.gray-input{
-	border:none;
-	border-radius: 0;
-	box-shadow: none;
-	background: #EAEEF1;
-	-webkit-box-shadow: inset 0px 1px 1px 1px rgba(227,227,227,1);
-	-moz-box-shadow: inset 0px 1px 1px 1px rgba(227,277,227,1);
-	box-shadow: inset 0px 1px 1px 1px rgba(227,227,227,1);
-}*/
 
 .gray-input{
 	border:solid 1px rgba(127, 128, 130, 0.08);
@@ -224,6 +215,7 @@ label.chbExtra{
 .dtContainer{
 	width: 100%;
 	overflow-x: scroll;
+
 	/*max-height: 500px;*/
 }
 
@@ -385,9 +377,14 @@ label.chbExtra{
 }
 
 @media(max-width: 992px){
+	
 	.smallTd{
 		max-width: 250px !important;
 		word-break: break-all;
+	}
+
+	.container{
+		max-width: 92px	
 	}
 
 	#checkin-box{

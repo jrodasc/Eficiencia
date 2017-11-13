@@ -38,6 +38,17 @@
                                 <p class="errornombre text-center alert alert-danger hidden"></p>
                             </div>
                         </div> 
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="content">Fecha:</label>
+                            <div class="col-sm-10">
+                                <div class='input-group date' id='datetimepicker8'>
+                                    <input type='text' class="form-control" id="fecha_edit_categoria" name="fecha_add_categoria"  />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div> 
+                        </div>
                     </form>
                     <div class="modal-footer-categorias">
                         <button type="button" class="btn btn-primary edit" data-dismiss="modal">
@@ -51,3 +62,25 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    
+        <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+            <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+
+    <script type="text/javascript">
+    $(function () {
+        
+        $('#datetimepicker8').datetimepicker({ format: 'YYYY-MM-DD HH:mm'
+    });
+
+        
+        
+
+
+
+        
+
+    });
+</script>

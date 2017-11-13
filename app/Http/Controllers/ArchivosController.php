@@ -16,7 +16,7 @@ class ArchivosController extends Controller
     public function index(Request $request)
     {
         $data = Archivo::orderBy('id','desc')->get();
-        $articulos = Articulo::pluck('nombre','id');;
+        $articulos = Articulo::pluck('nombre','id');
         //$articulo_id = $data->nota()->where('categoria_id', 4)->get();
         //$data->nota()->pluck('id')->toArray();        
 
