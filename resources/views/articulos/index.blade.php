@@ -51,7 +51,7 @@
                                         
                                     </ul>
                                 </div>
-                                <form class="m20 " role="Buscar" >
+                                
                                     <table class="display table table-bordered table-hover table-responsive compact" id="postTable"  cellspacing="0" width="100%">
                                     <thead>
                                     <tr>
@@ -87,7 +87,7 @@
                                         @endforeach
                                     </tbody>
                                     </table>
-                                </form>
+                                
             
                             </div><!-- /.panel panel-default -->
                         </div><!-- /.col-md-8 -->

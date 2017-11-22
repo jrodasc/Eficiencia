@@ -39,7 +39,7 @@
                             <div id="files_list_edit"></div>
                             <p id="loading"></p>
                             <input type="hidden" name="file_ids_edit" id="file_ids_edit" value="" />
-                            <input type="text" name="archivo_id_edit" id="archivo_id_edit" value="" />
+                            <input type="hidden" name="archivo_id_edit" id="archivo_id_edit" value="" />
                             </div>
                         </div>
                     </form>

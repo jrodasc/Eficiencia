@@ -69,7 +69,12 @@
                                     <td class="col1">{{ $indexKey+1 }}</td>
                                     <td>{{$nota->ref}}</td>
                                     <td>{{$nota->nombre}}</td>
-                                    <td>
+                                    <td> 
+                                        @foreach($archivos as $index => $archivo)
+                                                        @if($nota->id==$archivo->nota_id)
+                                                            <a class="btn btn-info" href="/storage/{{$archivo->filename}}">Descargar</a>
+                                                        @endif
+                                                    @endforeach
                                         <button class="edit-modal btn btn-info" data-id="{{$nota->id}}" data-ref="{{$nota->ref}}" data-nombre="{{$nota->nombre}}" >
                                         <span class="glyphicon glyphicon-edit"></span> Editar</button>
                                         <button class="delete-modal btn btn-danger"  data-id="{{$nota->id}}" data-ref="{{$nota->ref}}" data-nombre="{{$nota->nombre}}">
@@ -87,11 +92,13 @@
                         </ul>
                     </div>
                     <br>
+                    <div class="modal-body">
                     <h2 class="m0 text-uppercase">Neumática</h2>
                     <table class="display table table-bordered table-hover table-responsive compact" id="postTable-categoria1"  cellspacing="0" width="100%">
                         <thead>
                             <tr>
                                 <th valign="middle">#</th>
+                                <th>REF</th>
                                 <th>Fecha</th>
                                 <th>Horas Máquina</th>
                                 <th>Revisión</th>
@@ -105,6 +112,7 @@
                           <tr class="item-cat1{{$notacategoria->id}}">
                                   
                                     <td class="col-neu1">{{ $indexCategoriaKey+1 }}</td>
+                                    <td>{{$notacategoria->ref}}</td>
                                     <td>{{$notacategoria->fecha}}</td>
                                     <td>{{$notacategoria->horamaquina}}</td>
                                     
@@ -124,17 +132,20 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
                     <div class="panel-heading">
                         <ul>
                         <a href="#" class="add-modal-notas-categoria2 btn btn-success pull-left">Agregar</a>
                         </ul>
                     </div><br>
+                <div class="modal-body">
                 <h2 class="m0 text-uppercase">Hidraúlica</h2>
                 <table class="display table table-bordered table-hover table-responsive compact" id="postTable-categoria2"  cellspacing="0" width="100%">
                      
                         <thead>
                             <tr>
                                 <th valign="middle">#</th>
+                                <th>REF</th>
                                 <th>Fecha</th>
                                 <th>Horas Máquina</th>
                                 <th>Revisión</th>
@@ -147,6 +158,7 @@
                               @foreach($notas_hidraulicas as $indexCategoriahidraKey => $notacategoriahidra)
                           <tr class="item-cat2{{$notacategoriahidra->id}}">
                                     <td class="col-neu1">{{ $indexCategoriahidraKey+1 }}</td>
+                                    <td>{{$notacategoriahidra->ref}}</td>
                                     <td>{{$notacategoriahidra->fecha}}</td>
                                     <td>{{$notacategoriahidra->horamaquina}}</td>
                                     <td class="text-center"><input type="checkbox" class="revision" id="" data-id="{{$notacategoriahidra->id}}" @if ($notacategoriahidra->revision) checked @endif></td>
@@ -161,16 +173,19 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
                     <div class="panel-heading">
                         <ul>
                             <a href="#" class="add-modal-notas-categoria3 btn btn-success pull-left">Agregar</a>
                         </ul>
                     </div>
+                    <div class="modal-body">
                     <h2 class="m0 text-uppercase">Otras intervenciones</h2>
                 <table class="display table table-bordered table-hover table-responsive compact" id="postTable-categoria3"  cellspacing="0" width="100%">
                         <thead>
                             <tr>
                                 <th valign="middle">#</th>
+                                <th>REF</th>
                                 <th>Fecha</th>
                                 <th>Horas Máquina</th>
                                 <th>Revisión</th>
@@ -184,6 +199,7 @@
                           <tr class="item-cat3{{$notacategoriaotra->id}}">
                                   
                                     <td class="col-neu1">{{ $indexCategoriaotraKey+1 }}</td>
+                                    <td>{{$notacategoriaotra->ref}}</td>
                                     <td>{{$notacategoriaotra->fecha}}</td>
                                     <td>{{$notacategoriaotra->horamaquina}}</td>
                                     
@@ -199,6 +215,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
             </div>
         </div>
     </div>

@@ -207,8 +207,10 @@ class ArticulosController extends Controller
                     ->join('articulo_nota','articulo_nota.nota_id','=','notas.id')
                     ->where('articulo_nota.articulo_id','=',$id)
                     ->where('categoria_id','=','3')->orderBy('id','desc')->get();
-
+ 
+        $archivos = Nota::select('archivos.nota_id','archivos.id', 'archivos.nombre', 'archivos.filename')
+                    ->join('archivos','archivos.nota_id','=','notas.id')->get();
          
-        return view('articulos.notas',compact('articulos','notas','notas_neumaticas','notas_hidraulicas','notas_otras'));
+        return view('articulos.notas',compact('articulos','notas','notas_neumaticas','notas_hidraulicas','notas_otras','archivos'));
     }
 }
