@@ -55,7 +55,7 @@
                         </li>  </ul>  
             </li>
            
-            <li class="treeview">
+           <!-- <li class="treeview">
                 <a href="#">
                     <i class="fa  fa-file-archive-o"></i>
                     <span>Articulos</span>
@@ -73,7 +73,7 @@
                             </a>
                         </li>    
                             </ul>
-            </li>
+            </li>->
                 
                 
                 

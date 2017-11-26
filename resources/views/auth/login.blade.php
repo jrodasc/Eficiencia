@@ -42,7 +42,7 @@
                         
                         
                         <div class="copy animated fadeIn">
-                            <h1>Sistema de Control <br>de Archivos </h1>
+                            <h1>Sistema de Control <br>de Eficiencia </h1>
                             <p></p>
                         </div>
                     </div> <!-- .logo-title-container -->
