@@ -48,19 +48,19 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Disponibilidad</span>
-              <h2 class="m0 text-uppercase pull-left">73%</h2>
+              <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->produccion}}%</h2>
 				<br>
 				<br>
               <span class="info-box-text">Rendimiento</span>
-              <h2 class="m0 text-uppercase pull-left">90%</h2>
+              <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->rendimiento}}%</h2>
 				<br>
 				<br>
               <span class="info-box-text">Calidad</span>
-              <h2 class="m0 text-uppercase pull-left">99.5%</h2>
+              <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->conformescalidad}}%</h2>
 				<br>
 				<br>
               <span class="info-box-text">OEE</span>
-              <h2 class="m0 text-uppercase pull-left">66.35%</h2>
+              <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->OEE}}%</h2>
 				<br>
 				<br>
 				
@@ -131,7 +131,7 @@
 									<th>Maquina</th>
 									<th>Causa</th>
 									<th>Comentarios</th>
-									<th width="280px">Acción</th>
+									
 								</tr>
 
 								{{ csrf_field() }}
@@ -144,17 +144,13 @@
 										<td>{{$parada->fecha_fin}}</td>
 										<td>0</td>
 										<td>
-											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => 'impresora']); !!}
+											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => 'id_maquina']); !!}
 										</td>
 										<td>
-											 {!! Form::select('maquina', $datos['Maquinas'], Session::get('impresora', 0), ['class' => 'form-control gray-input', 'id' => 'impresora']); !!}
+											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => 'id_causa']); !!}
 										</td>
-										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario')) !!}<input type="hidden" name="id" id="id" value="" /></td>
-										<td>
-											<a class="actualizar btn btn-info"  data-id="{{$parada->id}}" >Actualizar</a>
-											
-											
-										</td>
+										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario')) !!}<input type="hidden" name="id" id="id" value="{{$parada->id}}" /></td>
+										
 									</tr>
 								@endforeach
 							</tbody>
@@ -246,7 +242,54 @@
 	    barChartOptions.datasetFill = false;
 	    barChart.Bar(barChartData, barChartOptions);
 
-	    $(document).on('click', '.actualizar', function() { 
+		$('select[id=id_maquina]').on('change',function () {
+			//$('#id').val($(this).data('id'));
+	    	id = $('#id').val();
+	    	//alert(id);
+	    	
+			//'id_maquina': document.getElementById("id_maquina").value
+
+			$.ajax({
+                type: 'PUT',
+                url: '/admin/control/' + id,
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                   	id: $('#id').val(),
+                   	comentario: $('#comentario').val(),
+                   	'id_maquina': document.getElementById("id_maquina").value,
+                   	'id_causa': document.getElementById("id_causa").value,
+
+                    
+                },
+                success: function(data) {
+                }
+                });
+		});
+
+		$('select[id=id_causa]').on('change',function () {
+			//$('#id').val($(this).data('id'));
+	    	id = $('#id').val();
+	    	//alert(id);
+	    	
+			//'id_maquina': document.getElementById("id_maquina").value
+
+			$.ajax({
+                type: 'PUT',
+                url: '/admin/control/' + id,
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                   	id: $('#id').val(),
+                   	comentario: $('#comentario').val(),
+                   	'id_maquina': document.getElementById("id_maquina").value,
+                   	'id_causa': document.getElementById("id_causa").value,
+
+                    
+                },
+                success: function(data) {
+                }
+                });
+		});
+		$(document).on('click', '.actualizar', function() { 
 	    	$('#id').val($(this).data('id'));
 	    	id = $('#id').val();
 
