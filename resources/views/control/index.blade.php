@@ -140,16 +140,16 @@
 								@foreach ($datos['Paradas'] as $key => $parada)
 									<tr class="item{{$parada->id}}">
 										<td class="col1">{{ $key+1 }}</td>
-										<td>{{$parada->fecha_inicio}}</td>
+										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio" value="{{$parada->fecha_inicio}}" /></td>
 										<td>{{$parada->fecha_fin}}</td>
-										<td>0</td>
+										<td><div id="countdowntimer"><span id="current_timer"><span></div></td>
 										<td>
 											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => 'id_maquina']); !!}
 										</td>
 										<td>
 											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => 'id_causa']); !!}
 										</td>
-										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario')) !!}<input type="hidden" name="id" id="id" value="{{$parada->id}}" /></td>
+										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario')) !!}<input type="hidden" name="id" id="id" value="{{$parada->id}}" /><input type="hidden" name="fecha_bd" id="fecha_bd" value="{{strtotime($datos['fecha_bd'])}}" /></td>
 										
 									</tr>
 								@endforeach
@@ -166,13 +166,82 @@
         <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
         <!-- toastr notifications -->
         <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
+        
+        
+        <script src="/js/countTimer/jquery.countdownTimer.js"></script>
+
  <script>
             $(window).load(function(){
                 $('#dtContainer').removeAttr('style');
-            })
+            });
+
+            
         </script>
 	<script>
+	
+	var timestamp = null;
+	function cargar_push() 
+	{  
 		
+		$.ajax({
+		async:	false, 
+	    type: "GET",
+	    url: "/admin/push",
+	    data: {
+                    '_token': $('input[name=_token]').val(),
+                   	timestamp: timestamp,
+                   	 
+
+
+            },
+		success: function(data)
+		{	
+			timestamp 		   = data.updated_at;
+			fecha_inicio       = data.fecha_inicio;
+			fecha_fin          = data.fecha_fin;
+			id_maquina         = data.id_maquina;
+			id_causa           = data.id_causa;
+			id        		   = data.id;
+			comentario     	   = data.comentario;
+
+		
+		if(timestamp == null)
+			{
+			
+			}else{
+				toastr.success('¡Se ha detenido una máquina!', 'Success Alert', {timeOut: 5000});
+                $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.fecha_inicio + "</td><td>" + data.fecha_fin + "</td><td>0</td><td>-</td><td>-</td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + data.comentario + "></td></tr>");
+              /*  $('.new_published').on('ifToggled', function(event){
+                            $(this).closest('tr').toggleClass('warning');
+                        });*/
+
+                $('.col1').each(function (index) {
+                    $(this).html(index+1);
+                });
+
+             
+
+                
+			}
+		
+	//	setTimeout('cargar_push()',1000);
+			    	
+	    }
+		});		
+	}
+
+	$(document).ready(function()
+		{
+			var fecha_inicio = $('input[id=fecha_inicio]').val();
+			//cargar_push();
+			$("#current_timer").countdowntimer({ 
+				size : "lg",
+				startDate : fecha_inicio,
+				 currentTime : true
+			});
+		});	
+
+	
 
 	    /*----------------------------------------*/
 	    /*            Grafica de Barras           */
@@ -265,7 +334,24 @@
                 }
                 });
 		});
+		$('input[id=comentario]').on('change',function () {
+			id = $('#id').val();
+			$.ajax({
+                type: 'PUT',
+                url: '/admin/control/' + id,
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                   	id: $('#id').val(),
+                   	comentario: $('#comentario').val(),
+                   	'id_maquina': document.getElementById("id_maquina").value,
+                   	'id_causa': document.getElementById("id_causa").value,
 
+                    
+                },
+                success: function(data) {
+                }
+                });
+		});
 		$('select[id=id_causa]').on('change',function () {
 			//$('#id').val($(this).data('id'));
 	    	id = $('#id').val();
