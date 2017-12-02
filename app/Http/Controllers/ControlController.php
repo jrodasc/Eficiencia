@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB; use App\Paradas;
-use Session;
+use DB; use App\Paradas; use App\Calculo;
+use Session; use DateTime;
 
 class ControlController extends Controller
 {
@@ -23,6 +23,48 @@ class ControlController extends Controller
         return view('control.index',compact('datos'));
     
     }
+    public function calculo_oee($id)
+    {
+        $calculo = calculo::where('produccion',$id)->first();
+        $totalnet = 0; $i=1; $total = 0;
+        //dd($calculo);
+        if(isset($calculo))
+        {
+            $producciones = DB::table('parada_maquinas')->join('maquina', 'maquina.idmaquina','=', 'parada_maquinas.id_maquina')->where("parada_maquinas.id_produccion", "=", $id)->where("maq_principal", "=", "1")->orderBy('updated_at','desc')->get();
+
+            foreach ($producciones as $produccion) {
+                //dd($produccion->fecha_inicio);
+                //dd($produccion->net);
+                if($produccion->net == 1 )
+                {
+                    $from = new DateTime($produccion->fecha_inicio);
+                    $to = new DateTime();
+                    echo "<pre>";
+                    $interval = $to->diff($from, true);
+                   // dd($producciones[$i]->net);
+                    $totalnet = $totalnet + $interval->format('%i%a');      
+                }else
+                {
+                    $from = new DateTime($produccion->fecha_inicio);
+                    $to = new DateTime();
+                    echo "<pre>";
+                    $interval = $to->diff($from, true);
+                   // dd($producciones[$i]->net);
+                    $total = $total + $interval->format('%i%a');      
+                }
+                
+                $i++;
+            }
+          //  dd($totalnet);
+            $calculo->sumanet = $totalnet;
+            $calculo->sumatrue = $total;
+            $calculo->save();     
+        }
+       // dd($calculo);
+       
+        
+
+    }
     public function show(Request $request, $id)
     {
     	$parada = Paradas::where('id',$id)->first();
@@ -30,6 +72,8 @@ class ControlController extends Controller
     	$parada->comentario = $request->comentario;
     	$parada->id_maquina = $request->id_maquina;
     	$parada->id_causa = $request->id_causa;
+//dd($request->id_produccion);
+        $this->calculo_oee($request->id_produccion);
     	$parada->save();  
 
     	return response()->json($parada);
@@ -41,6 +85,8 @@ class ControlController extends Controller
     	$parada->comentario = $request->comentario;
     	$parada->id_maquina = $request->id_maquina;
     	$parada->id_causa = $request->id_causa;
+      //  dd($request->id_produccion);
+        $this->calculo_oee($request->id_produccion);
     	$parada->save();  
 
     	return response()->json($parada);

@@ -140,14 +140,14 @@
 								@foreach ($datos['Paradas'] as $key => $parada)
 									<tr class="item{{$parada->id}}">
 										<td class="col1">{{ $key+1 }}</td>
-										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio" value="{{$parada->fecha_inicio}}" /></td>
-										<td>{{$parada->fecha_fin}}</td>
-										<td><div id="countdowntimer"><span id="current_timer"><span></div></td>
+										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio{{$parada->id}}" value="{{$parada->fecha_inicio}}" /></td>
+										<td>{{$parada->fecha_fin}}<input type="hidden" name="fecha_fin" id="fecha_fin{{$parada->id}}" value="{{$parada->fecha_fin}}" /></td>
+										<td><div id="countdowntimer"><span id="current_timer{{$parada->id}}"><span></div></td>
 										<td>
-											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => 'id_maquina']); !!}
+											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => 'id_maquina', 'data-idparada' => $parada->id, 'data-id_produccion' => $parada->id_produccion]); !!}
 										</td>
 										<td>
-											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => 'id_causa']); !!}
+											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => 'id_causa','data-idparada' => $parada->id, 'data-id_produccion' => $parada->id_produccion]); !!}
 										</td>
 										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario')) !!}<input type="hidden" name="id" id="id" value="{{$parada->id}}" /><input type="hidden" name="fecha_bd" id="fecha_bd" value="{{strtotime($datos['fecha_bd'])}}" /></td>
 										
@@ -155,6 +155,7 @@
 								@endforeach
 							</tbody>
 						</table>
+
 				</div>
 			</div>
 		</div>
@@ -232,14 +233,38 @@
 
 	$(document).ready(function()
 		{
-			var fecha_inicio = $('input[id=fecha_inicio]').val();
-			//cargar_push();
-			$("#current_timer").countdowntimer({ 
+			
+			@foreach ($datos['Paradas'] as $x => $parada)
+				var fecha_inicio = $('input[id=fecha_inicio{{$parada->id}}]').val();
+				//var fecha_fin = $('input[id=fecha_fin{{$parada->id}}]').val();
+				
+				$("#current_timer{{$parada->id}}").countdowntimer({ 
+				dateAndTime : fecha_inicio,
 				size : "lg",
-				startDate : fecha_inicio,
-				 currentTime : true
+				
+				
+				 
 			});
-		});	
+		
+			@endforeach	
+		});		
+
+	function restarFechas(date1,date2)
+ {
+  start_actual_time = new Date(date1);
+    end_actual_time = new Date(date2);
+
+    var diff = end_actual_time - start_actual_time;
+
+    var diffSeconds = diff/1000;
+    var HH = Math.floor(diffSeconds/3600);
+    var MM = Math.floor(diffSeconds%3600)/60;
+
+    var formatted = ((HH < 10)?("0" + HH):HH) + ":" + ((MM < 10)?("0" + MM):MM)
+    return formatted;
+ }
+			//cargar_push();
+			
 
 	
 
@@ -313,10 +338,23 @@
 
 		$('select[id=id_maquina]').on('change',function () {
 			//$('#id').val($(this).data('id'));
+	    	$('#id').val($(this).data('idparada'));
+	    	var id_produccion = $(this).data('id_produccion');
 	    	id = $('#id').val();
-	    	//alert(id);
+	    	
+	    	
 	    	
 			//'id_maquina': document.getElementById("id_maquina").value
+			var fecha_inicio = $('input[id=fecha_inicio'+ id+']').val();
+
+			var fecha_fin = $('input[id=fecha_fin'+ id+']').val();
+			
+			if(fecha_fin != null)
+			{
+				var min_total=restarFechas(fecha_inicio,fecha_fin);
+//alert(fecha_total);
+			}
+			
 
 			$.ajax({
                 type: 'PUT',
@@ -327,6 +365,8 @@
                    	comentario: $('#comentario').val(),
                    	'id_maquina': document.getElementById("id_maquina").value,
                    	'id_causa': document.getElementById("id_causa").value,
+                   	'min_total': min_total,
+                   	'id_produccion': id_produccion,
 
                     
                 },
@@ -336,6 +376,7 @@
 		});
 		$('input[id=comentario]').on('change',function () {
 			id = $('#id').val();
+			var id_produccion = $(this).data('id_produccion');
 			$.ajax({
                 type: 'PUT',
                 url: '/admin/control/' + id,
@@ -345,6 +386,7 @@
                    	comentario: $('#comentario').val(),
                    	'id_maquina': document.getElementById("id_maquina").value,
                    	'id_causa': document.getElementById("id_causa").value,
+                   	'id_produccion': id_produccion,
 
                     
                 },
@@ -354,6 +396,7 @@
 		});
 		$('select[id=id_causa]').on('change',function () {
 			//$('#id').val($(this).data('id'));
+			var id_produccion = $(this).data('id_produccion');
 	    	id = $('#id').val();
 	    	//alert(id);
 	    	
@@ -368,6 +411,7 @@
                    	comentario: $('#comentario').val(),
                    	'id_maquina': document.getElementById("id_maquina").value,
                    	'id_causa': document.getElementById("id_causa").value,
+                   	'id_produccion': id_produccion,
 
                     
                 },
