@@ -13,7 +13,7 @@ class ControlController extends Controller
     	$maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     	$graficas = DB::table('calculo_oee')->first();
 
-    	$parada = DB::table('parada_maquinas')->where("maq_principal", "=", "1")->orderBy('updated_at','desc')->get();
+    	$parada = DB::table('parada_maquinas')->select('id','fecha_inicio','fecha_fin','comentario','id_maquina','id_causa','id_produccion','id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, fecha_inicio, fecha_fin) as minutos'))->where("maq_principal", "=", "1")->orderBy('updated_at','desc')->get();
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
 

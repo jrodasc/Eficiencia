@@ -32,6 +32,7 @@
         .table.table-bordered tbody td {
             vertical-align: baseline;
         }
+        
     </style>
 	<div class="row">
 		<section class="content-header">
@@ -142,7 +143,13 @@
 										<td class="col1">{{ $key+1 }}</td>
 										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio{{$parada->id}}" value="{{$parada->fecha_inicio}}" /></td>
 										<td>{{$parada->fecha_fin}}<input type="hidden" name="fecha_fin" id="fecha_fin{{$parada->id}}" value="{{$parada->fecha_fin}}" /></td>
-										<td><div id="countdowntimer"><span id="current_timer{{$parada->id}}"><span></div></td>
+										<td>
+										@if($parada->minutos>0)
+											{{$parada->minutos}}
+										@else
+										<div id="clock"><label id="minutes">00</label>:<label id="seconds">00</label></div>
+										@endif
+										</td>
 										<td>
 											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => 'id_maquina', 'data-idparada' => $parada->id, 'data-id_produccion' => $parada->id_produccion]); !!}
 										</td>
@@ -233,14 +240,44 @@
 
 	$(document).ready(function()
 		{
+			var sec = 0;
+
+    function clock(){
+    
+         var totalSeconds = 10;
+        setInterval(setTime, 1000);
+        function setTime()
+        {
+            ++totalSeconds;
+            $('#clock > #seconds').html(pad(totalSeconds%60));
+            $('#clock > #minutes').html(pad(parseInt(totalSeconds/60)));
+        }
+        function pad(val)
+        {
+            var valString = val + "";
+            if(valString.length < 2)
+            {
+                return "0" + valString;
+            }
+            else
+            {
+                return valString;
+            }
+        }
+}
+
+    clock();
+    
 			
 			@foreach ($datos['Paradas'] as $x => $parada)
 				var fecha_inicio = $('input[id=fecha_inicio{{$parada->id}}]').val();
+
 				//var fecha_fin = $('input[id=fecha_fin{{$parada->id}}]').val();
 				
 				$("#current_timer{{$parada->id}}").countdowntimer({ 
-				dateAndTime : fecha_inicio,
+				startDate : fecha_inicio,
 				size : "lg",
+
 				
 				
 				 
