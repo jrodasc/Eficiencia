@@ -32,12 +32,13 @@ class ControlController extends Controller
             return json_encode($causas);
         }
     public function calculo_oee($id)
-    {
+    {  
         $calculo = calculo::where('produccion',$id)->first();
+       
         $totalnet = 0; $i=1; $total = 0;
-        //dd($calculo);
+        
         if(isset($calculo))
-        {
+        {   
             $producciones = DB::table('parada_maquinas')->join('maquina', 'maquina.idmaquina','=', 'parada_maquinas.id_maquina')->where("parada_maquinas.id_produccion", "=", $id)->where("maq_principal", "=", "1")->orderBy('updated_at','desc')->get();
 
             foreach ($producciones as $produccion) {
@@ -63,10 +64,12 @@ class ControlController extends Controller
                 
                 $i++;
             }
+
           //  dd($totalnet);
             $calculo->sumanet = $totalnet;
             $calculo->sumatrue = $total;
             $calculo->save();     
+            //dd($id."----");
         }
        // dd($calculo);
        
@@ -76,12 +79,12 @@ class ControlController extends Controller
     public function show(Request $request, $id)
     {
     	$parada = Paradas::where('id',$id)->first();
-    	
+    	//dd($parada->id_produccion);
     	$parada->comentario = $request->comentario;
     	$parada->id_maquina = $request->id_maquina;
     	$parada->id_causa = $request->id_causa;
 //dd($request->id_produccion);
-        $this->calculo_oee($request->id_produccion);
+        $this->calculo_oee($parada->id_produccion);
     	$parada->save();  
 
     	return response()->json($parada);
