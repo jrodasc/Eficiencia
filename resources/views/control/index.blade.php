@@ -355,8 +355,8 @@ var diff = {{$parada->FechaActual}} - fecha_inicio;
 		                    '_token': $('input[name=_token]').val(),
 		                   	id: $('#id').val(),
 		                   	comentario: $('#comentario').val(),
-		                   	'id_maquina': document.getElementById("id_maquina").value,
-		                   	'id_causa': document.getElementById("id_causa").value,
+		                   	'id_maquina': document.getElementById("id_maquina{{$parada->id}}").value,
+		                   	'id_causa': document.getElementById("id_causa{{$parada->id}}").value,
 		                   	'id_produccion': id_produccion,
 
 		                    
