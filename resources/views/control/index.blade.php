@@ -140,21 +140,21 @@
 							<tbody>
 								@foreach ($datos['Paradas'] as $key => $parada)
 									<tr class="item{{$parada->id}}">
-										<td class="col1">{{ $key+1 }}</td>
-										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio{{$parada->id}}" value="{{$parada->fecha_inicio}}" /></td>
-										<td>{{$parada->fecha_fin}}<input type="hidden" name="fecha_fin" id="fecha_fin{{$parada->id}}" value="{{$parada->fecha_fin}}" /></td>
+										<td class="col1">{{(count($datos['Paradas']))-($key)}}</td>
+										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio{{$parada->id}}" value="{{strtotime($parada->fecha_inicio)}}" /></td>
+										<td>{{$parada->fecha_fin}}<input type="hidden" name="fecha_fin" id="fecha_fin{{$parada->id}}" value="{{strtotime($parada->fecha_fin)}}" /></td>
 										<td>
 										@if($parada->minutos>0)
 											{{$parada->minutos}}
 										@else
-										<div id="clock"><label id="minutes">00</label>:<label id="seconds">00</label></div>
+										<div id="clock{{$parada->id}}"><label id="minutes">00</label>:<label id="seconds">00</label></div>
 										@endif
 										</td>
 										<td>
-											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => 'id_maquina', 'data-idparada' => $parada->id, 'data-id_produccion' => $parada->id_produccion]); !!}
+											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => "id_maquina".$parada->id, 'data-idparada' => $parada->id, 'data-id_produccion' => $parada->id_produccion]); !!}
 										</td>
 										<td>
-											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => 'id_causa','data-idparada' => $parada->id, 'data-id_produccion' => $parada->id_produccion]); !!}
+											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => "id_causa".$parada->id,'data-idparada' => $parada->id, 'data-id_produccion' => $parada->id_produccion]); !!}
 										</td>
 										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario')) !!}<input type="hidden" name="id" id="id" value="{{$parada->id}}" /><input type="hidden" name="fecha_bd" id="fecha_bd" value="{{strtotime($datos['fecha_bd'])}}" /></td>
 										
@@ -174,7 +174,7 @@
         <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
         <!-- toastr notifications -->
         <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
-        
+     
         
         <script src="/js/countTimer/jquery.countdownTimer.js"></script>
 
@@ -232,7 +232,7 @@
                 
 			}
 		
-	//	setTimeout('cargar_push()',1000);
+		//setTimeout('cargar_push()',1000);
 			    	
 	    }
 		});		
@@ -242,15 +242,20 @@
 		{
 			var sec = 0;
 
-    function clock(){
-    
-         var totalSeconds = 10;
+    function clock($fecha_inicio,$id){
+
+      //  var $fecha_inicio = diff;
+      	var totalSeconds = $fecha_inicio;
         setInterval(setTime, 1000);
         function setTime()
-        {
+        { 
             ++totalSeconds;
-            $('#clock > #seconds').html(pad(totalSeconds%60));
-            $('#clock > #minutes').html(pad(parseInt(totalSeconds/60)));
+            $('#clock'+ $id +' > #seconds').html(pad(totalSeconds%60));
+            $('#clock'+ $id +' > #minutes').html(pad(parseInt(totalSeconds/60)));
+            //$('#clock'+ $id +' > #hrs').html(pad(parseInt(totalSeconds/3600)));
+
+          //  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+
         }
         function pad(val)
         {
@@ -266,23 +271,102 @@
         }
 }
 
-    clock();
+
+
+
     
 			
 			@foreach ($datos['Paradas'] as $x => $parada)
 				var fecha_inicio = $('input[id=fecha_inicio{{$parada->id}}]').val();
+				//alert(fecha_inicio.strftime('%Y/%m/%d'));
+				var id = {{$parada->id}};
+				
+				//alert({{$parada->FechaActual}});
 
-				//var fecha_fin = $('input[id=fecha_fin{{$parada->id}}]').val();
-				
-				$("#current_timer{{$parada->id}}").countdowntimer({ 
-				startDate : fecha_inicio,
-				size : "lg",
+			/*	var seg_total=({{$parada->FechaActual}}-fecha_inicio);
+				var tmpDate = new Date(seg_total);
+
+				start_actual_time = new Date(fecha_inicio);
+    end_actual_time = new Date({{$parada->FechaActual}});
+
+    var diff = end_actual_time - start_actual_time;
+				//diffunix = ( {{$parada->FechaActual}} - fecha_inicio);
+				alert(start_actual_time);*/
+
+				//var fechaa = (({{$parada->FechaActual}}/86400))+25569+(-5/24);
+
+			//	fechaa.getDate();
+
+			/*fecha = new D/ate(); 
+diaActual = fecha.getDate(); 
+diaBuscado = diaActual + 120;*/
+
+//var fechaInicio = new Date('2017-12-03 11:00:00').getTime();
+//var fechaFin    = new Date('2017-12-03 12:00:00').getTime();
+//var diff = fechaFin - fechaInicio;
+var diff = {{$parada->FechaActual}} - fecha_inicio;
+
+//var hour = Math.floor(diff /3600);
+   var minute = Math.floor((diff /60));
+ /*  var seconds = totalSeconds - (hour*3600 + minute*60);*/
+//alert(diff/(1000*60));
+//alert({{$parada->FechaActual}} + "-" + fecha_inicio + "-" + minute + "+" + diff);
+//alert(diff/(1000*60));
+//alert(diff/(1000*60*60*24));
+  // (1000*60*60*24) --> milisegundos -> segundos -> minutos -> horas -> días
+//console.log(fecha2.diff(fecha1, 'days'), ' dias de diferencia');
+			//	alert(fecha2.diff(fecha1, 'days'));
+				clock(diff,id);
+
+				 $(document).ready(function() {
+			        $('select[id="id_maquina{{$parada->id}}"]').on('change',function(e){
+			            var maquinaID = $(this).val();
+
+			            if(maquinaID){ 
+			                $.ajax({
+			                    url: '/admin/control/maquina/'+maquinaID,
+			                    type: 'GET',
+			                    dataType: 'json',
+			                    success: function(data){ 
+			                        $('select[id="id_causa{{$parada->id}}"]').empty(); 
+			                        $.each(data, function(key, value){
+			                            $('select[id="id_causa{{$parada->id}}"]').append('<option value="'+ key +'">'+ value + '</option>');
+			                        });
+			                    }
+			                });
+			            }else{
+			                $('select[id="id_causa"]').empty();
+			            }
+			        });
+			    });
+
+					$('select[id=id_causa{{$parada->id}}]').on('change',function () {
+					//$('#id').val($(this).data('id'));
+					var id_produccion = $(this).data('id_produccion');
+			    	id = $('#id').val();
+			    	//alert(id);
+			    	
+					//'id_maquina': document.getElementById("id_maquina").value
+
+					$.ajax({
+		                type: 'PUT',
+		                url: '/admin/control/' + id,
+		                data: {
+		                    '_token': $('input[name=_token]').val(),
+		                   	id: $('#id').val(),
+		                   	comentario: $('#comentario').val(),
+		                   	'id_maquina': document.getElementById("id_maquina").value,
+		                   	'id_causa': document.getElementById("id_causa").value,
+		                   	'id_produccion': id_produccion,
+
+		                    
+		                },
+		                success: function(data) {
+		                }
+		                });
+				});
 
 				
-				
-				 
-			});
-		
 			@endforeach	
 		});		
 
@@ -292,6 +376,7 @@
     end_actual_time = new Date(date2);
 
     var diff = end_actual_time - start_actual_time;
+
 
     var diffSeconds = diff/1000;
     var HH = Math.floor(diffSeconds/3600);
@@ -431,31 +516,7 @@
                 }
                 });
 		});
-		$('select[id=id_causa]').on('change',function () {
-			//$('#id').val($(this).data('id'));
-			var id_produccion = $(this).data('id_produccion');
-	    	id = $('#id').val();
-	    	//alert(id);
-	    	
-			//'id_maquina': document.getElementById("id_maquina").value
-
-			$.ajax({
-                type: 'PUT',
-                url: '/admin/control/' + id,
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                   	id: $('#id').val(),
-                   	comentario: $('#comentario').val(),
-                   	'id_maquina': document.getElementById("id_maquina").value,
-                   	'id_causa': document.getElementById("id_causa").value,
-                   	'id_produccion': id_produccion,
-
-                    
-                },
-                success: function(data) {
-                }
-                });
-		});
+	
 		$(document).on('click', '.actualizar', function() { 
 	    	$('#id').val($(this).data('id'));
 	    	id = $('#id').val();

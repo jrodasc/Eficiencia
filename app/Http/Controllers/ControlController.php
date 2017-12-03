@@ -13,7 +13,7 @@ class ControlController extends Controller
     	$maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     	$graficas = DB::table('calculo_oee')->first();
 
-    	$parada = DB::table('parada_maquinas')->select('id','fecha_inicio','fecha_fin','comentario','id_maquina','id_causa','id_produccion','id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, fecha_inicio, fecha_fin) as minutos'))->where("maq_principal", "=", "1")->orderBy('updated_at','desc')->get();
+    	$parada = DB::table('parada_maquinas')->select('id','fecha_inicio','fecha_fin','comentario','id_maquina','id_causa','id_produccion','id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, fecha_inicio, fecha_fin) as minutos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))->where("maq_principal", "=", "1")->orderBy('updated_at','desc')->get();
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
 
@@ -23,6 +23,14 @@ class ControlController extends Controller
         return view('control.index',compact('datos'));
     
     }
+     public function ajaxCausa($id)
+        {
+
+            $causas = DB::table("causas")
+                        ->where('idmaquina',$id)
+                        ->pluck("nombre","idcausa");
+            return json_encode($causas);
+        }
     public function calculo_oee($id)
     {
         $calculo = calculo::where('produccion',$id)->first();
