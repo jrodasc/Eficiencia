@@ -1,11 +1,7 @@
-ELIMITER $$
-CREATE TRIGGER `calculo_oee_actualizacion` 
-AFTER UPDATE on `parada_maquinas`
+CREATE TRIGGER `calculo_oee_actualizacion` AFTER UPDATE ON `parada_maquinas`
+ FOR EACH ROW BEGIN
 
-BEGIN
-	
 
-	
 SET @sumanet =(select SUM(TIMESTAMPDIFF(MINUTE, fecha_inicio, fecha_fin)) as sumanet from parada_maquinas 
 	INNER JOIN maquina ON maquina.idmaquina = parada_maquinas.id_maquina 
 	where parada_maquinas.maq_principal = '1'  and maquina.net=1 group by parada_maquinas.id_produccion);
@@ -15,4 +11,5 @@ SET @sumanet =(select SUM(TIMESTAMPDIFF(MINUTE, fecha_inicio, fecha_fin)) as sum
 	where parada_maquinas.maq_principal = '1' and maquina.net=0 group by parada_maquinas.id_produccion);
 
 	UPDATE calculo_oee SET sumanet = (@sumanet), sumatrue =(@sumatrue) where produccion=OLD.id_produccion;
-END;$$
+	
+END
