@@ -145,7 +145,7 @@
 										<td>{{$parada->fecha_fin}}<input type="hidden" name="fecha_fin" id="fecha_fin{{$parada->id}}" value="{{strtotime($parada->fecha_fin)}}" /></td>
 										<td>
 										@if($parada->minutos>0)
-											{{$parada->minutos}}
+											{{$parada->minutos}}:{{substr($parada->segundos, 0,2)}}
 										@else
 										<div id="clock{{$parada->id}}"><label id="minutes">00</label>:<label id="seconds">00</label></div>
 										@endif
