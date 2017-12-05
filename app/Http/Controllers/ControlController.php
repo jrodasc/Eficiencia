@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB; use App\Paradas; use App\Calculo;
+use DB; use App\Paradas; use App\Calculo; use App\Produccion;
 use Session; use DateTime;
 
 class ControlController extends Controller
@@ -12,12 +12,13 @@ class ControlController extends Controller
     {
     	$maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     	$graficas = DB::table('calculo_oee')->first();
+        $recetas = DB::table('receta')->pluck("nombre","id");
 
     	$parada = DB::table('parada_maquinas')->select('id','fecha_inicio','fecha_fin','comentario','id_maquina','id_causa','id_produccion','id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, fecha_inicio, fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, fecha_inicio, fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))->where("maq_principal", "=", "1")->orderBy('updated_at','desc')->get();
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
 
-        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas
+        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas
         ];
 
         return view('control.index',compact('datos'));
@@ -88,6 +89,19 @@ class ControlController extends Controller
     	$parada->save();  
 
     	return response()->json($parada);
+    }
+    public function ajaxReceta(Request $request, $id)
+    {
+        
+         $actualizacion=DB::table('receta')
+            ->where('linea', $request->id_linea)
+            ->update(['valor' => 0]);
+        
+        $receta= DB::table('receta')
+            ->where('id', $id)
+            ->update(['valor' => 1]);
+
+        return response()->json($actualizacion);
     }
     public function update(Request $request, $id)
     {

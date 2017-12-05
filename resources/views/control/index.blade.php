@@ -65,8 +65,9 @@
 				<br>
 				<br>
 				
-               {!! Form::select('maquina', $datos['Maquinas'], [], ['class' => 'form-control gray-input', 'id' => 'impresora']); !!}
-<br>
+               {!! Form::select('receta', $datos['Recetas'], [], ['class' => 'form-control gray-input', 'id' => 'receta', 'data-id_produccion' => $datos['Paradas'][0]->id_produccion, 'data-id_linea' => 3]) !!}
+				
+				<br>
 				<br>
 			  <span class="info-box-text">Unds:</span>
     		  <h2 class="m0 text-uppercase pull-left">900000</h2>          
@@ -144,7 +145,7 @@
 										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio{{$parada->id}}" value="{{strtotime($parada->fecha_inicio)}}" /></td>
 										<td>{{$parada->fecha_fin}}<input type="hidden" name="fecha_fin" id="fecha_fin{{$parada->id}}" value="{{strtotime($parada->fecha_fin)}}" /></td>
 										<td>
-										@if($parada->minutos>0)
+										@if(($parada->minutos >0) or ($parada->segundos>0))
 											{{$parada->minutos}}:{{substr($parada->segundos, 0,2)}}
 										@else
 										<div id="clock{{$parada->id}}"><label id="minutes">00</label>:<label id="seconds">00</label></div>
@@ -198,10 +199,7 @@
 	    data: {
                     '_token': $('input[name=_token]').val(),
                    	timestamp: timestamp,
-                   	 
-
-
-            },
+              },
 		success: function(data)
 		{	
 			timestamp 		   = data.updated_at;
@@ -271,57 +269,17 @@
         }
 }
 
-
-
-
-    
-			
 			@foreach ($datos['Paradas'] as $x => $parada)
 				var fecha_inicio = $('input[id=fecha_inicio{{$parada->id}}]').val();
-				//alert(fecha_inicio.strftime('%Y/%m/%d'));
 				var id = {{$parada->id}};
-				
-				//alert({{$parada->FechaActual}});
+				var diff = {{$parada->FechaActual}} - fecha_inicio;
+				var minute = Math.floor((diff /60));
 
-			/*	var seg_total=({{$parada->FechaActual}}-fecha_inicio);
-				var tmpDate = new Date(seg_total);
-
-				start_actual_time = new Date(fecha_inicio);
-    end_actual_time = new Date({{$parada->FechaActual}});
-
-    var diff = end_actual_time - start_actual_time;
-				//diffunix = ( {{$parada->FechaActual}} - fecha_inicio);
-				alert(start_actual_time);*/
-
-				//var fechaa = (({{$parada->FechaActual}}/86400))+25569+(-5/24);
-
-			//	fechaa.getDate();
-
-			/*fecha = new D/ate(); 
-diaActual = fecha.getDate(); 
-diaBuscado = diaActual + 120;*/
-
-//var fechaInicio = new Date('2017-12-03 11:00:00').getTime();
-//var fechaFin    = new Date('2017-12-03 12:00:00').getTime();
-//var diff = fechaFin - fechaInicio;
-var diff = {{$parada->FechaActual}} - fecha_inicio;
-
-//var hour = Math.floor(diff /3600);
-   var minute = Math.floor((diff /60));
- /*  var seconds = totalSeconds - (hour*3600 + minute*60);*/
-//alert(diff/(1000*60));
-//alert({{$parada->FechaActual}} + "-" + fecha_inicio + "-" + minute + "+" + diff);
-//alert(diff/(1000*60));
-//alert(diff/(1000*60*60*24));
-  // (1000*60*60*24) --> milisegundos -> segundos -> minutos -> horas -> días
-//console.log(fecha2.diff(fecha1, 'days'), ' dias de diferencia');
-			//	alert(fecha2.diff(fecha1, 'days'));
 				clock(diff,id);
 
-				 $(document).ready(function() {
+				$(document).ready(function() {
 			        $('select[id="id_maquina{{$parada->id}}"]').on('change',function(e){
 			            var maquinaID = $(this).val();
-
 			            if(maquinaID){ 
 			                $.ajax({
 			                    url: '/admin/control/maquina/'+maquinaID,
@@ -371,21 +329,19 @@ var diff = {{$parada->FechaActual}} - fecha_inicio;
 		});		
 
 	function restarFechas(date1,date2)
- {
-  start_actual_time = new Date(date1);
-    end_actual_time = new Date(date2);
+		{
+  			start_actual_time = new Date(date1);
+    		end_actual_time = new Date(date2);
 
-    var diff = end_actual_time - start_actual_time;
+    		var diff = end_actual_time - start_actual_time;
+    		var diffSeconds = diff/1000;
+		    var HH = Math.floor(diffSeconds/3600);
+    		var MM = Math.floor(diffSeconds%3600)/60;
 
+    		var formatted = ((HH < 10)?("0" + HH):HH) + ":" + ((MM < 10)?("0" + MM):MM)
+    		return formatted;
+ 		}
 
-    var diffSeconds = diff/1000;
-    var HH = Math.floor(diffSeconds/3600);
-    var MM = Math.floor(diffSeconds%3600)/60;
-
-    var formatted = ((HH < 10)?("0" + HH):HH) + ":" + ((MM < 10)?("0" + MM):MM)
-    return formatted;
- }
-			//cargar_push();
 			
 
 	
@@ -459,24 +415,19 @@ var diff = {{$parada->FechaActual}} - fecha_inicio;
 	    barChart.Bar(barChartData, barChartOptions);
 
 		$('select[id=id_maquina]').on('change',function () {
-			//$('#id').val($(this).data('id'));
+
 	    	$('#id').val($(this).data('idparada'));
 	    	var id_produccion = $(this).data('id_produccion');
 	    	id = $('#id').val();
-	    	
-	    	
-	    	
-			//'id_maquina': document.getElementById("id_maquina").value
-			var fecha_inicio = $('input[id=fecha_inicio'+ id+']').val();
 
+			var fecha_inicio = $('input[id=fecha_inicio'+ id+']').val();
 			var fecha_fin = $('input[id=fecha_fin'+ id+']').val();
 			
 			if(fecha_fin != null)
 			{
 				var min_total=restarFechas(fecha_inicio,fecha_fin);
-//alert(fecha_total);
+
 			}
-			
 
 			$.ajax({
                 type: 'PUT',
@@ -491,6 +442,26 @@ var diff = {{$parada->FechaActual}} - fecha_inicio;
                    	'id_produccion': id_produccion,
 
                     
+                },
+                success: function(data) {
+                }
+                });
+		});
+		$('select[id=receta]').on('change',function () {
+ 			
+	    	
+	    	var id_produccion = $(this).data('id_produccion');
+	    	var id_linea = $(this).data('id_linea');
+	    	id = $(this).val();
+		
+			$.ajax({
+                type: 'GET',
+                url: '/admin/control/receta/' + id,
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                   	id: $('#id').val(),
+                   	'id_produccion': id_produccion,
+                   	'id_linea': id_linea,
                 },
                 success: function(data) {
                 }
