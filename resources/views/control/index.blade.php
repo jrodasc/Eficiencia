@@ -32,6 +32,10 @@
         .table.table-bordered tbody td {
             vertical-align: baseline;
         }
+		.mygrid-wrapper-div {
+    	    overflow: scroll;
+    		height: 270px;
+		}
         
     </style>
 	<div class="row">
@@ -39,14 +43,9 @@
 			<h1>Estadísticas</h1>
 		</section>
 	</div>
-
 	<div class="row m10">
-			
 			<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-			
 			<div class="info-box">
-            
-
             <div class="info-box-content">
               <span class="info-box-text">Disponibilidad</span>
               <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->produccion}}%</h2>
@@ -64,9 +63,7 @@
               <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->OEE}}%</h2>
 				<br>
 				<br>
-				
                {!! Form::select('receta', $datos['Recetas'], [], ['class' => 'form-control gray-input', 'id' => 'receta', 'data-id_produccion' => $datos['Paradas'][0]->id_produccion, 'data-id_linea' => 3]) !!}
-				
 				<br>
 				<br>
 			  <span class="info-box-text">Unds:</span>
@@ -86,14 +83,12 @@
 				<br>
     		  <span class="info-box-text">Inicio produc:</span>
     		  <h2 class="m0 text-uppercase pull-left">17:05:00</h2>     
-<br>
+				<br>
 				<br>
             </div>
             <!-- /.info-box-content -->
           </div>
 		</div>
-
-
 		<div class="col-xs-18 col-sm-18 col-md-8 col-lg-8">
 			<div class="box box-primary">
 				<div class="box-header with-border">
@@ -111,7 +106,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="col-xs-18 col-sm-18 col-md-8 col-lg-8">
 			<div class="box box-primary">
 				<div class="box-header with-border">
@@ -122,7 +116,7 @@
 						</button>
 					</div>
 				</div>
-				<div class="modal-body">
+				<div class="mygrid-wrapper-div">
 					<table id="dtContainer" class="display table table-bordered table-hover table-responsive compact" cellspacing="0" width="100%">
 							<thead>
 								<tr>
@@ -133,9 +127,7 @@
 									<th>Maquina</th>
 									<th>Causa</th>
 									<th>Comentarios</th>
-									
 								</tr>
-
 								{{ csrf_field() }}
 							</thead>
 							<tbody>
@@ -152,24 +144,23 @@
 										@endif
 										</td>
 										<td>
-											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => "id_maquina".$parada->id, 'data-idparada' => $parada->id, 'data-id_produccion' => $parada->id_produccion]); !!}
+											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => "id_maquina".$parada->id, 'data-idparada' => $parada->id,  'data-id_produccion' => $parada->id_produccion]); !!}
 										</td>
 										<td>
 											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => "id_causa".$parada->id,'data-idparada' => $parada->id, 'data-id_produccion' => $parada->id_produccion]); !!}
 										</td>
-										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario')) !!}<input type="hidden" name="id" id="id" value="{{$parada->id}}" /><input type="hidden" name="fecha_bd" id="fecha_bd" value="{{strtotime($datos['fecha_bd'])}}" /></td>
-										
+										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario'.$parada->id, 'data-idparada' => $parada->id)) !!}<input type="hidden" name="id" id="id" value="{{$parada->id}}" /><input type="hidden" name="fecha_bd" id="fecha_bd" value="{{strtotime($datos['fecha_bd'])}}" />
+
+										</td>
 									</tr>
 								@endforeach
 							</tbody>
 						</table>
-
 				</div>
 			</div>
 		</div>
-
-		
 	</div>
+
     <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
         <!-- icheck checkboxes -->
         <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
@@ -179,7 +170,7 @@
         
         <script src="/js/countTimer/jquery.countdownTimer.js"></script>
 
- <script>
+		<script>
             $(window).load(function(){
                 $('#dtContainer').removeAttr('style');
             });
@@ -301,18 +292,16 @@
 					$('select[id=id_causa{{$parada->id}}]').on('change',function () {
 					//$('#id').val($(this).data('id'));
 					var id_produccion = $(this).data('id_produccion');
-			    	id = $('#id').val();
-			    	//alert(id);
+			    	id = $(this).data("idparada");
 			    	
-					//'id_maquina': document.getElementById("id_maquina").value
-
+		    	
 					$.ajax({
 		                type: 'PUT',
 		                url: '/admin/control/' + id,
 		                data: {
 		                    '_token': $('input[name=_token]').val(),
-		                   	id: $('#id').val(),
-		                   	comentario: $('#comentario').val(),
+		                   	'id': id,
+		                   	'comentario': document.getElementById("comentario{{$parada->id}}").value,
 		                   	'id_maquina': document.getElementById("id_maquina{{$parada->id}}").value,
 		                   	'id_causa': document.getElementById("id_causa{{$parada->id}}").value,
 		                   	'id_produccion': id_produccion,
@@ -323,6 +312,27 @@
 		                }
 		                });
 				});
+				$('input[id=comentario{{$parada->id}}]').on('change',function () {
+					id = $(this).data("idparada");
+					
+					var id_produccion = $(this).data('id_produccion');
+					$.ajax({
+		                type: 'PUT',
+		                url: '/admin/control/' + id,
+		                data: {
+		                    '_token': $('input[name=_token]').val(),
+		                   	'id': id,
+		                   	'comentario': document.getElementById("comentario{{$parada->id}}").value,
+		                   	'id_maquina': document.getElementById("id_maquina{{$parada->id}}").value,
+		                   	'id_causa': document.getElementById("id_causa{{$parada->id}}").value,
+		                   	'id_produccion': id_produccion,
+		                },
+		                success: function(data) {
+		                }
+		                });
+				});
+
+
 
 				
 			@endforeach	
@@ -354,10 +364,13 @@
 	    var barChart = new Chart(barChartCanvas);
 
 	    var barChartData = {
-	        labels: ["January", "February", "March", "April", "May", "June", "July"],
+	        labels: [@foreach ($datos['Paradas'] as $x => $parada)
+	        {{ $parada->id_maquina.= "," }}
+	        @endforeach
+	        ],
 	        datasets: [
 	            {
-	                label: "Electronics",
+	                label: "Total minutos",
 	                fillColor: "rgba(90, 186, 102, 1)",
 	                strokeColor: "rgba(90, 186, 102, 1)",
 	                pointColor: "rgba(90, 186, 102, 1)",
@@ -367,7 +380,7 @@
 	                data: [65, 59, 80, 81, 56, 55, 40]
 	            },
 	            {
-	                label: "Digital Goods",
+	                label: "Total paradas",
 	                fillColor: "rgba(60,141,188,0.9)",
 	                strokeColor: "rgba(60,141,188,0.8)",
 	                pointColor: "#3b8bba",
@@ -414,39 +427,7 @@
 	    barChartOptions.datasetFill = false;
 	    barChart.Bar(barChartData, barChartOptions);
 
-		$('select[id=id_maquina]').on('change',function () {
-
-	    	$('#id').val($(this).data('idparada'));
-	    	var id_produccion = $(this).data('id_produccion');
-	    	id = $('#id').val();
-
-			var fecha_inicio = $('input[id=fecha_inicio'+ id+']').val();
-			var fecha_fin = $('input[id=fecha_fin'+ id+']').val();
-			
-			if(fecha_fin != null)
-			{
-				var min_total=restarFechas(fecha_inicio,fecha_fin);
-
-			}
-
-			$.ajax({
-                type: 'PUT',
-                url: '/admin/control/' + id,
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                   	id: $('#id').val(),
-                   	comentario: $('#comentario').val(),
-                   	'id_maquina': document.getElementById("id_maquina").value,
-                   	'id_causa': document.getElementById("id_causa").value,
-                   	'min_total': min_total,
-                   	'id_produccion': id_produccion,
-
-                    
-                },
-                success: function(data) {
-                }
-                });
-		});
+		
 		$('select[id=receta]').on('change',function () {
  			
 	    	
@@ -467,26 +448,7 @@
                 }
                 });
 		});
-		$('input[id=comentario]').on('change',function () {
-			id = $('#id').val();
-			var id_produccion = $(this).data('id_produccion');
-			$.ajax({
-                type: 'PUT',
-                url: '/admin/control/' + id,
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                   	id: $('#id').val(),
-                   	comentario: $('#comentario').val(),
-                   	'id_maquina': document.getElementById("id_maquina").value,
-                   	'id_causa': document.getElementById("id_causa").value,
-                   	'id_produccion': id_produccion,
-
-                    
-                },
-                success: function(data) {
-                }
-                });
-		});
+		
 	
 		$(document).on('click', '.actualizar', function() { 
 	    	$('#id').val($(this).data('id'));

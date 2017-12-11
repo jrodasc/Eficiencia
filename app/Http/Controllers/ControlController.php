@@ -8,13 +8,15 @@ use Session; use DateTime;
 
 class ControlController extends Controller
 {
-    public function index()
+    public function index($id)
     {
     	$maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     	$graficas = DB::table('calculo_oee')->first();
-        $recetas = DB::table('receta')->pluck("nombre","id");
+        $recetas = DB::table('receta')->where("linea", "=", $id)->pluck("nombre","idReceta");
 
-    	$parada = DB::table('parada_maquinas')->select('id','fecha_inicio','fecha_fin','comentario','id_maquina','id_causa','id_produccion','id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, fecha_inicio, fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, fecha_inicio, fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))->where("maq_principal", "=", "1")->orderBy('updated_at','desc')->get();
+    	$parada = DB::table('parada_maquinas')->select('parada_maquinas.id','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','maquina.nombre','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
+        ->join('maquina', 'maquina.idmaquina',"=","parada_maquinas.id_maquina")
+        ->where("maq_principal", "=", "1")->where("parada_maquinas.id_linea", "=", $id)->orderBy('updated_at','desc')->get();
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
 
@@ -80,13 +82,17 @@ class ControlController extends Controller
     public function show(Request $request, $id)
     {
     	$parada = Paradas::where('id',$id)->first();
+        $input = $request->all();
+
     	//dd($parada->id_produccion);
-    	$parada->comentario = $request->comentario;
-    	$parada->id_maquina = $request->id_maquina;
-    	$parada->id_causa = $request->id_causa;
-//dd($request->id_produccion);
-        $this->calculo_oee($parada->id_produccion);
-    	$parada->save();  
+      //  dd($request->id_maquina);
+    	$parada->comentario = $input['comentario'];
+    	$parada->id_maquina = $input['id_maquina'];
+    	$parada->id_causa = $input['id_causa'];
+        
+      //  $this->calculo_oee($parada->id_produccion);
+    	
+        $parada->update();  
 
     	return response()->json($parada);
     }
@@ -106,13 +112,15 @@ class ControlController extends Controller
     public function update(Request $request, $id)
     {
     	$parada = Paradas::where('id',$id)->first();
-    	
-    	$parada->comentario = $request->comentario;
-    	$parada->id_maquina = $request->id_maquina;
-    	$parada->id_causa = $request->id_causa;
-      //  dd($request->id_produccion);
-        $this->calculo_oee($parada->id_produccion);
-    	$parada->save();  
+    	        $input = $request->all();
+
+        //dd($parada->id_produccion);
+      //  dd($request->id_maquina);
+        $parada->comentario = $input['comentario'];
+        $parada->id_maquina = $input['id_maquina'];
+        $parada->id_causa = $input['id_causa'];
+
+    	$parada->update();  
 
     	return response()->json($parada);
     }

@@ -31,13 +31,14 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::resource('/admin/roles','RoleController');
     Route::get('roles',['as'=>'roles.index','uses'=>'RoleController@index','middleware' => ['permission:role-list|role-create|role-edit|role-delete']]);
    
-    Route::resource('/admin/control', 'ControlController');
+    Route::get('/admin/control/{id}', 'ControlController@index');
+    Route::put('/admin/control/{id}', 'ControlController@update');
     Route::get('/admin/push', 'ControlController@httpush');
     Route::get('/admin/calculo', 'ControlController@calculo_oee');
     Route::get('/admin/control/maquina/{id}','ControlController@ajaxCausa');
     Route::get('/admin/control/receta/{id}','ControlController@ajaxReceta');
     
-    
+    Route::resource('/admin/lineas','LineasController');
    /* Route::get('/admin/archivos', 'StorageController@index');
     Route::post('/admin/archivos/create', 'StorageController@save');
     Route::get('/admin/archivos/{archivo}', function ($archivo) {
