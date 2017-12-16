@@ -14,8 +14,7 @@ class ControlController extends Controller
     	$graficas = DB::table('calculo_oee')->first();
         $recetas = DB::table('receta')->where("linea", "=", $id)->pluck("nombre","idReceta");
 
-    	$parada = DB::table('parada_maquinas')->select('parada_maquinas.id','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','maquina.nombre','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
-        ->join('maquina', 'maquina.idmaquina',"=","parada_maquinas.id_maquina")
+    	$parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
         ->where("maq_principal", "=", "1")->where("parada_maquinas.id_linea", "=", $id)->orderBy('updated_at','desc')->get();
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
@@ -32,6 +31,8 @@ class ControlController extends Controller
             $causas = DB::table("causas")
                         ->where('idmaquina',$id)
                         ->pluck("nombre","idcausa");
+
+            dd($causas);            
             return json_encode($causas);
         }
     public function calculo_oee($id)
@@ -79,23 +80,7 @@ class ControlController extends Controller
         
 
     }
-    public function show(Request $request, $id)
-    {
-    	$parada = Paradas::where('id',$id)->first();
-        $input = $request->all();
-
-    	//dd($parada->id_produccion);
-      //  dd($request->id_maquina);
-    	$parada->comentario = $input['comentario'];
-    	$parada->id_maquina = $input['id_maquina'];
-    	$parada->id_causa = $input['id_causa'];
-        
-      //  $this->calculo_oee($parada->id_produccion);
-    	
-        $parada->update();  
-
-    	return response()->json($parada);
-    }
+   
     public function ajaxReceta(Request $request, $id)
     {
         
@@ -111,8 +96,10 @@ class ControlController extends Controller
     }
     public function update(Request $request, $id)
     {
-    	$parada = Paradas::where('id',$id)->first();
-    	        $input = $request->all();
+ $input = $request->all();
+    	//$parada = Paradas::where('idparada','=',$id)->first();
+        /*$parada =  DB::table('parada_maquinas')->select('comentario','id_maquina','id_causa')->where('idparada','=',$id)->first();
+    	       
 
         //dd($parada->id_produccion);
       //  dd($request->id_maquina);
@@ -120,7 +107,13 @@ class ControlController extends Controller
         $parada->id_maquina = $input['id_maquina'];
         $parada->id_causa = $input['id_causa'];
 
-    	$parada->update();  
+    	$parada->update();  */
+        $parada= DB::table('parada_maquinas')
+            ->where('idparada', $id)
+            ->update([
+                'comentario' => $input['comentario'],
+                'id_maquina' => $input['id_maquina'],
+                'id_causa' => $input['id_causa']]);
 
     	return response()->json($parada);
     }

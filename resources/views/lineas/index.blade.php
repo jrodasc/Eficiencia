@@ -29,10 +29,7 @@
                                         <td>
                                             <a class="show-modal btn btn-success" data-id="{{$linea->id}}" href="/admin/control/{{$linea->idlinea}}">
                                                     <span class="glyphicon glyphicon-eye-open"></span> Paradas Máquinas</a>
-                                            <button class="edit-modal btn btn-info" data-id="{{$linea->idlinea}}" >
-                                            <span class="glyphicon glyphicon-edit"></span> Editar</button>
-                                            <button class="delete-modal btn btn-danger" data-id="{{$linea->idlinea}}" data-id="{{$linea->idlinea}}" >
-                                            <span class="glyphicon glyphicon-trash"></span> Eliminar</button>
+                                            
                                             
                                         </td>
                                     </tr>

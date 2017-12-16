@@ -132,24 +132,24 @@
 							</thead>
 							<tbody>
 								@foreach ($datos['Paradas'] as $key => $parada)
-									<tr class="item{{$parada->id}}">
+									<tr class="item{{$parada->idparada}}">
 										<td class="col1">{{(count($datos['Paradas']))-($key)}}</td>
-										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio{{$parada->id}}" value="{{strtotime($parada->fecha_inicio)}}" /></td>
-										<td>{{$parada->fecha_fin}}<input type="hidden" name="fecha_fin" id="fecha_fin{{$parada->id}}" value="{{strtotime($parada->fecha_fin)}}" /></td>
+										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio{{$parada->idparada}}" value="{{strtotime($parada->fecha_inicio)}}" /></td>
+										<td>{{$parada->fecha_fin}}<input type="hidden" name="fecha_fin" id="fecha_fin{{$parada->idparada}}" value="{{strtotime($parada->fecha_fin)}}" /></td>
 										<td>
 										@if(($parada->minutos >0) or ($parada->segundos>0))
 											{{$parada->minutos}}:{{substr($parada->segundos, 0,2)}}
 										@else
-										<div id="clock{{$parada->id}}"><label id="minutes">00</label>:<label id="seconds">00</label></div>
+										<div id="clock{{$parada->idparada}}"><label id="minutes">00</label>:<label id="seconds">00</label></div>
 										@endif
 										</td>
 										<td>
-											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => "id_maquina".$parada->id, 'data-idparada' => $parada->id,  'data-id_produccion' => $parada->id_produccion]); !!}
+											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => "id_maquina".$parada->idparada, 'data-idparada' => $parada->idparada,  'data-id_produccion' => $parada->id_produccion]); !!}
 										</td>
 										<td>
-											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => "id_causa".$parada->id,'data-idparada' => $parada->id, 'data-id_produccion' => $parada->id_produccion]); !!}
+											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => "id_causa".$parada->idparada,'data-idparada' => $parada->idparada, 'data-id_produccion' => $parada->id_produccion]); !!}
 										</td>
-										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario'.$parada->id, 'data-idparada' => $parada->id)) !!}<input type="hidden" name="id" id="id" value="{{$parada->id}}" /><input type="hidden" name="fecha_bd" id="fecha_bd" value="{{strtotime($datos['fecha_bd'])}}" />
+										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario'.$parada->idparada, 'data-idparada' => $parada->idparada)) !!}<input type="hidden" name="id" id="id" value="{{$parada->idparada}}" /><input type="hidden" name="fecha_bd" id="fecha_bd" value="{{strtotime($datos['fecha_bd'])}}" />
 
 										</td>
 									</tr>
@@ -261,25 +261,26 @@
 }
 
 			@foreach ($datos['Paradas'] as $x => $parada)
-				var fecha_inicio = $('input[id=fecha_inicio{{$parada->id}}]').val();
-				var id = {{$parada->id}};
+				var fecha_inicio = $('input[id=fecha_inicio{{$parada->idparada}}]').val();
+				var id = {{$parada->idparada}};
 				var diff = {{$parada->FechaActual}} - fecha_inicio;
 				var minute = Math.floor((diff /60));
 
 				clock(diff,id);
 
 				$(document).ready(function() {
-			        $('select[id="id_maquina{{$parada->id}}"]').on('change',function(e){
+			        $('select[id="id_maquina{{$parada->idparada}}"]').on('change',function(e){
 			            var maquinaID = $(this).val();
+			            
 			            if(maquinaID){ 
 			                $.ajax({
 			                    url: '/admin/control/maquina/'+maquinaID,
 			                    type: 'GET',
 			                    dataType: 'json',
 			                    success: function(data){ 
-			                        $('select[id="id_causa{{$parada->id}}"]').empty(); 
+			                        $('select[id="id_causa{{$parada->idparada}}"]').empty(); 
 			                        $.each(data, function(key, value){
-			                            $('select[id="id_causa{{$parada->id}}"]').append('<option value="'+ key +'">'+ value + '</option>');
+			                            $('select[id="id_causa{{$parada->idparada}}"]').append('<option value="'+ key +'">'+ value + '</option>');
 			                        });
 			                    }
 			                });
@@ -289,7 +290,7 @@
 			        });
 			    });
 
-					$('select[id=id_causa{{$parada->id}}]').on('change',function () {
+					$('select[id=id_causa{{$parada->idparada}}]').on('change',function () {
 					//$('#id').val($(this).data('id'));
 					var id_produccion = $(this).data('id_produccion');
 			    	id = $(this).data("idparada");
@@ -301,9 +302,9 @@
 		                data: {
 		                    '_token': $('input[name=_token]').val(),
 		                   	'id': id,
-		                   	'comentario': document.getElementById("comentario{{$parada->id}}").value,
-		                   	'id_maquina': document.getElementById("id_maquina{{$parada->id}}").value,
-		                   	'id_causa': document.getElementById("id_causa{{$parada->id}}").value,
+		                   	'comentario': document.getElementById("comentario{{$parada->idparada}}").value,
+		                   	'id_maquina': document.getElementById("id_maquina{{$parada->idparada}}").value,
+		                   	'id_causa': document.getElementById("id_causa{{$parada->idparada}}").value,
 		                   	'id_produccion': id_produccion,
 
 		                    
@@ -312,7 +313,7 @@
 		                }
 		                });
 				});
-				$('input[id=comentario{{$parada->id}}]').on('change',function () {
+				$('input[id=comentario{{$parada->idparada}}]').on('change',function () {
 					id = $(this).data("idparada");
 					
 					var id_produccion = $(this).data('id_produccion');
@@ -322,9 +323,9 @@
 		                data: {
 		                    '_token': $('input[name=_token]').val(),
 		                   	'id': id,
-		                   	'comentario': document.getElementById("comentario{{$parada->id}}").value,
-		                   	'id_maquina': document.getElementById("id_maquina{{$parada->id}}").value,
-		                   	'id_causa': document.getElementById("id_causa{{$parada->id}}").value,
+		                   	'comentario': document.getElementById("comentario{{$parada->idparada}}").value,
+		                   	'id_maquina': document.getElementById("id_maquina{{$parada->idparada}}").value,
+		                   	'id_causa': document.getElementById("id_causa{{$parada->idparada}}").value,
 		                   	'id_produccion': id_produccion,
 		                },
 		                success: function(data) {
