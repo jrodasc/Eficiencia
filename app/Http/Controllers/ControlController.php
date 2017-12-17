@@ -48,7 +48,7 @@ class ControlController extends Controller
             ->where('idReceta', $id)
             ->update(['activa' => 1]);
         $produccion= DB::table('produccion')
-            ->where('id', $request->id_produccion)
+            ->where('idproduccion', $request->id_produccion)
             ->update(['id_receta' => $id]);
 
 
@@ -122,7 +122,7 @@ class ControlController extends Controller
         
        // while( $fecha_bd <= $fecha_ac )
        // { 
-        $produccion = Produccion::where("id_linea", "=", $request->id_linea)->orderBy('id','desc')->first();
+        $produccion = Produccion::where("id_linea", "=", $request->id_linea)->orderBy('idproduccion','desc')->first();
         
         if($produccion->id!=$request->id_produccion)
         {    
