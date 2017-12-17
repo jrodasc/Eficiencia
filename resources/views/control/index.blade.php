@@ -149,7 +149,8 @@
 										<td>
 											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => "id_causa".$parada->idparada,'data-idparada' => $parada->idparada, 'data-id_produccion' => $parada->id_produccion]); !!}
 										</td>
-										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario'.$parada->idparada, 'data-idparada' => $parada->idparada)) !!}<input type="hidden" name="id" id="id" value="{{$parada->idparada}}" /><input type="hidden" name="fecha_bd" id="fecha_bd" value="{{strtotime($datos['fecha_bd'])}}" />
+										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario'.$parada->idparada, 'data-idparada' => $parada->idparada)) !!}<input type="hidden" name="id" id="id" value="{{$parada->idparada}}" /><input type="hidden" name="fecha_bd" id="fecha_bd" value="{{strtotime($datos['fecha_bd'])}}" /><input type="hidden" name="id_produccion" id="id_produccion" value="{{$parada->id_produccion}}" />
+											<input type="hidden" name="id_linea" id="id_linea" value="{{$parada->id_linea}}" />
 
 										</td>
 									</tr>
@@ -179,17 +180,129 @@
         </script>
 	<script>
 	
-	var timestamp = null;
-	function cargar_push() 
-	{  
+		var timestamp = null;
+	$(document).ready(function()
+	{
+		cargar_push();
+		cargar_push_produccion();
+
+	
+	});	
+	function cargar_push_produccion() 
+	{  var fecha_bd = $('input[id=fecha_bd]').val();
+	var id_produccion = $('input[id=id_produccion]').val();
+	var id_linea = $('input[id=id_linea]').val();
+	
 		
 		$.ajax({
-		async:	false, 
-	    type: "GET",
+		async:	true, 
+    	type: "POST",
+	    url: "/admin/push/produccion",
+	    data: {
+                    '_token': $('input[name=_token]').val(),
+                   	timestamp: timestamp,
+                   	fecha_bd: fecha_bd,
+                   	id_produccion: id_produccion,
+                   	id_linea: id_linea
+              },
+		success: function(data)
+		{	
+			timestamp 		   = data.updated_at;
+			fecha_inicio       = data.fecha_inicio;
+			fecha_fin          = data.fecha_fin;
+			id_maquina         = data.id_maquina;
+			id_causa           = data.id_causa;
+			id        		   = data.id;
+			comentario     	   = data.comentario;
+			produccion    	   = data.produccion;
+			
+
+			if (fecha_fin == null)
+			{
+				fecha_fin ="";
+			}
+			if (comentario == null)
+			{
+				comentario ="";
+			}
+		
+		if(produccion == null)
+			{
+			
+			}else{
+				alert(data.produccion);
+				toastr.success('¡Se ha iniciado una nueva produccion!', 'Success Alert', {timeOut: 5000});
+                /*$('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "></td></tr>");
+
+                $('select[id="id_maquina' + id +'"]').empty(); 
+			                        $.each(data.maquinas, function(key, value){
+			                            $('select[id="id_maquina' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
+			                        });
+                 $('select[id="id_causa' + id +'"]').empty(); 
+			                        $.each(data.causas, function(key, value){
+			                            $('select[id="id_causa' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
+			                        });
+            
+                $('.col1').each(function (index) {
+                    $(this).html(index+1);
+                });
+                 var timestamp = null;
+                $('#fecha_bd').val(data.updated_at);
+
+				
+				var diff = data.fecha_actual - data.fecha_inicio_reloj;
+				var minute = Math.floor((diff /60));
+
+				clock(diff,id);
+
+				function clock($fecha_inicio,$id){
+
+				      //  var $fecha_inicio = diff;
+				      	var totalSeconds = $fecha_inicio;
+				        setInterval(setTime, 1000);
+				        function setTime()
+				        { 
+				            ++totalSeconds;
+				            $('#clock'+ $id +' > #seconds').html(pad(totalSeconds%60));
+				            $('#clock'+ $id +' > #minutes').html(pad(parseInt(totalSeconds/60)));
+				            //$('#clock'+ $id +' > #hrs').html(pad(parseInt(totalSeconds/3600)));
+
+				          //  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+
+				        }
+				        function pad(val)
+				        {
+				            var valString = val + "";
+				            if(valString.length < 2)
+				            {
+				                return "0" + valString;
+				            }
+				            else
+				            {
+				                return valString;
+				            }
+				        }
+				}
+             */  
+			}
+		
+		setTimeout('cargar_push_produccion()',5000);
+			    	
+			    	
+	    }
+		});		
+	}
+	function cargar_push() 
+	{  var fecha_bd = $('input[id=fecha_bd]').val();
+		
+		$.ajax({
+		async:	true, 
+    	type: "POST",
 	    url: "/admin/push",
 	    data: {
                     '_token': $('input[name=_token]').val(),
                    	timestamp: timestamp,
+                   	fecha_bd: fecha_bd,
               },
 		success: function(data)
 		{	
@@ -201,13 +314,30 @@
 			id        		   = data.id;
 			comentario     	   = data.comentario;
 
+			if (fecha_fin == null)
+			{
+				fecha_fin ="";
+			}
+			if (comentario == null)
+			{
+				comentario ="";
+			}
 		
 		if(timestamp == null)
 			{
 			
 			}else{
 				toastr.success('¡Se ha detenido una máquina!', 'Success Alert', {timeOut: 5000});
-                $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.fecha_inicio + "</td><td>" + data.fecha_fin + "</td><td>0</td><td>-</td><td>-</td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + data.comentario + "></td></tr>");
+                $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "></td></tr>");
+
+                $('select[id="id_maquina' + id +'"]').empty(); 
+			                        $.each(data.maquinas, function(key, value){
+			                            $('select[id="id_maquina' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
+			                        });
+                 $('select[id="id_causa' + id +'"]').empty(); 
+			                        $.each(data.causas, function(key, value){
+			                            $('select[id="id_causa' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
+			                        });
               /*  $('.new_published').on('ifToggled', function(event){
                             $(this).closest('tr').toggleClass('warning');
                         });*/
@@ -215,13 +345,52 @@
                 $('.col1').each(function (index) {
                     $(this).html(index+1);
                 });
+                 var timestamp = null;
+                $('#fecha_bd').val(data.updated_at);
+
+				
+				var diff = data.fecha_actual - data.fecha_inicio_reloj;
+				var minute = Math.floor((diff /60));
+
+				clock(diff,id);
+
+				function clock($fecha_inicio,$id){
+
+				      //  var $fecha_inicio = diff;
+				      	var totalSeconds = $fecha_inicio;
+				        setInterval(setTime, 1000);
+				        function setTime()
+				        { 
+				            ++totalSeconds;
+				            $('#clock'+ $id +' > #seconds').html(pad(totalSeconds%60));
+				            $('#clock'+ $id +' > #minutes').html(pad(parseInt(totalSeconds/60)));
+				            //$('#clock'+ $id +' > #hrs').html(pad(parseInt(totalSeconds/3600)));
+
+				          //  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+
+				        }
+				        function pad(val)
+				        {
+				            var valString = val + "";
+				            if(valString.length < 2)
+				            {
+				                return "0" + valString;
+				            }
+				            else
+				            {
+				                return valString;
+				            }
+				        }
+				}
+
 
              
 
                 
 			}
 		
-		//setTimeout('cargar_push()',1000);
+		setTimeout('cargar_push()',5000);
+			    	
 			    	
 	    }
 		});		

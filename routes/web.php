@@ -33,7 +33,8 @@ Route::group(['middleware' => ['auth',]], function () {
    
     Route::get('/admin/control/{id}', 'ControlController@index');
     Route::put('/admin/control/{id}', 'ControlController@update');
-    Route::get('/admin/push', 'ControlController@httpush');
+    Route::post('/admin/push', 'ControlController@httpush');
+    Route::post('/admin/push/produccion', 'ControlController@httpushproduccion');
     Route::get('/admin/calculo', 'ControlController@calculo_oee');
     Route::get('/admin/control/maquina/{id}','ControlController@ajaxCausa');
     Route::get('/admin/control/receta/{id}','ControlController@ajaxReceta');
