@@ -124,7 +124,7 @@ class ControlController extends Controller
        // { 
         $produccion = Produccion::where("id_linea", "=", $request->id_linea)->orderBy('idproduccion','desc')->first();
         
-        if($produccion->id!=$request->id_produccion)
+        if($produccion->idproduccion!=$request->id_produccion)
         {    
 
             $parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
@@ -139,7 +139,7 @@ class ControlController extends Controller
                         ->pluck("nombre","idmaquina");
         $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas];
 
-            return response()->json(array('datos' => $datos,'produccion' => $produccion->id ), 200);        
+            return response()->json(array('datos' => $datos,'produccion' => $produccion->idproduccion ), 200);        
         }else{
             return response()->json(array('produccion' => null   ), 200); 
 
