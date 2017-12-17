@@ -42,11 +42,11 @@ class ControlController extends Controller
         
          $actualizacion=DB::table('receta')
             ->where('linea', $request->id_linea)
-            ->update(['valor' => 0]);
+            ->update(['activa' => 0]);
         
         $receta= DB::table('receta')
             ->where('idReceta', $id)
-            ->update(['valor' => 1]);
+            ->update(['activa' => 1]);
         $produccion= DB::table('produccion')
             ->where('id', $request->id_produccion)
             ->update(['id_receta' => $id]);
