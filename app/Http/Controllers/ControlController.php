@@ -14,9 +14,16 @@ class ControlController extends Controller
 
     	
         $recetas = DB::table('receta')->where("linea", "=", $id)->pluck("nombre","idReceta");
-
+        $produccion = Produccion::orderBy("fecha_inicio","desc")->first();
+        
     	$parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
-        ->where("maq_principal", "=", "1")->where("parada_maquinas.id_linea", "=", $id)->orderBy('updated_at','desc')->get();
+            ->join('produccion','produccion.idproduccion','=','parada_maquinas.id_produccion')
+            ->where("parada_maquinas.maq_principal", "=", "1")
+            ->where("produccion.finalizado", "=", "0")
+            ->where("parada_maquinas.id_linea", "=", $id)
+            ->where("parada_maquinas.id_produccion","=", $produccion->idproduccion)
+            ->orderBy('parada_maquinas.updated_at','desc')->get();
+        
         
         $graficas = DB::table('calculo_oee')->where("produccion","=",$parada[0]->id_produccion)->first();
 
@@ -26,7 +33,7 @@ class ControlController extends Controller
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
 
-        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas, 'TotalParadas' => $total_paradas, 'SumaParadas' => $suma_paradas
+        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas, 'TotalParadas' => $total_paradas, 'SumaParadas' => $suma_paradas, 'ProduccionFechaInicio' => $produccion->fecha_inicio
         ];
 
         return view('control.index',compact('datos'));
@@ -98,26 +105,47 @@ class ControlController extends Controller
         $fecha_ac = strtotime($parada->updated_at);
         if($fecha_bd<$fecha_ac)
         {    
-
-            $fecha = DB::table('parada_maquinas')->select( DB::raw('UNIX_TIMESTAMP() as FechaActual'))
-        ->orderBy('updated_at','desc')->first();
-        $causas = DB::table("causas")
+            if($parada->fecha_fin==null)
+            {
+                $fecha = DB::table('parada_maquinas')->select( DB::raw('UNIX_TIMESTAMP() as FechaActual'))
+                        ->orderBy('updated_at','desc')->first();
+                $causas = DB::table("causas")
                         ->pluck("nombre","idcausa");
         
-        $maquinas = DB::table("maquina")
+                $maquinas = DB::table("maquina")
                         ->pluck("nombre","idmaquina");
 
-         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
-        $causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
+                $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
+                $causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
+                $estatus = "nuevo";
 
-            return response()->json(array('updated_at' => strtotime($parada->updated_at), 'fecha_inicio' => $parada->fecha_inicio, 'fecha_inicio_reloj' => strtotime($parada->fecha_inicio), 'fecha_fin' => $parada->fecha_fin, 'id_maquina' => $parada->id_maquina, 'id_causa' => $parada->id_causa, 'id' => $parada->id, 'comentario' => $parada->comentario, 'fecha_actual' => $fecha->FechaActual, 'causas' => $causas, 'maquinas' => $maquinas ,'ultimo' => $request->ultimo ), 200);        
+                
+
+            }else
+            {
+                $fecha = DB::table('parada_maquinas')->select( DB::raw('UNIX_TIMESTAMP() as FechaActual'))
+                        ->orderBy('updated_at','desc')->first();
+                $causas = DB::table("causas")
+                        ->pluck("nombre","idcausa");
+        
+                $maquinas = DB::table("maquina")
+                        ->pluck("nombre","idmaquina");
+
+                $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
+                $causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
+                $estatus = "actualizar";
+
+            }
+            return response()->json(array('updated_at' => strtotime($parada->updated_at), 'fecha_inicio' => $parada->fecha_inicio, 'fecha_inicio_reloj' => strtotime($parada->fecha_inicio), 'fecha_fin' => $parada->fecha_fin, 'id_maquina' => $parada->id_maquina, 'id_causa' => $parada->id_causa, 'id' => $parada->idparada, 'comentario' => $parada->comentario, 'fecha_actual' => $fecha->FechaActual, 'causas' => $causas, 'maquinas' => $maquinas ,'ultimo' => $request->ultimo, 'estatus' => $estatus, 'parada' => $parada ), 200);     
+               
         }else{
             return response()->json(array('updated_at' => $request->timestamp, 'fecha_inicio' => $parada->fecha_inicio, 'fecha_fin' => $parada->fecha_fin, 'id_maquina' => $parada->id_maquina, 'id_causa' => $parada->id_causa, 'id' => $parada->id, 'comentario' => $parada->comentario   ), 200); 
 
         } 
+            }
 
 
-    }
+    
     public function httpushproduccion(Request $request)
     {   set_time_limit(0); 
         //dd($request->timestamp);
