@@ -34,7 +34,7 @@
         }
 		.mygrid-wrapper-div {
     	    overflow: scroll;
-    		height: 270px;
+    		height: 400px;
 		}
         
     </style>
@@ -48,7 +48,7 @@
 			<div class="info-box">
             <div class="info-box-content">
               <span class="info-box-text">Disponibilidad</span>
-              <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->produccion}}%</h2>
+              <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->oeeDISPONIBILIDAD}}%</h2>
 				<br>
 				<br>
               <span class="info-box-text">Rendimiento</span>
@@ -56,7 +56,7 @@
 				<br>
 				<br>
               <span class="info-box-text">Calidad</span>
-              <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->conformescalidad}}%</h2>
+              <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->oeeCALIDAD}}%</h2>
 				<br>
 				<br>
               <span class="info-box-text">OEE</span>
@@ -67,18 +67,24 @@
 				<br>
 				<br>
 			  <span class="info-box-text">Unds:</span>
-    		  <h2 class="m0 text-uppercase pull-left">900000</h2>          
+    		  <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->cantidadnominalpiezas}}</h2>          
 			  <br><br>
     		  <span class="info-box-text">Merma:</span>
-    		  <h2 class="m0 text-uppercase pull-left">2888</h2>          
+    		  <h2 class="m0 text-uppercase pull-left">{{$datos['Graficas']->rechazomermas}}</h2>          
     		  <br>
 			  <br>
     		  <span class="info-box-text">T. Paradas:</span>
-    		  <h2 class="m0 text-uppercase pull-left">2888</h2>     
+    		  <h2 class="m0 text-uppercase pull-left">
+					@foreach ($datos['TotalParadas'] as $key => $totalparada)
+						{{$totalparada->TotalParadas}}
+					@endforeach
+    		  </h2>     
     		    <br>
 				<br>
     		  <span class="info-box-text">T. mins paradas:</span>
-    		  <h2 class="m0 text-uppercase pull-left">2888</h2>     
+    		  <h2 class="m0 text-uppercase pull-left">@foreach ($datos['SumaParadas'] as $key => $minutosparada)
+						{{$minutosparada->SumaParadas}}
+					@endforeach</h2>     
 				<br>
 				<br>
     		  <span class="info-box-text">Inicio produc:</span>
@@ -92,7 +98,7 @@
 		<div class="col-xs-18 col-sm-18 col-md-8 col-lg-8">
 			<div class="box box-primary">
 				<div class="box-header with-border">
-					<!--<h3 class="box-title">Afluencia de asistentes por evento</h3>-->
+					<h3 class="box-title">Gráficas</h3>
 					<div class="box-tools pull-right">
 						<button type="button" class="btn btn-box-tool" data-widget="collapse">
 							<i class="fa fa-minus" aria-hidden="true"></i>
@@ -100,9 +106,9 @@
 					</div>
 				</div>
 				<div class="box-body">
-					<div class="chart">
-						<canvas id="barrasChart" style="height: 250px; width: 787px;" height="250" width="787"></canvas>
-					</div>
+					
+						<canvas id="barrasChart" style="height: 150px; width: 787px;" height="150" width="787"></canvas>
+					
 				</div>
 			</div>
 		</div>
@@ -225,14 +231,15 @@
 			{
 				comentario ="";
 			}
-		
 		if(produccion == null)
 			{
 			
 			}else{
-				alert(data.produccion);
 				toastr.success('¡Se ha iniciado una nueva produccion!', 'Success Alert', {timeOut: 5000});
-				$('#id_produccion').val(data.produccion);
+				$('#id_produccion').val(produccion);
+				/*$.each(produccion, function(index, val) {
+					 console.log(val.FechaActual);
+				});*/
                 /*$('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "></td></tr>");
 
                 $('select[id="id_maquina' + id +'"]').empty(); 
@@ -354,39 +361,6 @@
 				var minute = Math.floor((diff /60));
 
 				clock(diff,id);
-
-				function clock($fecha_inicio,$id){
-
-				      //  var $fecha_inicio = diff;
-				      	var totalSeconds = $fecha_inicio;
-				        setInterval(setTime, 1000);
-				        function setTime()
-				        { 
-				            ++totalSeconds;
-				            $('#clock'+ $id +' > #seconds').html(pad(totalSeconds%60));
-				            $('#clock'+ $id +' > #minutes').html(pad(parseInt(totalSeconds/60)));
-				            //$('#clock'+ $id +' > #hrs').html(pad(parseInt(totalSeconds/3600)));
-
-				          //  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
-
-				        }
-				        function pad(val)
-				        {
-				            var valString = val + "";
-				            if(valString.length < 2)
-				            {
-				                return "0" + valString;
-				            }
-				            else
-				            {
-				                return valString;
-				            }
-				        }
-				}
-
-
-             
-
                 
 			}
 		
@@ -397,11 +371,7 @@
 		});		
 	}
 
-	$(document).ready(function()
-		{
-			var sec = 0;
-
-    function clock($fecha_inicio,$id){
+	function clock($fecha_inicio,$id){
 
       //  var $fecha_inicio = diff;
       	var totalSeconds = $fecha_inicio;
@@ -428,7 +398,10 @@
                 return valString;
             }
         }
-}
+	}
+
+	$(document).ready(function() {
+			var sec = 0;
 
 			@foreach ($datos['Paradas'] as $x => $parada)
 				var fecha_inicio = $('input[id=fecha_inicio{{$parada->idparada}}]').val();

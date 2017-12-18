@@ -11,15 +11,22 @@ class ControlController extends Controller
     public function index($id)
     {
     	$maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
-    	$graficas = DB::table('calculo_oee')->first();
+
+    	
         $recetas = DB::table('receta')->where("linea", "=", $id)->pluck("nombre","idReceta");
 
     	$parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
         ->where("maq_principal", "=", "1")->where("parada_maquinas.id_linea", "=", $id)->orderBy('updated_at','desc')->get();
+        
+        $graficas = DB::table('calculo_oee')->where("produccion","=",$parada[0]->id_produccion)->first();
+
+        $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))->where("id_produccion","=",$parada[0]->id_produccion)->get();
+        $suma_paradas = DB::table('calculo_oee')->select(DB::raw('MINUTE(SEC_TO_TIME(SUM(sumanet + sumatrue)*60)) as SumaParadas'))->where("produccion","=",$parada[0]->id_produccion)->get();
+
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
 
-        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas
+        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas, 'TotalParadas' => $total_paradas, 'SumaParadas' => $suma_paradas
         ];
 
         return view('control.index',compact('datos'));
