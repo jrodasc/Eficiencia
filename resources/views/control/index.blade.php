@@ -178,9 +178,7 @@
         <script src="/js/countTimer/jquery.countdownTimer.js"></script>
 
 		<script>
-            $(window).load(function(){
-                $('#dtContainer').removeAttr('style');
-            });
+            
 
             
         </script>
@@ -311,6 +309,7 @@
                     '_token': $('input[name=_token]').val(),
                    	timestamp: timestamp,
                    	fecha_bd: fecha_bd,
+                   	ultimo: {{count($datos['Paradas'])}}
               },
 		success: function(data)
 		{	
@@ -321,6 +320,7 @@
 			id_causa           = data.id_causa;
 			id        		   = data.id;
 			comentario     	   = data.comentario;
+			ultimo			   = parseInt(data.ultimo)+1 ;
 
 			if (fecha_fin == null)
 			{
@@ -336,7 +336,8 @@
 			
 			}else{
 				toastr.success('¡Se ha detenido una máquina!', 'Success Alert', {timeOut: 5000});
-                $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "></td></tr>");
+				alert(data.ultimo);
+                $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + ultimo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "></td></tr>");
 
                 $('select[id="id_maquina' + id +'"]').empty(); 
 			                        $.each(data.maquinas, function(key, value){
@@ -350,9 +351,7 @@
                             $(this).closest('tr').toggleClass('warning');
                         });*/
 
-                $('.col1').each(function (index) {
-                    $(this).html(index+1);
-                });
+               
                  var timestamp = null;
                 $('#fecha_bd').val(data.updated_at);
 
