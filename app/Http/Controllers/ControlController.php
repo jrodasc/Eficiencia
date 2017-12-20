@@ -27,7 +27,9 @@ class ControlController extends Controller
         
         $graficas = DB::table('calculo_oee')->where("produccion","=",$parada[0]->id_produccion)->first();
 
-        $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))->where("id_produccion","=",$parada[0]->id_produccion)->get();
+        $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))
+        ->where("id_produccion","=",$parada[0]->id_produccion)
+        ->where("maq_principal","=","1")->get();
         $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$parada[0]->id_produccion)->get();
 
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
