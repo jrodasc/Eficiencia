@@ -82,7 +82,9 @@
     		    <br>
 				<br>
     		  <span class="info-box-text">T. mins paradas:</span>
-    		  <h2 class="m0 text-uppercase pull-left">@foreach ($datos['SumaParadas'] as $key => $minutosparada)
+    		  <h2 class="m0 text-uppercase pull-left">
+
+    		  	@foreach ($datos['SumaParadas'] as $key => $minutosparada)
 						{{$minutosparada->SumaParadas}}
 					@endforeach</h2>     
 				<br>
@@ -140,7 +142,7 @@
 								@foreach ($datos['Paradas'] as $key => $parada)
 									<tr class="item{{$parada->idparada}}">
 										<td class="col1">{{(count($datos['Paradas']))-($key)}}</td>
-										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio{{$parada->idparada}}" value="{{strtotime($parada->fecha_inicio)}}" /></td>
+										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio{{$parada->idparada}}" value="{{$parada->fecha_inicio_reloj}}" /></td>
 										<td>{{$parada->fecha_fin}}<input type="hidden" name="fecha_fin" id="fecha_fin{{$parada->idparada}}" value="{{strtotime($parada->fecha_fin)}}" /></td>
 										<td>
 										@if(($parada->minutos >0) or ($parada->segundos>0))
@@ -362,18 +364,48 @@
 	               
 	                 var timestamp = null;
 	                $('#fecha_bd').val(data.updated_at);
+	                
+	                if(data.fecha_fin==null)
+	                {
+	                	
+	                	//alert(data.fecha_inicio_reloj);
+	                	
+		                var diff = data.fecha_actual - data.fecha_inicio_reloj;
+		                //var diff = {{$parada->FechaActual}} - fecha_inicio;
+						var minute = Math.floor((diff /60));
 
+						clock(diff,id);	
+	                }
+
+	                $(document).ready(function() {
+			        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
+			            var maquinaID = $(this).val();
+			            
+			            if(maquinaID){ 
+			                $.ajax({
+			                    url: '/admin/control/maquina/'+maquinaID,
+			                    type: 'GET',
+			                    dataType: 'json',
+			                    success: function(data){ 
+			                        $('select[id="id_causa'+ data.id +'"]').empty(); 
+			                        $.each(data, function(key, value){
+			                            $('select[id="id_causa'+ data.id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
+			                        });
+			                    }
+			                });
+			            }else{
+			                $('select[id="id_causa"]').empty();
+			            }
+			        });
+			    });
 					
-					var diff = data.fecha_actual - data.fecha_inicio_reloj;
-					var minute = Math.floor((diff /60));
-
-					clock(diff,id);	
+					
 				}else{	
 					$.each(parada, function(index, val) {
 						 console.log(index);
 					});
 					toastr.success('¡Se ha inicializado una máquina!', 'Success Alert', {timeOut: 5000});
-					$('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + data.ultimo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "></td></tr>");
+					$('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + data.ultimo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td>"+ data.minutos +":" + data.segundos + "</td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "></td></tr>");
 
 					$('select[id="id_maquina' + id +'"]').empty(); 
 				                        $.each(data.maquinas, function(key, value){
@@ -387,11 +419,29 @@
 				    var timestamp = null;
 	                $('#fecha_bd').val(data.updated_at);
 
-					
-					var diff = data.fecha_actual - data.fecha_inicio_reloj;
-					var minute = Math.floor((diff /60));
+	                $(document).ready(function() {
+			        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
+			            var maquinaID = $(this).val();
+			            
+			            if(maquinaID){ 
+			                $.ajax({
+			                    url: '/admin/control/maquina/'+maquinaID,
+			                    type: 'GET',
+			                    dataType: 'json',
+			                    success: function(data){ 
+			                        $('select[id="id_causa'+ data.id +'"]').empty(); 
+			                        $.each(data, function(key, value){
+			                            $('select[id="id_causa'+ data.id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
+			                        });
+			                    }
+			                });
+			            }else{
+			                $('select[id="id_causa"]').empty();
+			            }
+			        });
+			    });
 
-					clock(diff,id);	
+					
 
 				}
 				
