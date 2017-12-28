@@ -28,7 +28,8 @@ class ControlController extends Controller
 
         //dd($idproduccion);
         $graficas = DB::table('calculo_oee')->where("produccion","=",$produccion->idproduccion)->first();
-
+        
+        
         $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))
         ->where("id_produccion","=",$produccion->idproduccion)
         ->where("maq_principal","=","1")->get();
@@ -37,7 +38,7 @@ class ControlController extends Controller
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
 
-        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas, 'TotalParadas' => $total_paradas, 'SumaParadas' => $suma_paradas, 'ProduccionFechaInicio' => $produccion->fecha_inicio, 'Produccion' => $produccion->idproduccion
+        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas, 'TotalParadas' => $total_paradas, 'SumaParadas' => $suma_paradas, 'ProduccionFechaInicio' => $produccion->fecha_inicio, 'Produccion' => $produccion->idproduccion, 'id_linea' => $id
         ];
 
         return view('control.index',compact('datos'));
@@ -185,9 +186,11 @@ class ControlController extends Controller
         
        // while( $fecha_bd <= $fecha_ac )
        // { 
-        $produccion = Produccion::where("id_linea", "=", $request->id_linea)->orderBy('idproduccion','desc')->first();
+        $produccion = Produccion::select("idproduccion","fecha_inicio")->where("id_linea", "=", $request->id_linea)->orderBy('fecha_inicio','desc')->first();
+
         if (!empty($produccion))
             {
+
                 $idproduccion = $produccion->idproduccion;
             }else
             {
@@ -196,8 +199,8 @@ class ControlController extends Controller
         if($idproduccion!=$request->id_produccion)
         {    
 
-            $parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
-        ->where("maq_principal", "=", "1")->where("parada_maquinas.id_linea", "=", $request->id_linea)->orderBy('updated_at','desc')->get();
+            $parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea','parada_maquinas.updated_at',DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
+        ->where("maq_principal", "=", "1")->where("parada_maquinas.id_produccion","=", $idproduccion)->where("parada_maquinas.id_linea", "=", $request->id_linea)->orderBy('updated_at','desc')->get();
         
             $fecha = DB::table('parada_maquinas')->select( DB::raw('UNIX_TIMESTAMP() as FechaActual'))
         ->orderBy('updated_at','desc')->first();
@@ -206,9 +209,33 @@ class ControlController extends Controller
         
         $maquinas = DB::table("maquina")
                         ->pluck("nombre","idmaquina");
+
+        $graficas = DB::table('calculo_oee')->where("produccion","=",$idproduccion)->first();
+
+        $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))
+        ->where("id_produccion","=",$idproduccion)
+        ->where("maq_principal","=","1")->get();
+        if (!empty($total_paradas))
+        {
+            $NumTotalParada = $total_paradas;
+        }else
+        {
+            $NumTotalParada = 0;
+        }
+        $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$idproduccion)->get();
+
+         if (!empty($suma_paradas))
+        {
+            $SumParada = $suma_paradas;
+        }else
+        {
+            $SumParada = 0;
+        }
+
+        $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
         $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas];
 
-            return response()->json(array('datos' => $datos,'produccion' => $produccion->idproduccion ), 200);        
+            return response()->json(array('datos' => $datos,'produccion' => $produccion->idproduccion,'Paradas' => $parada, 'updated_at' => strtotime($paradaupdated_at->updated_at), 'Disponibilidad' => $graficas->oeeDISPONIBILIDAD, 'Rendimiento' => $graficas->rendimiento, 'oeeCALIDAD' => $graficas->oeeCALIDAD, 'OEE' => $graficas->OEE, 'cantidadnominalpiezas' => $graficas->cantidadnominalpiezas, 'rechazomermas' => $graficas->rechazomermas, 'totalparada' => $NumTotalParada, 'SumaParadas' => $SumParada, 'ProduccionFechaInicio' => $produccion->fecha_inicio  ), 200);        
         }else{
             return response()->json(array('produccion' => null   ), 200); 
 
