@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB; use App\Paradas; use App\Calculo; use App\Produccion;
+use DB; use App\Paradas; use App\Calculo; use App\Produccion; use App\Maquina;
 use Session; use DateTime;
 
 class ControlController extends Controller
 {
     public function index($id)
     {
-    	$maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
-
+    	$maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'))
+        ->join("parada_maquinas","parada_maquinas.id_maquina","=","maquina.idmaquina")->groupBy("maquina.idmaquina")->get();
+$maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     	
         $recetas = DB::table('receta')->where("linea", "=", $id)->pluck("nombre","idReceta");
         $produccion = Produccion::orderBy("fecha_inicio","desc")->first();
@@ -38,7 +39,7 @@ class ControlController extends Controller
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
 
-        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas, 'TotalParadas' => $total_paradas, 'SumaParadas' => $suma_paradas, 'ProduccionFechaInicio' => $produccion->fecha_inicio, 'Produccion' => $produccion->idproduccion, 'OEE' => $produccion->contador,  'id_linea' => $id
+        $datos = ['Maquinas' => $maquinas,'MaquinasGraficas' => $maquinasgraficas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas, 'TotalParadas' => $total_paradas, 'SumaParadas' => $suma_paradas, 'ProduccionFechaInicio' => $produccion->fecha_inicio, 'Produccion' => $produccion->idproduccion, 'OEE' => $produccion->contador,  'id_linea' => $id
         ];
 
         return view('control.index',compact('datos'));

@@ -174,6 +174,8 @@
 		</div>
 	</div>
 
+	    
+
     <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
         <!-- icheck checkboxes -->
         <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
@@ -598,9 +600,10 @@
 	    var barChart = new Chart(barChartCanvas);
 
 	    var barChartData = {
-	        labels: [@foreach ($datos['Paradas'] as $x => $parada)
-	        {{ $parada->id_maquina.= "," }}
-	        @endforeach
+	        labels: [@foreach ($datos['MaquinasGraficas'] as $key => $x)
+
+	       {{ $x->idmaquina.= "," }}
+	       @endforeach
 	        ],
 	        datasets: [
 	            {
@@ -621,7 +624,10 @@
 	                pointStrokeColor: "rgba(60,141,188,1)",
 	                pointHighlightFill: "#fff",
 	                pointHighlightStroke: "rgba(60,141,188,1)",
-	                data: [28, 48, 40, 19, 86, 27, 90]
+	                data: [@foreach ($datos['MaquinasGraficas'] as $key => $x)
+	        
+	       {{ $x->totalparadas.= "," }}
+	       @endforeach]
 	            }
 	        ]
 	    };
