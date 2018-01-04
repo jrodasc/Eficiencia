@@ -16,7 +16,7 @@ class ControlController extends Controller
         $recetas = DB::table('receta')->where("linea", "=", $id)->pluck("nombre","idReceta");
         $produccion = Produccion::orderBy("fecha_inicio","desc")->first();
         
-    	$parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea',DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'), DB::raw('UNIX_TIMESTAMP(parada_maquinas.fecha_inicio) as fecha_inicio_reloj'))
+    	$parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea',DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'), DB::raw('UNIX_TIMESTAMP(parada_maquinas.fecha_inicio) as fecha_inicio_reloj'))
             ->join('produccion','produccion.idproduccion','=','parada_maquinas.id_produccion')
             ->where("parada_maquinas.maq_principal", "=", "1")
             ->where("produccion.finalizado", "=", "0")
@@ -38,7 +38,7 @@ class ControlController extends Controller
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
 
-        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas, 'TotalParadas' => $total_paradas, 'SumaParadas' => $suma_paradas, 'ProduccionFechaInicio' => $produccion->fecha_inicio, 'Produccion' => $produccion->idproduccion, 'id_linea' => $id
+        $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at->updated_at,'Graficas' => $graficas, 'Recetas' => $recetas, 'TotalParadas' => $total_paradas, 'SumaParadas' => $suma_paradas, 'ProduccionFechaInicio' => $produccion->fecha_inicio, 'Produccion' => $produccion->idproduccion, 'OEE' => $produccion->contador,  'id_linea' => $id
         ];
 
         return view('control.index',compact('datos'));
@@ -105,9 +105,12 @@ class ControlController extends Controller
         $fecha_bd = $request->fecha_bd;
         
        
-        $parada = Paradas::select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea','parada_maquinas.updated_at', DB::raw('UNIX_TIMESTAMP(fecha_inicio) as FechaInicioReloj'),DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'))->where("maq_principal", "=", "1")
+        $parada = Paradas::select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea','parada_maquinas.updated_at', DB::raw('UNIX_TIMESTAMP(fecha_inicio) as FechaInicioReloj'),DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'))->where("maq_principal", "=", "1")
             ->where("id_produccion", "=", $request->idproduccion)
             ->orderBy('updated_at','desc')->first();
+
+
+        $produccion = Produccion::orderBy("fecha_inicio","desc")->where("idproduccion", "=", $request->idproduccion)->first();
 
             if (!empty($parada))
             {
@@ -165,7 +168,10 @@ class ControlController extends Controller
                 $estatus = "actualizar";
 
             } 
-            return response()->json(array('updated_at' => strtotime($parada->updated_at), 'fecha_inicio' => $parada->fecha_inicio, 'fecha_inicio_reloj' => $parada->FechaInicioReloj, 'fecha_fin' => $parada->fecha_fin, 'id_maquina' => $parada->id_maquina, 'id_causa' => $parada->id_causa, 'id' => $parada->idparada, 'comentario' => $parada->comentario, 'fecha_actual' => $fecha->FechaActual, 'causas' => $causas, 'maquinas' => $maquinas ,'ultimo' => $request->ultimo, 'estatus' => $estatus, 'parada' => $parada,'minutos' => $parada->minutos, 'segundos' => $parada->segundos ), 200);     
+            $graficas = DB::table('calculo_oee')->where("produccion","=",$request->idproduccion)->first();
+            
+            
+            return response()->json(array('updated_at' => strtotime($parada->updated_at), 'fecha_inicio' => $parada->fecha_inicio, 'fecha_inicio_reloj' => $parada->FechaInicioReloj, 'fecha_fin' => $parada->fecha_fin, 'id_maquina' => $parada->id_maquina, 'id_causa' => $parada->id_causa, 'id' => $parada->idparada, 'comentario' => $parada->comentario, 'fecha_actual' => $fecha->FechaActual, 'causas' => $causas, 'maquinas' => $maquinas ,'ultimo' => $request->ultimo, 'estatus' => $estatus, 'parada' => $parada,'minutos' => $parada->minutos, 'segundos' => $parada->segundos, 'Disponibilidad' => $graficas->oeeDISPONIBILIDAD, 'Rendimiento' => $graficas->rendimiento, 'oeeCALIDAD' => $graficas->oeeCALIDAD, 'OEE' => $produccion->contador, 'cantidadnominalpiezas' => $graficas->cantidadnominalpiezas, 'rechazomermas' => $graficas->rechazomermas ), 200);     
                
         }else{
             return response()->json(array('updated_at' => $request->timestamp, 'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin, 'id_maquina' => $id_maquina, 'id_causa' => $id_causa, 'id' => $id, 'comentario' => $comentario   ), 200); 
@@ -186,7 +192,7 @@ class ControlController extends Controller
         
        // while( $fecha_bd <= $fecha_ac )
        // { 
-        $produccion = Produccion::select("idproduccion","fecha_inicio")->where("id_linea", "=", $request->id_linea)->orderBy('fecha_inicio','desc')->first();
+        $produccion = Produccion::select("idproduccion","fecha_inicio","contador")->where("id_linea", "=", $request->id_linea)->orderBy('fecha_inicio','desc')->first();
 
         if (!empty($produccion))
             {
@@ -199,7 +205,7 @@ class ControlController extends Controller
         if($idproduccion!=$request->id_produccion)
         {    
 
-            $parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea','parada_maquinas.updated_at',DB::raw('TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
+            $parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea','parada_maquinas.updated_at',DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
         ->where("maq_principal", "=", "1")->where("parada_maquinas.id_produccion","=", $idproduccion)->where("parada_maquinas.id_linea", "=", $request->id_linea)->orderBy('updated_at','desc')->get();
         
             $fecha = DB::table('parada_maquinas')->select( DB::raw('UNIX_TIMESTAMP() as FechaActual'))
@@ -235,7 +241,7 @@ class ControlController extends Controller
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
         $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas];
 
-            return response()->json(array('datos' => $datos,'produccion' => $produccion->idproduccion,'Paradas' => $parada, 'updated_at' => strtotime($paradaupdated_at->updated_at), 'Disponibilidad' => $graficas->oeeDISPONIBILIDAD, 'Rendimiento' => $graficas->rendimiento, 'oeeCALIDAD' => $graficas->oeeCALIDAD, 'OEE' => $graficas->OEE, 'cantidadnominalpiezas' => $graficas->cantidadnominalpiezas, 'rechazomermas' => $graficas->rechazomermas, 'totalparada' => $NumTotalParada, 'SumaParadas' => $SumParada, 'ProduccionFechaInicio' => $produccion->fecha_inicio  ), 200);        
+            return response()->json(array('datos' => $datos,'produccion' => $produccion->idproduccion,'Paradas' => $parada, 'updated_at' => strtotime($paradaupdated_at->updated_at), 'Disponibilidad' => $graficas->oeeDISPONIBILIDAD, 'Rendimiento' => $graficas->rendimiento, 'oeeCALIDAD' => $graficas->oeeCALIDAD, 'OEE' => $produccion->contador, 'cantidadnominalpiezas' => $graficas->cantidadnominalpiezas, 'rechazomermas' => $graficas->rechazomermas, 'totalparada' => $NumTotalParada, 'SumaParadas' => $SumParada, 'ProduccionFechaInicio' => $produccion->fecha_inicio  ), 200);        
         }else{
             return response()->json(array('produccion' => null   ), 200); 
 

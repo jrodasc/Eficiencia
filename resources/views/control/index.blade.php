@@ -60,7 +60,7 @@
 				<br>
 				<br>
               <span class="info-box-text">OEE</span>
-              <h2 id="OEE" class="m0 text-uppercase pull-left">{{isset($datos['Graficas']->OEE) ? $datos['Graficas']->OEE:0}}%</h2>
+              <h2 id="OEE" class="m0 text-uppercase pull-left">{{isset($datos['OEE']) ? $datos['OEE']:0}}</h2>
 				<br>
 				<br>
                {!! Form::select('receta', $datos['Recetas'], [], ['class' => 'form-control gray-input', 'id' => 'receta', 'data-id_produccion' => $datos['Produccion'], 'data-id_linea' => 3]) !!}
@@ -149,8 +149,8 @@
 										<td id="fecha_inicio" data-fecha-inicio="{{$parada->fecha_inicio}}">{{$parada->fecha_inicio}}<input type="hidden" name="fecha_inicio" id="fecha_inicio{{$parada->idparada}}" value="{{$parada->fecha_inicio_reloj}}" /></td>
 										<td>{{$parada->fecha_fin}}<input type="hidden" name="fecha_fin" id="fecha_fin{{$parada->idparada}}" value="{{strtotime($parada->fecha_fin)}}" /></td>
 										<td>
-										@if(($parada->minutos >0) or ($parada->segundos>0))
-											{{$parada->minutos}}:{{substr($parada->segundos, 0,2)}}
+										@if(($parada->segundos !=null))
+											{{$parada->minutos}}
 										@else
 										<div id="clock{{$parada->idparada}}"><label id="minutes">00</label>:<label id="seconds">00</label></div>
 										@endif
@@ -194,8 +194,8 @@
 		var timestamp = null;
 	$(document).ready(function()
 	{
-		cargar_push();
-		cargar_push_produccion();
+		//cargar_push();
+		//cargar_push_produccion();
 
 	
 	});	
@@ -280,7 +280,7 @@
                
 			}
 		
-		setTimeout('cargar_push_produccion()',5000);
+		//setTimeout('cargar_push_produccion()',5000);
 			    	
 			    	
 	    }
@@ -370,6 +370,19 @@
 
 	                }
 
+	                $('#fecha_bd').val(data.updated_at);
+				
+					$('#idproduccion').val(data.produccion);
+					$('#Disponibilidad').text(data.Disponibilidad + "%");
+					$('#Rendimiento').text(data.Rendimiento + "%");
+					$('#oeeCALIDAD').text(data.oeeCALIDAD + "%");
+					$('#OEE').text(data.OEE + "%");
+					$('#cantidadnominalpiezas').text(data.cantidadnominalpiezas );
+					$('#rechazomermas').text(data.rechazomermas );
+					$('#totalparada').text(data.totalparada );
+					$('#SumaParadas').text(data.SumaParadas );
+					$('#ProduccionFechaInicio').text(data.ProduccionFechaInicio );
+
 	                $(document).ready(function() {
 			        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
 			            var maquinaID = $(this).val();
@@ -441,7 +454,7 @@
                 
 			}
 		
-		setTimeout('cargar_push()',5000);
+		//setTimeout('cargar_push()',5000);
 			    	
 			    	
 	    }
