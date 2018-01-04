@@ -196,8 +196,8 @@
 		var timestamp = null;
 	$(document).ready(function()
 	{
-		//cargar_push();
-		//cargar_push_produccion();
+		cargar_push();
+		cargar_push_produccion();
 
 	
 	});	
@@ -282,7 +282,7 @@
                
 			}
 		
-		//setTimeout('cargar_push_produccion()',5000);
+		setTimeout('cargar_push_produccion()',5000);
 			    	
 			    	
 	    }
@@ -456,7 +456,7 @@
                 
 			}
 		
-		//setTimeout('cargar_push()',5000);
+		setTimeout('cargar_push()',5000);
 			    	
 			    	
 	    }
