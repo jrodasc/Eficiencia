@@ -106,7 +106,7 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
         $fecha_bd = $request->fecha_bd;
         
        
-        $parada = Paradas::select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea','parada_maquinas.updated_at', DB::raw('UNIX_TIMESTAMP(fecha_inicio) as FechaInicioReloj'),DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'))->where("maq_principal", "=", "1")
+        $parada = Paradas::select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea','parada_maquinas.updated_at', DB::raw('UNIX_TIMESTAMP(fecha_inicio) as FechaInicioReloj'),DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'))->where("maq_principal", "=", "1")
             ->where("id_produccion", "=", $request->idproduccion)
             ->orderBy('updated_at','desc')->first();
 
@@ -206,7 +206,7 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
         if($idproduccion!=$request->id_produccion)
         {    
 
-            $parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea','parada_maquinas.updated_at',DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(MINUTE, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
+            $parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea','parada_maquinas.updated_at',DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'))
         ->where("maq_principal", "=", "1")->where("parada_maquinas.id_produccion","=", $idproduccion)->where("parada_maquinas.id_linea", "=", $request->id_linea)->orderBy('updated_at','desc')->get();
         
             $fecha = DB::table('parada_maquinas')->select( DB::raw('UNIX_TIMESTAMP() as FechaActual'))
@@ -221,7 +221,8 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
 
         $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))
         ->where("id_produccion","=",$idproduccion)
-        ->where("maq_principal","=","1")->get();
+        ->where("maq_principal","=","1")->first();
+
         if (!empty($total_paradas))
         {
             $NumTotalParada = $total_paradas;
@@ -229,7 +230,7 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
         {
             $NumTotalParada = 0;
         }
-        $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$idproduccion)->get();
+        $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$idproduccion)->first();
 
          if (!empty($suma_paradas))
         {
@@ -242,7 +243,7 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
         $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas];
 
-            return response()->json(array('datos' => $datos,'produccion' => $produccion->idproduccion,'Paradas' => $parada, 'updated_at' => strtotime($paradaupdated_at->updated_at), 'Disponibilidad' => $graficas->oeeDISPONIBILIDAD, 'Rendimiento' => $graficas->rendimiento, 'oeeCALIDAD' => $graficas->oeeCALIDAD, 'OEE' => $produccion->contador, 'cantidadnominalpiezas' => $graficas->cantidadnominalpiezas, 'rechazomermas' => $graficas->rechazomermas, 'totalparada' => $NumTotalParada, 'SumaParadas' => $SumParada, 'ProduccionFechaInicio' => $produccion->fecha_inicio  ), 200);        
+            return response()->json(array('datos' => $datos,'produccion' => $produccion->idproduccion, 'Paradas' => $parada, 'updated_at' => strtotime($paradaupdated_at->updated_at), 'Disponibilidad' => $graficas->oeeDISPONIBILIDAD, 'Rendimiento' => $graficas->rendimiento, 'oeeCALIDAD' => $graficas->oeeCALIDAD, 'OEE' => $produccion->contador, 'cantidadnominalpiezas' => $graficas->cantidadnominalpiezas, 'rechazomermas' => $graficas->rechazomermas, 'totalparada' => $total_paradas->TotalParadas, 'SumaParadas' => $suma_paradas->SumaParadas, 'ProduccionFechaInicio' => $produccion->fecha_inicio  ), 200);        
         }else{
             return response()->json(array('produccion' => null   ), 200); 
 
