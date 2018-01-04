@@ -449,9 +449,20 @@
 			        });
 			    });
 
-					
-
 				}
+
+				$('#fecha_bd').val(data.updated_at);
+				
+				
+				$('#Disponibilidad').text(data.Disponibilidad + "%");
+				$('#Rendimiento').text(data.Rendimiento + "%");
+				$('#oeeCALIDAD').text(data.oeeCALIDAD + "%");
+				$('#OEE').text(data.OEE + "%");
+				$('#cantidadnominalpiezas').text(data.cantidadnominalpiezas );
+				$('#rechazomermas').text(data.rechazomermas );
+				$('#totalparada').text(data.totalparada );
+				$('#SumaParadas').text(data.SumaParadas );
+				$('#ProduccionFechaInicio').text(data.ProduccionFechaInicio );
 				
                 
 			}

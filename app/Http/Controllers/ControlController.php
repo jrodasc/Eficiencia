@@ -135,7 +135,10 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
                  
 
            }
-        
+        $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))
+        ->where("id_produccion","=",$request->idproduccion)
+        ->where("maq_principal","=","1")->first();
+        $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$request->idproduccion)->first();
         if($fecha_bd<$fecha_ac)
         {    
             if($parada->fecha_fin==null)
@@ -172,7 +175,7 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
             $graficas = DB::table('calculo_oee')->where("produccion","=",$request->idproduccion)->first();
             
             
-            return response()->json(array('updated_at' => strtotime($parada->updated_at), 'fecha_inicio' => $parada->fecha_inicio, 'fecha_inicio_reloj' => $parada->FechaInicioReloj, 'fecha_fin' => $parada->fecha_fin, 'id_maquina' => $parada->id_maquina, 'id_causa' => $parada->id_causa, 'id' => $parada->idparada, 'comentario' => $parada->comentario, 'fecha_actual' => $fecha->FechaActual, 'causas' => $causas, 'maquinas' => $maquinas ,'ultimo' => $request->ultimo, 'estatus' => $estatus, 'parada' => $parada,'minutos' => $parada->minutos, 'segundos' => $parada->segundos, 'Disponibilidad' => $graficas->oeeDISPONIBILIDAD, 'Rendimiento' => $graficas->rendimiento, 'oeeCALIDAD' => $graficas->oeeCALIDAD, 'OEE' => $produccion->contador, 'cantidadnominalpiezas' => $graficas->cantidadnominalpiezas, 'rechazomermas' => $graficas->rechazomermas ), 200);     
+            return response()->json(array('updated_at' => strtotime($parada->updated_at), 'fecha_inicio' => $parada->fecha_inicio, 'fecha_inicio_reloj' => $parada->FechaInicioReloj, 'fecha_fin' => $parada->fecha_fin, 'id_maquina' => $parada->id_maquina, 'id_causa' => $parada->id_causa, 'id' => $parada->idparada, 'comentario' => $parada->comentario, 'fecha_actual' => $fecha->FechaActual, 'causas' => $causas, 'maquinas' => $maquinas ,'ultimo' => $request->ultimo, 'estatus' => $estatus, 'parada' => $parada,'minutos' => $parada->minutos, 'segundos' => $parada->segundos, 'Disponibilidad' => $graficas->oeeDISPONIBILIDAD, 'Rendimiento' => $graficas->rendimiento, 'oeeCALIDAD' => $graficas->oeeCALIDAD, 'OEE' => $produccion->contador, 'totalparada' => $total_paradas->TotalParadas, 'SumaParadas' => $suma_paradas->SumaParadas,'cantidadnominalpiezas' => $graficas->cantidadnominalpiezas, 'rechazomermas' => $graficas->rechazomermas ), 200);     
                
         }else{
             return response()->json(array('updated_at' => $request->timestamp, 'fecha_inicio' => $fecha_inicio, 'fecha_fin' => $fecha_fin, 'id_maquina' => $id_maquina, 'id_causa' => $id_causa, 'id' => $id, 'comentario' => $comentario   ), 200); 
