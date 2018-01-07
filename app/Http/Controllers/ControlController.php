@@ -34,7 +34,10 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
         $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))
         ->where("id_produccion","=",$produccion->idproduccion)
         ->where("maq_principal","=","1")->get();
-        $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$produccion->idproduccion)->get();
+        //$suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$produccion->idproduccion)->get();
+
+        $suma_paradas = DB::table('parada_maquinas')->select(DB::raw("SEC_TO_TIME(SUM(MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600))) as SumaParadas"))->where("id_produccion","=",$produccion->idproduccion)->whereNotNull('fecha_fin')->get();
+
 
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
@@ -138,7 +141,8 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
         $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))
         ->where("id_produccion","=",$request->idproduccion)
         ->where("maq_principal","=","1")->first();
-        $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$request->idproduccion)->first();
+      //  $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$request->idproduccion)->first();
+        $suma_paradas = DB::table('parada_maquinas')->select(DB::raw("SEC_TO_TIME(SUM(MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600))) as SumaParadas"))->where("id_produccion","=",$request->idproduccion)->whereNotNull('fecha_fin')->first();
         if($fecha_bd<$fecha_ac)
         {    
             if($parada->fecha_fin==null)
@@ -233,7 +237,10 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
         {
             $NumTotalParada = 0;
         }
-        $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$idproduccion)->first();
+       // $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$idproduccion)->first();
+
+        $suma_paradas = DB::table('parada_maquinas')->select(DB::raw("SEC_TO_TIME(SUM(MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600))) as SumaParadas"))->where("id_produccion","=",$idproduccion)->whereNotNull('fecha_fin')->first();
+
 
          if (!empty($suma_paradas))
         {
