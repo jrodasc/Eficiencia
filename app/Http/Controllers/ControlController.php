@@ -61,11 +61,13 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     public function updatemaquina($idmaquina,$id)
     {
  
-   
+   $timestamp = DB::table('parada_maquinas')->select(DB::raw('updated_at'))
+        ->where("idparada","=",$id)->get();
         $parada= DB::table('parada_maquinas')
             ->where('idparada', $id)
             ->update([
                 'id_maquina' => $idmaquina,
+                'updated_at' => $timestamp,
                 ]);
 
         return json_encode($id);

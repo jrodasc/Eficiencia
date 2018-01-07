@@ -246,7 +246,7 @@
 			}else{
 				toastr.success('¡Se ha iniciado una nueva produccion!', 'Success Alert', {timeOut: 5000});
 
-               $('.mygrid-wrapper-div').replaceWith("<div class='mygrid-wrapper-div'><input type='hidden' name='estatus' id='estatus' value='1' /><table id='dtContainer' class='display table table-bordered table-hover table-responsive compact' cellspacing='0' width='100%'><thead><tr><th>No</th><th>Inicio</th><th>Fin</th><th>Total Min</th><th>Maquina</th><th>Causa</th><th>Comentarios</th></tr></thead><tbody></tbody></table></div>");
+               $('.mygrid-wrapper-div').replaceWith("<div class='mygrid-wrapper-div'><table id='dtContainer' class='display table table-bordered table-hover table-responsive compact' cellspacing='0' width='100%'><thead><tr><th>No</th><th>Inicio</th><th>Fin</th><th>Total Min</th><th>Maquina</th><th>Causa</th><th>Comentarios</th></tr></thead><tbody></tbody></table></div>");
               
 				
 				$.each(datos['Paradas'], function(index, val) {
@@ -261,6 +261,7 @@
 				});
 				
 				$('#fecha_bd').val(data.updated_at);
+				$('#estatus').val(1);
 
 				
 				$('#idproduccion').val(data.produccion);
@@ -308,7 +309,7 @@
 			}
 			
 			
-		}
+		} 
 
 				$.ajax({
 		async:	true, 
@@ -350,7 +351,7 @@
 				if(data.estatus=="nuevo")
 				{    
 					toastr.success('¡Se ha detenido una máquina!', 'Success Alert', {timeOut: 5000});
-					ultimoinc			   = parseInt(data.ultimo)+1 ;
+					ultimoinc = parseInt(data.ultimo)+1 ;
 	                $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + ultimoinc + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimoinc +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimoinc +" /></td></tr>");
 
 	                $('select[id="id_maquina' + id +'"]').empty(); 
