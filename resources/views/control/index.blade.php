@@ -300,7 +300,7 @@
 			var ultimo = $('input[id=ultimo]').val(); 
 			
 		}else{
-			if($('input[id=idproduccion]').val()==0)
+			if($('input[id=estatus]').val()==0)
 			{
 				var ultimo = {{count($datos['Paradas'])}};	
 			}else{
