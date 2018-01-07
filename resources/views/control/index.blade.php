@@ -454,6 +454,11 @@
 			                $.ajax({
 			                    url: '/admin/control/maquina/'+maquinaID,
 			                    type: 'GET',
+			                    data: {
+			                    '_token': $('input[name=_token]').val(),
+			                   	'idparada': paradaID,
+			                   	'id_maquina': maquinaID,
+			                   	},
 			                    dataType: 'json',
 			                    success: function(data){ 
 			                        $('select[id="id_causa'+ data.id +'"]').empty(); 
