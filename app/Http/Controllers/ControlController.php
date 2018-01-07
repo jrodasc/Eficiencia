@@ -50,8 +50,7 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     }
      public function ajaxCausa(Request $request,$id)
         {
-            $input = $request->all();
-            $idmaquina = $input['id_maquina'];
+            
             $causas = DB::table("causas")
                         ->where('idmaquina',$id)
                         ->pluck("nombre","idcausa");
