@@ -48,16 +48,29 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
         return view('control.index',compact('datos'));
     
     }
-     public function ajaxCausa($id)
+     public function ajaxCausa(Request $request,$id)
         {
-
+            $input = $request->all();
+            $idmaquina = $input['id_maquina'];
             $causas = DB::table("causas")
                         ->where('idmaquina',$id)
                         ->pluck("nombre","idcausa");
-
+            $this->updatemaquina($request->id_maquina, $request->idparada);
                      
             return json_encode($causas);
         }
+    public function updatemaquina($idmaquina,$id)
+    {
+ 
+   
+        $parada= DB::table('parada_maquinas')
+            ->where('idparada', $id)
+            ->update([
+                'id_maquina' => $idmaquina,
+                ]);
+
+        return json_encode($id);
+    }
 
    
     public function ajaxReceta(Request $request, $id)
@@ -242,18 +255,12 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
         $suma_paradas = DB::table('parada_maquinas')->select(DB::raw("SEC_TO_TIME(SUM(MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600))) as SumaParadas"))->where("id_produccion","=",$idproduccion)->whereNotNull('fecha_fin')->first();
 
 
-         if (!empty($suma_paradas))
-        {
-            $SumParada = $suma_paradas;
-        }else
-        {
-            $SumParada = 0;
-        }
-
+      
         $paradaupdated_at = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at','desc')->first();
         $datos = ['Maquinas' => $maquinas, 'Paradas' => $parada, 'Causas' => $causas];
 
-            return response()->json(array('datos' => $datos,'produccion' => $produccion->idproduccion, 'Paradas' => $parada, 'updated_at' => strtotime($paradaupdated_at->updated_at), 'Disponibilidad' => $graficas->oeeDISPONIBILIDAD, 'Rendimiento' => $graficas->rendimiento, 'oeeCALIDAD' => $graficas->oeeCALIDAD, 'OEE' => $produccion->contador, 'cantidadnominalpiezas' => $graficas->cantidadnominalpiezas, 'rechazomermas' => $graficas->rechazomermas, 'totalparada' => $total_paradas->TotalParadas, 'SumaParadas' => $suma_paradas->SumaParadas, 'ProduccionFechaInicio' => $produccion->fecha_inicio  ), 200);        
+            return response()->json(array('datos' => $datos,'produccion' => $produccion->idproduccion, 'Paradas' => $parada, 'updated_at' => strtotime($paradaupdated_at->updated_at), 'Disponibilidad' => $graficas->oeeDISPONIBILIDAD, 'Rendimiento' => $graficas->rendimiento, 'oeeCALIDAD' => $graficas->oeeCALIDAD, 'OEE' => $produccion->contador, 'cantidadnominalpiezas' => $graficas->cantidadnominalpiezas, 'rechazomermas' => $graficas->rechazomermas, 'totalparada' => $total_paradas->TotalParadas, 'SumaParadas' => $suma_paradas->SumaParadas, 'ProduccionFechaInicio' => $produccion->fecha_inicio  ), 200);    
+
         }else{
             return response()->json(array('produccion' => null   ), 200); 
 

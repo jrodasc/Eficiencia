@@ -127,6 +127,7 @@
 				<input type="hidden" name="idproduccion" id="idproduccion" value="{{$datos['Produccion']}}" />
 					<input type="hidden" name="fecha_bd" id="fecha_bd" value="{{strtotime($datos['fecha_bd'])}}" />
 					<input type="hidden" name="id_linea" id="id_linea" value="{{$datos['id_linea']}}" />
+					<input type='hidden' name='estatus' id='estatus' value='0' />
 				<div class="mygrid-wrapper-div">
 					
 					<table id="dtContainer" class="display table table-bordered table-hover table-responsive compact" cellspacing="0" width="100%">
@@ -245,14 +246,14 @@
 			}else{
 				toastr.success('¡Se ha iniciado una nueva produccion!', 'Success Alert', {timeOut: 5000});
 
-               $('.mygrid-wrapper-div').replaceWith("<div class='mygrid-wrapper-div'><table id='dtContainer' class='display table table-bordered table-hover table-responsive compact' cellspacing='0' width='100%'><thead><tr><th>No</th><th>Inicio</th><th>Fin</th><th>Total Min</th><th>Maquina</th><th>Causa</th><th>Comentarios</th></tr></thead><tbody></tbody></table></div>");
+               $('.mygrid-wrapper-div').replaceWith("<div class='mygrid-wrapper-div'><input type='hidden' name='estatus' id='estatus' value='1' /><table id='dtContainer' class='display table table-bordered table-hover table-responsive compact' cellspacing='0' width='100%'><thead><tr><th>No</th><th>Inicio</th><th>Fin</th><th>Total Min</th><th>Maquina</th><th>Causa</th><th>Comentarios</th></tr></thead><tbody></tbody></table></div>");
               
 				
 				$.each(datos['Paradas'], function(index, val) {
 					 
 					 //console.log($(this).attr('idparada'));
 					 //console.log('div' + index + ':' + $(this).attr('id'));
-					 $('#dtContainer').prepend("<tr class='item" + $(this).attr('idparada') + "'><td class='col1'>" + $(this).attr('idparada') + "</td><td>" + $(this).attr('idparada') + "</td><td>" + $(this).attr('idparada') + "</td><td><div id='clock" + $(this).attr('idparada') +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + $(this).attr('idparada') +"' data-idparada='" + $(this).attr('idparada') +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + $(this).attr('idparada') +"' data-idparada='" + $(this).attr('idparada') +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + $(this).attr('idparada') + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + $(this).attr('idparada') +" /><input type='hidden' name='ultimo' id='ultimo' value='0' /><input type='hidden' name='consecutivo" + $(this).attr('idparada') + "' id='consecutivo" + $(this).attr('idparada') + "' value=" + $(this).attr('idparada') +" /></td></tr>");
+					// $('#dtContainer').prepend("<tr class='item" + $(this).attr('idparada') + "'><td class='col1'>" + $(this).attr('idparada') + "</td><td>" + $(this).attr('idparada') + "</td><td>" + $(this).attr('idparada') + "</td><td><div id='clock" + $(this).attr('idparada') +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + $(this).attr('idparada') +"' data-idparada='" + $(this).attr('idparada') +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + $(this).attr('idparada') +"' data-idparada='" + $(this).attr('idparada') +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + $(this).attr('idparada') + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + $(this).attr('idparada') +" /><input type='hidden' name='ultimo' id='ultimo' value='0' /><input type='hidden' name='consecutivo" + $(this).attr('idparada') + "' id='consecutivo" + $(this).attr('idparada') + "' value=" + $(this).attr('idparada') +" /></td></tr>");
 /*
 					      $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + ultimo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimo +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimo +" /></td></tr>");
 */
@@ -260,6 +261,7 @@
 				});
 				
 				$('#fecha_bd').val(data.updated_at);
+
 				
 				$('#idproduccion').val(data.produccion);
 				$('#Disponibilidad').text(data.Disponibilidad + "%");
@@ -296,10 +298,18 @@
 		if($('input[id=ultimo]').val()!=null)
 		{
 			var ultimo = $('input[id=ultimo]').val(); 
+			
 		}else{
-			var ultimo = {{count($datos['Paradas'])}};
+			if($('input[id=idproduccion]').val()==0)
+			{
+				var ultimo = {{count($datos['Paradas'])}};	
+			}else{
+				var ultimo = 0;
+			}
+			
 			
 		}
+
 				$.ajax({
 		async:	true, 
     	type: "POST",
@@ -373,7 +383,7 @@
 	                }
 
 	                $('#fecha_bd').val(data.updated_at);
-				
+				    $('#estatus').val(0);
 					//$('#idproduccion').val(data.produccion);
 					$('#Disponibilidad').text(data.Disponibilidad + "%");
 					$('#Rendimiento').text(data.Rendimiento + "%");
@@ -388,19 +398,28 @@
 	                $(document).ready(function() {
 			        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
 			            var maquinaID = $(this).val();
-			            
+			            var paradaID = $(this).data("idparada");
 			            if(maquinaID){ 
 			                $.ajax({
 			                    url: '/admin/control/maquina/'+maquinaID,
 			                    type: 'GET',
+			                    data: {
+			                    '_token': $('input[name=_token]').val(),
+			                   	'idparada': paradaID,
+			                   	'id_maquina': maquinaID,
+			                   	},
 			                    dataType: 'json',
 			                    success: function(data){ 
 			                        $('select[id="id_causa'+ data.id +'"]').empty(); 
 			                        $.each(data, function(key, value){
 			                            $('select[id="id_causa'+ data.id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 			                        });
+
+			        
 			                    }
 			                });
+
+			                
 			            }else{
 			                $('select[id="id_causa"]').empty();
 			            }
@@ -413,7 +432,7 @@
 					
 					var consecutivo = $('input[id=consecutivo' + data.id + ']').val();
 					toastr.success('¡Se ha inicializado una máquina!', 'Success Alert', {timeOut: 5000});
-					$('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + consecutivo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td>"+ data.minutos +"</td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimo +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimo +" /></td></tr>");
+					$('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + consecutivo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td>"+ data.minutos +"</td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='text' name='ultimo' id='ultimo' value=" + ultimo +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimo +" /></td></tr>");
 
 					$('select[id="id_maquina' + id +'"]').empty(); 
 				                        $.each(data.maquinas, function(key, value){
@@ -430,7 +449,7 @@
 	                $(document).ready(function() {
 			        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
 			            var maquinaID = $(this).val();
-			            
+			            var paradaID = $(this).data("idparada");
 			            if(maquinaID){ 
 			                $.ajax({
 			                    url: '/admin/control/maquina/'+maquinaID,
@@ -441,8 +460,12 @@
 			                        $.each(data, function(key, value){
 			                            $('select[id="id_causa'+ data.id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 			                        });
+
+			                       
 			                    }
 			                });
+
+
 			            }else{
 			                $('select[id="id_causa"]').empty();
 			            }
@@ -517,10 +540,15 @@
 				$(document).ready(function() {
 			        $('select[id="id_maquina{{$parada->idparada}}"]').on('change',function(e){
 			            var maquinaID = $(this).val();
-			            
+			            var paradaID = $(this).data("idparada");
 			            if(maquinaID){ 
 			                $.ajax({
 			                    url: '/admin/control/maquina/'+maquinaID,
+			                    data: {
+			                    '_token': $('input[name=_token]').val(),
+			                   	'idparada': paradaID,
+			                   	'id_maquina': maquinaID,
+			                   	},
 			                    type: 'GET',
 			                    dataType: 'json',
 			                    success: function(data){ 
@@ -528,8 +556,11 @@
 			                        $.each(data, function(key, value){
 			                            $('select[id="id_causa{{$parada->idparada}}"]').append('<option value="'+ key +'">'+ value + '</option>');
 			                        });
+
 			                    }
 			                });
+
+			              
 			            }else{
 			                $('select[id="id_causa"]').empty();
 			            }
@@ -699,6 +730,8 @@
                 }
                 });
 		});
+
+
 		
 	
 		$(document).on('click', '.actualizar', function() { 
