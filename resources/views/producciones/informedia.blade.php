@@ -40,64 +40,12 @@
     </style>
 	<div class="row">
 		<section class="content-header">
-			<h1>Estadísticas</h1>
+			<h1>Informe'día</h1>
 		</section>
 	</div>
 	<div class="row m10">
-			<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-			<div class="info-box">
-            <div class="info-box-content">
-              <span class="info-box-text">Disponibilidad</span>
-              <h2 id="Disponibilidad" class="m0 text-uppercase pull-left">{{isset($datos['Graficas']->oeeDISPONIBILIDAD) ? $datos['Graficas']->oeeDISPONIBILIDAD:0}}%</h2>
-				<br>
-				<br>
-              <span class="info-box-text">Rendimiento</span>
-              <h2 id="Rendimiento" class="m0 text-uppercase pull-left">{{isset($datos['Graficas']->oeeRENDIMIENTO) ? $datos['Graficas']->oeeRENDIMIENTO:0}}%</h2>
-				<br>
-				<br>
-              <span class="info-box-text">Calidad</span>
-              <h2 id="oeeCALIDAD" class="m0 text-uppercase pull-left">{{isset($datos['Graficas']->oeeCALIDAD) ? $datos['Graficas']->oeeCALIDAD:0}}%</h2>
-				<br>
-				<br>
-              <span class="info-box-text">OEE</span>
-              <h2 id="OEE" class="m0 text-uppercase pull-left">{{isset($datos['Graficas']->OEE) ? $datos['Graficas']->OEE:0}}</h2>
-				<br>
-				<br>
-               {!! Form::select('receta', $datos['Recetas'], [], ['class' => 'form-control gray-input', 'id' => 'receta', 'data-id_produccion' => $datos['Produccion'], 'data-id_linea' => 3]) !!}
-				<br>
-				<br>
-			  <span class="info-box-text">Unds:</span>
-    		  <h2 id="cantidadnominalpiezas" class="m0 text-uppercase pull-left">{{isset($datos['OEE']) ? $datos['OEE']:0}}</h2>          
-			  <br><br>
-    		  <span class="info-box-text">Merma:</span>
-    		  <h2 id="rechazomermas" class="m0 text-uppercase pull-left">{{isset($datos['Graficas']->rechazomermas) ? $datos['Graficas']->rechazomermas:0}}</h2>          
-    		  <br>
-			  <br>
-    		  <span class="info-box-text">T. Paradas:</span>
-    		  <h2 id="totalparada" class="m0 text-uppercase pull-left">
-					@foreach ($datos['TotalParadas'] as $key => $totalparada)
-						{{$totalparada->TotalParadas}}
-					@endforeach
-    		  </h2>     
-    		    <br>
-				<br>
-    		  <span class="info-box-text">T. mins paradas:</span>
-    		  <h2 id="SumaParadas" class="m0 text-uppercase pull-left">
-
-    		  	@foreach ($datos['SumaParadas'] as $key => $minutosparada)
-						{{$minutosparada->SumaParadas}}
-					@endforeach</h2>     
-				<br>
-				<br>
-    		  <span class="info-box-text">Inicio produc:</span>
-    		  <h2 id="ProduccionFechaInicio" class="m0 text-uppercase pull-left">{{isset($datos['ProduccionFechaInicio']) ? $datos['ProduccionFechaInicio']:0}}</h2>     
-				<br>
-				<br>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-		</div>
-		<div class="col-xs-18 col-sm-18 col-md-8 col-lg-8">
+		
+		<div class="col-xs-18 col-sm-18 col-md-12 col-lg-12">
 			<div class="box box-primary">
 				<div class="box-header with-border">
 					<h3 class="box-title">Gráficas</h3>
@@ -114,7 +62,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-18 col-sm-18 col-md-8 col-lg-8">
+		<div class="col-xs-18 col-sm-18 col-md-12 col-lg-12">
 			<div class="box box-primary">
 				<div class="box-header with-border">
 					<h3 class="box-title">Control de paradas</h3>
@@ -134,8 +82,8 @@
 							<thead>
 								<tr>
 									<th>No</th>
-									<th>Inicio</th>
-									<th>Fin</th>
+									<th>Fecha Inicio</th>
+									<th>Fecha Fin</th>
 									<th>Total Min</th>
 									<th>Maquina</th>
 									<th>Causa</th>

@@ -40,6 +40,8 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::get('/admin/control/receta/{id}','ControlController@ajaxReceta');
     
     Route::resource('/admin/lineas','LineasController');
+    Route::resource('/admin/producciones','ProduccionesController');
+    Route::get('/admin/informe-dia/{id}', 'ProduccionesController@informe');
    /* Route::get('/admin/archivos', 'StorageController@index');
     Route::post('/admin/archivos/create', 'StorageController@save');
     Route::get('/admin/archivos/{archivo}', function ($archivo) {
