@@ -262,7 +262,6 @@
 				
 				$('#fecha_bd').val(data.updated_at);
 				$('#estatus').val(1);
-
 				
 				$('#idproduccion').val(data.produccion);
 				$('#Disponibilidad').text(data.Disponibilidad + "%");
@@ -277,16 +276,8 @@
 
 				var timestamp = null;
 
-				
-             
-             
-			
-    		
-               
 			}
-		
 		setTimeout('cargar_push_produccion()',5000);
-			    	
 			    	
 	    }
 		});		
@@ -343,7 +334,7 @@
 		
 			if(timestamp == null)
 				{
-					//$('#fecha_bd').val(data.updated_at);
+
 					$('#Disponibilidad').text(data.Disponibilidad + "%");
 					$('#Rendimiento').text(data.Rendimiento + "%");
 					$('#oeeCALIDAD').text(data.oeeCALIDAD + "%");
@@ -359,7 +350,7 @@
 						{    
 							toastr.success('¡Se ha detenido una máquina!', 'Success Alert', {timeOut: 5000});
 							ultimoinc = parseInt(data.ultimo)+1 ;
-			                $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + ultimoinc + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimoinc +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimoinc +" /></td></tr>");
+			                $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + ultimoinc + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='causas'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimoinc +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimoinc +" /></td></tr>");
 
 			                $('select[id="id_maquina' + id +'"]').empty(); 
 						        $.each(data.maquinas, function(key, value){
@@ -374,15 +365,9 @@
 			                
 			                if(data.fecha_fin==null)
 			                {
-			                	
-			                	//alert(data.fecha_inicio_reloj);
-			                	
 				                var diff = data.fecha_actual - data.fecha_inicio_reloj;
-				                
 								var minute = Math.floor((diff /60));
-
 								clock(diff,id);	
-
 			                }
 
 			                $('#fecha_bd').val(data.updated_at);
@@ -398,13 +383,14 @@
 							$('#SumaParadas').text(data.SumaParadas );
 							$('#ProduccionFechaInicio').text(data.ProduccionFechaInicio );
 
-			                $(document).ready(function() {
+
+			                $(document).ready(function() { 
 						        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
 						            var maquinaID = $(this).val();
 						            var paradaID = $(this).data("idparada");
 						            if(maquinaID){ 
 						                $.ajax({
-						                    url: '/admin/control/maquina/'+maquinaID,
+						                    url: '/admin/control/maquina/' + maquinaID,
 						                    type: 'GET',
 						                    data: {
 						                    '_token': $('input[name=_token]').val(),
@@ -413,16 +399,14 @@
 						                   	},
 						                    dataType: 'json',
 						                    success: function(data){ 
-						                        $('select[id="id_causa'+ data.id +'"]').empty(); 
+                                                $('select[id="id_causa'+ dparadaID +'"]').empty(); 
+                                                
 						                        $.each(data, function(key, value){
-						                            $('select[id="id_causa'+ data.id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
+                                                   
+						                            $('select[id="id_causa'+ paradaID +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 						                        });
-
-						        
 						                    }
 						                });
-
-						                
 						            }else{
 						                $('select[id="id_causa"]').empty();
 						            }
@@ -431,7 +415,7 @@
 						}else{	
 							var consecutivo = $('input[id=consecutivo' + data.id + ']').val();
 							toastr.success('¡Se ha inicializado una máquina!', 'Success Alert', {timeOut: 5000});
-							$('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + consecutivo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td>"+ data.minutos +"</td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimo +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimo +" /></td></tr>");
+							$('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + consecutivo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td>"+ data.minutos +"</td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='causas'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimo +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimo +" /></td></tr>");
 
 							$('select[id="id_maquina' + id +'"]').empty(); 
 	                        $.each(data.maquinas, function(key, value){
@@ -445,10 +429,11 @@
 				    		var timestamp = null;
 	                		$('#fecha_bd').val(data.updated_at);
 
-	                		$(document).ready(function() {
+	                		$(document).ready(function() { 
 				        		$('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
-				            		var maquinaID = $(this).val();
+				            		var maquinaID = $(this).val(); 
 				            		var paradaID = $(this).data("idparada");
+
 				            		if(maquinaID){ 
 						                $.ajax({
 						                    url: '/admin/control/maquina/'+maquinaID,
@@ -460,9 +445,12 @@
 						                   	},
 						                    dataType: 'json',
 						                    success: function(data){ 
-						                        $('select[id="id_causa'+ data.id +'"]').empty(); 
+                                                
+						                        $('select[id="id_causa'+ paradaID +'"]').empty(); 
+                                               
 						                        $.each(data, function(key, value){
-						                            $('select[id="id_causa'+ data.id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
+
+						                            $('select[id="id_causa'+ paradaID +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 						                        });
 						                    }
 						                });
@@ -520,7 +508,7 @@
         }
 	}
 
-	$(document).ready(function() {
+	$(document).ready(function() { 
 			var sec = 0;
 
 			@foreach ($datos['Paradas'] as $x => $parada)
@@ -642,7 +630,19 @@
 	       @endforeach
 	        ],
 	        datasets: [
-	            
+	            {
+                    label: "Total minutos",
+                    fillColor: "rgba(90, 186, 102, 1)",
+                    strokeColor: "rgba(90, 186, 102, 1)",
+                    pointColor: "rgba(90, 186, 102, 1)",
+                    pointStrokeColor: "#5ABA66",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    data: [@foreach ($datos['MaquinasGraficas'] as $key => $x)
+            
+           {{ $x->totalparadas.= "," }}
+           @endforeach]
+                },
 	            {
 	                label: "Total paradas",
 	                fillColor: "rgba(60,141,188,0.9)",
@@ -652,8 +652,7 @@
 	                pointHighlightFill: "#fff",
 	                pointHighlightStroke: "rgba(60,141,188,1)",
 	                data: [@foreach ($datos['MaquinasGraficas'] as $key => $x)
-	        
-	       {{ $x->totalparadas.= "," }}
+	        {{ $x->minutos.= "," }}
 	       @endforeach]
 	            }
 	        ]

@@ -10,9 +10,9 @@ class ControlController extends Controller
 {
     public function index($id)
     {
-    	$maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'))
+    	$maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'),DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'))
         ->join("parada_maquinas","parada_maquinas.id_maquina","=","maquina.idmaquina")->groupBy("maquina.idmaquina")->get();
-$maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
+        $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     	
         $recetas = DB::table('receta')->where("linea", "=", $id)->pluck("nombre","idReceta");
         $produccion = Produccion::orderBy("fecha_inicio","desc")->first();
@@ -53,9 +53,9 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
             
             $causas = DB::table("causas")
                         ->where('idmaquina',$id)
-                        ->pluck("nombre","idcausa");
+                        ->pluck("nombre","idcausa","idmaquina");
             $this->updatemaquina($request->id_maquina, $request->idparada);
-                     
+                 
             return json_encode($causas);
         }
     public function updatemaquina($idmaquina,$id)
@@ -93,7 +93,7 @@ $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     }
     public function update(Request $request, $id)
     {
- $input = $request->all();
+        $input = $request->all();
     	//$parada = Paradas::where('idparada','=',$id)->first();
         /*$parada =  DB::table('parada_maquinas')->select('comentario','id_maquina','id_causa')->where('idparada','=',$id)->first();
     	       
