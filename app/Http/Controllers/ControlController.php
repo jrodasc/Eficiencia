@@ -10,7 +10,7 @@ class ControlController extends Controller
 {
     public function index($id)
     {
-    	$maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'),DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'))
+    	$maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'),DB::raw('TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'))
         ->join("parada_maquinas","parada_maquinas.id_maquina","=","maquina.idmaquina")->groupBy("maquina.idmaquina")->get();
         $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     	
