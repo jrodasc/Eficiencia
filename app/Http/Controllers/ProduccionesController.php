@@ -10,10 +10,15 @@ class ProduccionesController extends Controller
 {
     public function index(Request $request)
     {
-        $data = Produccion::orderBy('idproduccion','desc')->get();
+        $produccion = Produccion::select('produccion.idproduccion','produccion.contador','produccion.fecha_inicio','produccion.fecha_fin','finalizado','produccion.observacion','produccion.id_receta','receta.nombre','receta.formato','calculo_oee.OEE','calculo_oee.rendimiento')
+        ->join('receta','receta.idReceta','=','produccion.id_receta')
+        ->join('calculo_oee','receta.idReceta','=','produccion.id_receta')
+        ->orderBy('idproduccion','asc')->get();
+        $total = count($produccion);
        
+        $datos=['Producciones' => $produccion,'Total' => $total];
 
-        return view('producciones.index', ['producciones' => $data]);
+        return view('producciones.index', compact('datos'));
     }
 
     public function informe($id)
