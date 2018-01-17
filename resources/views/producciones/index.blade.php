@@ -43,7 +43,8 @@
                                         <td>{{$produccion->formato}}</td>
                                         <td>{{$produccion->OEE}}</td>
                                         <td>{{$produccion->rendimiento}}</td>
-                                        <td></td> <td></td>
+                                        <td>{{$produccion->oeeDISPONIBILIDAD}}</td> 
+                                        <td>{{$produccion->oeeCALIDAD}}</td>
                                         <td>{{isset($produccion->finalizado) ? "SI":"NO"}}</td> 
                                         <td>
                                             <a class="show-modal btn btn-success" data-id="{{$produccion->idproduccion}}" href="/admin/informe-dia/{{$produccion->idproduccion}}">
