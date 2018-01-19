@@ -10,12 +10,15 @@ class ControlController extends Controller
 {
     public function index($id)
     {
+        $produccion = Produccion::orderBy("fecha_inicio","desc")->first();
     	$maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'),DB::raw('TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'))
-        ->join("parada_maquinas","parada_maquinas.id_maquina","=","maquina.idmaquina")->groupBy("maquina.idmaquina")->get();
+        ->join("parada_maquinas","parada_maquinas.id_maquina","=","maquina.idmaquina")
+        ->where("parada_maquinas.id_produccion","=", $produccion->idproduccion)
+        ->groupBy("maquina.idmaquina")->get();
         $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     	
         $recetas = DB::table('receta')->where("linea", "=", $id)->pluck("nombre","idReceta");
-        $produccion = Produccion::orderBy("fecha_inicio","desc")->first();
+        
         
     	$parada = DB::table('parada_maquinas')->select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea',DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'), DB::raw('UNIX_TIMESTAMP() as FechaActual'), DB::raw('UNIX_TIMESTAMP(parada_maquinas.fecha_inicio) as fecha_inicio_reloj'))
             ->join('produccion','produccion.idproduccion','=','parada_maquinas.id_produccion')

@@ -399,7 +399,7 @@
 						                   	},
 						                    dataType: 'json',
 						                    success: function(data){ 
-                                                $('select[id="id_causa'+ dparadaID +'"]').empty(); 
+                                                $('select[id="id_causa'+ paradaID +'"]').empty(); 
                                                 
 						                        $.each(data, function(key, value){
                                                    
