@@ -28,7 +28,7 @@ class ControlController extends Controller
             ->where("produccion.finalizado", "=", "0")
             ->where("parada_maquinas.id_linea", "=", $id)
             ->where("parada_maquinas.id_produccion","=", $produccion->idproduccion)
-            ->orderBy('parada_maquinas.updated_at','desc')->get();
+            ->orderBy('parada_maquinas.updated_at','asc')->get();
         
        // $idproduccion = $produccion->idproduccion;
 
