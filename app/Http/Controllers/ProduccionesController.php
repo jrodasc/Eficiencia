@@ -10,10 +10,9 @@ class ProduccionesController extends Controller
 {
     public function index(Request $request)
     {
-        $produccion = Produccion::select('produccion.idproduccion','produccion.contador','produccion.fecha_inicio','produccion.fecha_fin','finalizado','produccion.observacion','produccion.id_receta','produccion.id_linea','receta.nombre','receta.formato','calculo_oee.OEE','calculo_oee.rendimiento','calculo_oee.oeeDISPONIBILIDAD','calculo_oee.oeeCALIDAD')
-        ->join('receta','receta.idReceta','=','produccion.id_receta')
-        ->join('calculo_oee','receta.idReceta','=','produccion.id_receta')
-        ->orderBy('idproduccion','asc')->get();
+        $produccion = Produccion::select('produccion.idproduccion','produccion.contador','produccion.fecha_inicio','produccion.fecha_fin','finalizado','produccion.observacion','produccion.id_receta','produccion.id_linea','calculo_oee.OEE','calculo_oee.rendimiento','calculo_oee.oeeDISPONIBILIDAD','calculo_oee.oeeCALIDAD')
+        ->join('calculo_oee','calculo_oee.produccion','=','produccion.idproduccion')
+        ->orderBy('idproduccion','desc')->get();
         $total = count($produccion);
        
         $datos=['Producciones' => $produccion,'Total' => $total];

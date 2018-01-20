@@ -39,8 +39,8 @@
                                         <td>{{$produccion->fecha_inicio}}</td>
                                         <td>{{$produccion->fecha_fin}}</td>
                                         <td>{{$produccion->contador}}</td>
-                                        <td>{{$produccion->nombre}}</td>
-                                        <td>{{$produccion->formato}}</td>
+                                        <td></td>
+                                        <td></td>
                                         <td>{{$produccion->OEE}}</td>
                                         <td>{{$produccion->rendimiento}}</td>
                                         <td>{{$produccion->oeeDISPONIBILIDAD}}</td> 
