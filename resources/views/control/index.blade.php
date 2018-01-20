@@ -420,10 +420,12 @@
 							$('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + consecutivo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td>"+ data.minutos +"</td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='causas'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimo +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimo +" /></td></tr>");
 
 							$('select[id="id_maquina' + id +'"]').empty(); 
+							$('select[id="id_maquina' + id +'"]').append('<option value=""><--Seleccione Maquina--></option>');
 	                        $.each(data.maquinas, function(key, value){
 	                            $('select[id="id_maquina' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 	                        });
 	                		$('select[id="id_causa' + id +'"]').empty(); 
+	                		$('select[id="id_causa' + id +'"]').append('<option value=""><--Seleccione Causa--></option>'); 
 				            $.each(data.causas, function(key, value){
 				                $('select[id="id_causa' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 				            });
@@ -449,7 +451,7 @@
 						                    success: function(data){ 
                                                 
 						                        $('select[id="id_causa'+ paradaID +'"]').empty(); 
-                                               
+                                               $('select[id="id_causa' + paradaID +'"]').append('<option value=""><--Seleccione Causa--></option>'); 
 						                        $.each(data, function(key, value){
 
 						                            $('select[id="id_causa'+ paradaID +'"]').append('<option value="'+ key +'">'+ value + '</option>');
@@ -537,6 +539,7 @@
 			                    dataType: 'json',
 			                    success: function(data){ 
 			                        $('select[id="id_causa{{$parada->idparada}}"]').empty(); 
+			                        $('select[id="id_causa{{$parada->idparada}}"]').append('<option value=""><--Seleccione Causa--></option>'); 
 			                        $.each(data, function(key, value){
 			                            $('select[id="id_causa{{$parada->idparada}}"]').append('<option value="'+ key +'">'+ value + '</option>');
 			                        });
