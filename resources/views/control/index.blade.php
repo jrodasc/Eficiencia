@@ -251,12 +251,7 @@
 				
 				$.each(datos['Paradas'], function(index, val) {
 					 
-					 //console.log($(this).attr('idparada'));
-					 //console.log('div' + index + ':' + $(this).attr('id'));
-					// $('#dtContainer').prepend("<tr class='item" + $(this).attr('idparada') + "'><td class='col1'>" + $(this).attr('idparada') + "</td><td>" + $(this).attr('idparada') + "</td><td>" + $(this).attr('idparada') + "</td><td><div id='clock" + $(this).attr('idparada') +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + $(this).attr('idparada') +"' data-idparada='" + $(this).attr('idparada') +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + $(this).attr('idparada') +"' data-idparada='" + $(this).attr('idparada') +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + $(this).attr('idparada') + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + $(this).attr('idparada') +" /><input type='hidden' name='ultimo' id='ultimo' value='0' /><input type='hidden' name='consecutivo" + $(this).attr('idparada') + "' id='consecutivo" + $(this).attr('idparada') + "' value=" + $(this).attr('idparada') +" /></td></tr>");
-/*
-					      $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + ultimo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimo +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimo +" /></td></tr>");
-*/
+	
 					
 				});
 				
@@ -353,11 +348,11 @@
 			                $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + ultimoinc + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='causas'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimoinc +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimoinc +" /></td></tr>");
 
 			                $('select[id="id_maquina' + id +'"]').empty(); 
-			                $('select[id="id_maquina' + id +'"]').append('<option value=""><--Seleccione Maquina--></option>');
+			                
 						        $.each(data.maquinas, function(key, value){
 						        $('select[id="id_maquina' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 						                        });
-			                $('select[id="id_causa' + id +'"]').empty();
+			               // $('select[id="id_causa' + id +'"]').empty();
 			                $('select[id="id_causa' + id +'"]').append('<option value=""><--Seleccione Causa--></option>'); 
 						        $.each(data.causas, function(key, value){
 						        $('select[id="id_causa' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
@@ -390,6 +385,7 @@
 						        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
 						            var maquinaID = $(this).val();
 						            var paradaID = $(this).data("idparada");
+
 						            if(maquinaID){ 
 						                $.ajax({
 						                    url: '/admin/control/maquina/' + maquinaID,
@@ -518,16 +514,20 @@
 			@foreach ($datos['Paradas'] as $x => $parada)
 				var fecha_inicio = $('input[id=fecha_inicio{{$parada->idparada}}]').val();
 				var id = {{$parada->idparada}};
+				var idmaquina = {{$parada->id_maquina}};
 				var diff = {{$parada->FechaActual}} - fecha_inicio;
 				var minute = Math.floor((diff /60));
 
 				clock(diff,id);
 
-				$(document).ready(function() {
+				$(document).ready(function() { 
+					
 			        $('select[id="id_maquina{{$parada->idparada}}"]').on('change',function(e){
-			            var maquinaID = $(this).val();
-			            var paradaID = $(this).data("idparada");
-			            if(maquinaID){ 
+			        	var maquinaID = $(this).val();
+			            var paradaID = $(this).data("idparada");    
+			            
+			            if(maquinaID){
+
 			                $.ajax({
 			                    url: '/admin/control/maquina/'+maquinaID,
 			                    data: {
@@ -537,14 +537,17 @@
 			                   	},
 			                    type: 'GET',
 			                    dataType: 'json',
-			                    success: function(data){ 
-			                        $('select[id="id_causa{{$parada->idparada}}"]').empty(); 
-			                        $('select[id="id_causa{{$parada->idparada}}"]').append('<option value=""><--Seleccione Causa--></option>'); 
+			                    success: function(data) {
+
+		                			$('select[id="id_causa{{$parada->idparada}}"]').empty(); 
+                                   $('select[id="id_causa{{$parada->idparada}}"]').append('<option value=""><--Seleccione Causa--></option>'); 
+                                   
 			                        $.each(data, function(key, value){
+			                        	
 			                            $('select[id="id_causa{{$parada->idparada}}"]').append('<option value="'+ key +'">'+ value + '</option>');
 			                        });
-
-			                    }
+		                		}
+			                
 			                });
 
 			              
@@ -552,6 +555,30 @@
 			                $('select[id="id_causa"]').empty();
 			            }
 			        });
+
+			        $.ajax({
+			                    url: '/admin/control/maquina/'+{{$parada->id_maquina}},
+			                    data: {
+			                    '_token': $('input[name=_token]').val(),
+			                   	'idparada': {{$parada->idparada}},
+			                   	'id_maquina': {{$parada->id_maquina}},
+			                   	},
+			                    type: 'GET',
+			                    dataType: 'json',
+			                    success: function(data) {
+
+		                			$('select[id="id_causa{{$parada->idparada}}"]').empty(); 
+                                   $('select[id="id_causa{{$parada->idparada}}"]').append('<option value=""><--Seleccione Causa--></option>'); 
+                                   
+			                        $.each(data, function(key, value){
+			                        	if({{$parada->id_causa}}==key)
+			                            $('select[id="id_causa{{$parada->idparada}}"]').append('<option selected="selected" value="'+ key +'">'+ value + '</option>');
+			                        	else
+			                            $('select[id="id_causa{{$parada->idparada}}"]').append('<option value="'+ key +'">'+ value + '</option>');
+			                        });
+		                		}
+			                
+			                });
 			    });
 
 					$('select[id=id_causa{{$parada->idparada}}]').on('change',function () {
@@ -723,49 +750,7 @@
 
 		
 	
-		$(document).on('click', '.actualizar', function() { 
-	    	$('#id').val($(this).data('id'));
-	    	id = $('#id').val();
-
-	    	
-            $.ajax({
-                type: 'PUT',
-                url: '/admin/control/' + id,
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                   	id: $('#id').val(),
-                   	comentario: $('#comentario').val(),
-                    
-                },
-                success: function(data) {
-                  
-
-                    if ((data.errors)) {
-                        setTimeout(function () {
-                            $('#editModal').modal('show');
-                            toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
-                        }, 500);
-
-                       if (data.errors.ref) {
-                            $('.errorref').removeClass('hidden');
-                            $('.errorref').text(data.errors.ref);
-                        }
-                        if (data.errors.nombre) {
-                            $('.errornombre').removeClass('hidden');
-                            $('.errornombre').text(data.errors.nombre);
-                        }
-                    } else { 
-                        toastr.success('¡El estado ha sido actualizado!', 'Success Alert', {timeOut: 5000});
-                        $('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.fecha_inicio + "</td><td>" + data.fecha_fin + "</td><td>0</td><td>-</td><td>-</td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + data.comentario + "></td><td><a class='actualizar btn btn-info'  data-id=" + data.id + "' >Actualizar</a></td></tr>");
-     
-
-                        $('.col1').each(function (index) {
-                            $(this).html(index+1);
-                        });
-                    }
-                }
-            });
-        });
+		
 
 	   
 

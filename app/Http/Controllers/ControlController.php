@@ -59,7 +59,7 @@ class ControlController extends Controller
             $causas = DB::table("causas")
                         ->where('idmaquina',$id)
                         ->pluck("nombre","idcausa","idmaquina");
-            $this->updatemaquina($request->id_maquina, $request->idparada);
+            //$this->updatemaquina($request->id_maquina, $request->idparada);
                  
             return json_encode($causas);
         }
