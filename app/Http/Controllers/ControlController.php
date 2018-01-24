@@ -66,14 +66,17 @@ class ControlController extends Controller
     public function updatemaquina($idmaquina,$id)
     {
  
-   $timestamp = DB::table('parada_maquinas')->select(DB::raw('updated_at'))
-        ->where("idparada","=",$id)->get();
+   $timestamp = DB::table('parada_maquinas')->select('updated_at')
+        ->where("idparada","=",$id)->first();
+        
         $parada= DB::table('parada_maquinas')
             ->where('idparada', $id)
             ->update([
-                'id_maquina' => $idmaquina,
-                'updated_at' => $timestamp,
+                'id_maquina' => $idmaquina
+                 
+                
                 ]);
+            
 
         return json_encode($id);
     }

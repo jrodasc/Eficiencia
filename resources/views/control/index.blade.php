@@ -348,11 +348,11 @@
 			                $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + ultimoinc + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='causas'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimoinc +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimoinc +" /></td></tr>");
 
 			                $('select[id="id_maquina' + id +'"]').empty(); 
-			                
+			                $('select[id="id_maquina' + id +'"]').append('<option value=""><--Seleccione Maquina--></option>');
 						        $.each(data.maquinas, function(key, value){
 						        $('select[id="id_maquina' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 						                        });
-			               // $('select[id="id_causa' + id +'"]').empty();
+			               $('select[id="id_causa' + id +'"]').empty();
 			                $('select[id="id_causa' + id +'"]').append('<option value=""><--Seleccione Causa--></option>'); 
 						        $.each(data.causas, function(key, value){
 						        $('select[id="id_causa' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
@@ -585,18 +585,20 @@
 					//$('#id').val($(this).data('id'));
 					var id_produccion = $(this).data('id_produccion');
 			    	id = $(this).data("idparada");
-			    	
-		    	
+			    	var causaID = $(this).val();
+			    	var paradaID = $(this).data("idparada");
+		    		
 					$.ajax({
 		                type: 'PUT',
 		                url: '/admin/control/' + id,
 		                data: {
 		                    '_token': $('input[name=_token]').val(),
-		                   	'id': id,
+		                   	'id': paradaID,
 		                   	'comentario': document.getElementById("comentario{{$parada->idparada}}").value,
 		                   	'id_maquina': document.getElementById("id_maquina{{$parada->idparada}}").value,
-		                   	'id_causa': document.getElementById("id_causa{{$parada->idparada}}").value,
+		                   	'id_causa': causaID,
 		                   	'id_produccion': id_produccion,
+		                   	'idparada': paradaID,
 
 		                    
 		                },
