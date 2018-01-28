@@ -176,7 +176,6 @@
 	</div>
 
 	    
-
     <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
         <!-- icheck checkboxes -->
         <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
@@ -222,7 +221,7 @@
               },
 		success: function(data)
 		{	
-			timestamp 		   = data.updated_at;
+			timestamp 		   = data.updated_at_;
 			fecha_inicio       = data.fecha_inicio;
 			fecha_fin          = data.fecha_fin;
 			id_maquina         = data.id_maquina;
@@ -255,7 +254,7 @@
 					
 				});
 				
-				$('#fecha_bd').val(data.updated_at);
+				$('#fecha_bd').val(data.updated_at_);
 				$('#estatus').val(1);
 				
 				$('#idproduccion').val(data.produccion);
@@ -308,7 +307,7 @@
               },
 		success: function(data)
 		{	
-			timestamp 		   = data.updated_at;
+			timestamp 		   = data.updated_at_;
 			fecha_inicio       = data.fecha_inicio;
 			fecha_fin          = data.fecha_fin;
 			id_maquina         = data.id_maquina;
@@ -358,7 +357,7 @@
 						        $('select[id="id_causa' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 						                        });
 			                var timestamp = null;
-			                $('#fecha_bd').val(data.updated_at);
+			                $('#fecha_bd').val(data.updated_at_);
 			                
 			                if(data.fecha_fin==null)
 			                {
@@ -367,7 +366,7 @@
 								clock(diff,id);	
 			                }
 
-			                $('#fecha_bd').val(data.updated_at);
+			                $('#fecha_bd').val(data.updated_at_);
 						    $('#estatus').val(0);
 							//$('#idproduccion').val(data.produccion);
 							$('#Disponibilidad').text(data.Disponibilidad + "%");
@@ -427,7 +426,7 @@
 				            });
 
 				    		var timestamp = null;
-	                		$('#fecha_bd').val(data.updated_at);
+	                		$('#fecha_bd').val(data.updated_at_);
 
 	                		$(document).ready(function() { 
 				        		$('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
@@ -460,7 +459,7 @@
 			        			});
 			    			});
 						}
-					$('#fecha_bd').val(data.updated_at);
+					$('#fecha_bd').val(data.updated_at_);
 					$('#Disponibilidad').text(data.Disponibilidad + "%");
 					$('#Rendimiento').text(data.Rendimiento + "%");
 					$('#oeeCALIDAD').text(data.oeeCALIDAD + "%");
