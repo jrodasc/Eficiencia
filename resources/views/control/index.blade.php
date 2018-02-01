@@ -421,7 +421,7 @@
                                         id = $(this).data("idparada");
                                    
                                         var id_produccion = $(this).data('id_produccion');
-                                        alert(id_produccion);
+                                       
                                         $.ajax({
                                             type: 'PUT',
                                             url: '/admin/control/' + data.id,
