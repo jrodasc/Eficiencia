@@ -53,6 +53,16 @@ class ControlController extends Controller
         return view('control.index',compact('datos'));
     
     }
+    public function ajaxCausaMaquina(Request $request,$id)
+    {
+        $parada= DB::table('parada_maquinas')
+            ->where('idparada', $id)
+            ->update([
+                'id_maquina' => $idmaquina
+                 
+                
+                ]);
+    }
      public function ajaxCausa(Request $request,$id)
         {
             
@@ -178,7 +188,7 @@ class ControlController extends Controller
                         ->pluck("nombre","idmaquina");
 
                 $paradaupdated_at_ = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at_','desc')->first();
-                $causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
+                $causas = DB::table('causas')->where("idmaquina", "=", $parada->id_maquina)->pluck("nombre","idcausa");
                 $estatus = "nuevo";
 
                 
@@ -194,7 +204,7 @@ class ControlController extends Controller
                         ->pluck("nombre","idmaquina");
 
                 $paradaupdated_at_ = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at_','desc')->first();
-                $causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
+                $causas = DB::table('causas')->where("idmaquina", "=", $parada->id_maquina)->pluck("nombre","idcausa");
                 $estatus = "actualizar";
 
             } 

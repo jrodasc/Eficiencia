@@ -37,6 +37,7 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::post('/admin/push/produccion', 'ControlController@httpushproduccion');
     Route::get('/admin/calculo', 'ControlController@calculo_oee');
     Route::get('/admin/control/maquina/{id}','ControlController@ajaxCausa');
+    Route::get('/admin/control/causa/{id}','ControlController@ajaxCausaMaquina');
     Route::get('/admin/control/receta/{id}','ControlController@ajaxReceta');
     
     Route::resource('/admin/lineas','LineasController');
