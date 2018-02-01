@@ -415,7 +415,7 @@
 							toastr.success('¡Se ha inicializado una máquina!', 'Success Alert', {timeOut: 5000});
 							$('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + consecutivo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td>"+ data.minutos +"</td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' data-id_maquina="+ data.id_maquina +" name='causas'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario" + id +"' name='comentario" + id +"' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimo +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimo +" /></td></tr>");
 
-							//$('select[id="id_maquina' + id +'"]').empty(); 
+
 							$('select[id="id_maquina' + id +'"]').append('<option value=""><--Seleccione Maquina--></option>');
 
 
@@ -459,7 +459,7 @@
 						                	    $('select[id="id_causa'+ paradaID +'"]').empty(); 
                                             	$('select[id="id_causa' + paradaID +'"]').append('<option value=""><--Seleccione Causa--></option>'); 
 
-alert("hola");
+
 						                        $.each(data, function(key, value){
 
 						                            $('select[id="id_causa'+ paradaID +'"]').append('<option value="'+ key +'">'+ value + '</option>');
@@ -500,6 +500,25 @@ alert("hola");
 						                }
 						                });
 								});
+                                $('input[id=comentario'+ data.id +']').on('change',function () {
+                                        id = $(this).data("idparada");
+                                        
+                                        var id_produccion = $(this).data('id_produccion');
+                                        $.ajax({
+                                            type: 'PUT',
+                                            url: '/admin/control/' + id,
+                                            data: {
+                                                '_token': $('input[name=_token]').val(),
+                                                'id': id,
+                                                'comentario': document.getElementById('comentario'+ data.id).value,
+                                                'id_maquina': document.getElementById('id_maquina'+ data.id).value,
+                                                'id_causa': document.getElementById('id_causa'+ data.id).value,
+                                                'id_produccion': id_produccion,
+                                            },
+                                            success: function(data) {
+                                            }
+                                            });
+                                    });
 
 			        			
 			    			});

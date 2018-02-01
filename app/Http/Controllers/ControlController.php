@@ -134,13 +134,9 @@ class ControlController extends Controller
     }
     public function httpush(Request $request)
     {   set_time_limit(0); 
-        //dd($request->timestamp);
         $fecha_ac = isset($request->timestamp) ? $request->timestamp:0;
-        //$fecha_bd = isset($request->fecha_bd) ? $request->fecha_bd:0;
-
         $fecha_bd = $request->fecha_bd;
-        
-       
+               
         $parada = Paradas::select('parada_maquinas.idparada','parada_maquinas.fecha_inicio','parada_maquinas.fecha_fin','parada_maquinas.comentario','parada_maquinas.id_maquina','parada_maquinas.id_causa','parada_maquinas.id_produccion','parada_maquinas.id_linea','parada_maquinas.updated_at_', DB::raw('UNIX_TIMESTAMP(fecha_inicio) as FechaInicioReloj'),DB::raw('SEC_TO_TIME(TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin)) as minutos'), DB::raw('MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600) as segundos'))->where("maq_principal", "=", "1")
             ->where("id_produccion", "=", $request->idproduccion)
             ->orderBy('updated_at_','desc')->first();
@@ -173,7 +169,6 @@ class ControlController extends Controller
         $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))
         ->where("id_produccion","=",$request->idproduccion)
         ->where("maq_principal","=","1")->first();
-      //  $suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$request->idproduccion)->first();
         $suma_paradas = DB::table('parada_maquinas')->select(DB::raw("SEC_TO_TIME(SUM(MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600))) as SumaParadas"))->where("id_produccion","=",$request->idproduccion)->whereNotNull('fecha_fin')->first();
         if($fecha_bd<$fecha_ac)
         {    
@@ -224,15 +219,10 @@ class ControlController extends Controller
     
     public function httpushproduccion(Request $request)
     {   set_time_limit(0); 
-        //dd($request->timestamp);
-       
+             
         $fecha_ac = isset($request->timestamp) ? $request->timestamp:0;
-        //$fecha_bd = isset($request->fecha_bd) ? $request->fecha_bd:0;
-
         $fecha_bd = $request->fecha_bd;
         
-       // while( $fecha_bd <= $fecha_ac )
-       // { 
         $produccion = Produccion::select("idproduccion","fecha_inicio","contador")->where("id_linea", "=", $request->id_linea)->orderBy('fecha_inicio','desc')->first();
 
         if (!empty($produccion))
