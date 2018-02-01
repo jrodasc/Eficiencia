@@ -177,20 +177,13 @@
 
 	    
     <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
-        <!-- icheck checkboxes -->
-        <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
-        <!-- toastr notifications -->
-        <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
-     
-        
-        <script src="/js/countTimer/jquery.countdownTimer.js"></script>
+    <!-- icheck checkboxes -->
+    <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
+    <!-- toastr notifications -->
+    <link rel="stylesheet" href="{{asset('/css/toastr.min.css')}}">
+    <script src="/js/countTimer/jquery.countdownTimer.js"></script>
 
-		<script>
-            
-
-            
-        </script>
-
+	
 	<script>
 	
 		var timestamp = null;
@@ -198,8 +191,6 @@
 	{
 		cargar_push();
 		cargar_push_produccion();
-
-	
 	});	
 	function cargar_push_produccion() 
 	{  var fecha_bd = $('input[id=fecha_bd]').val();
@@ -248,15 +239,8 @@
                $('.mygrid-wrapper-div').replaceWith("<div class='mygrid-wrapper-div'><table id='dtContainer' class='display table table-bordered table-hover table-responsive compact' cellspacing='0' width='100%'><thead><tr><th>No</th><th>Inicio</th><th>Fin</th><th>Total Min</th><th>Maquina</th><th>Causa</th><th>Comentarios</th></tr></thead><tbody></tbody></table></div>");
               
 				
-				$.each(datos['Paradas'], function(index, val) {
-					 
-	
-					
-				});
-				
 				$('#fecha_bd').val(data.updated_at_);
 				$('#estatus').val(1);
-				
 				$('#idproduccion').val(data.produccion);
 				$('#Disponibilidad').text(data.Disponibilidad + "%");
 				$('#Rendimiento').text(data.Rendimiento + "%");
@@ -369,7 +353,6 @@
 
 			                $('#fecha_bd').val(data.updated_at_);
 						    $('#estatus').val(0);
-							//$('#idproduccion').val(data.produccion);
 							$('#Disponibilidad').text(data.Disponibilidad + "%");
 							$('#Rendimiento').text(data.Rendimiento + "%");
 							$('#oeeCALIDAD').text(data.oeeCALIDAD + "%");
@@ -379,7 +362,6 @@
 							$('#totalparada').text(data.totalparada );
 							$('#SumaParadas').text(data.SumaParadas );
 							$('#ProduccionFechaInicio').text(data.ProduccionFechaInicio );
-
 
 			                $(document).ready(function() { 
 						        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
@@ -409,6 +391,53 @@
 						                $('select[id="id_causa"]').empty();
 						            }
 						        });
+                                $('select[id=id_causa'+ data.id +']').on('change',function () {
+
+                                    var id_produccion = $(this).data('id_produccion');
+                                    id = $(this).data("idparada");
+                                    var causaID = $(this).val();
+                                    var paradaID = $(this).data("idparada");
+                                    var maquinaID = $(this).data("id_maquina");
+                                                                        
+                                    $.ajax({
+                                        type: 'PUT',
+                                        url: '/admin/control/' + id,
+                                        data: {
+                                            '_token': $('input[name=_token]').val(),
+                                            'id': paradaID,
+                                            'comentario': document.getElementById('comentario'+ data.id).value,
+                                            'id_maquina': document.getElementById('id_maquina'+ data.id).value,
+                                            'id_causa': causaID,
+                                            'id_produccion': id_produccion,
+                                            'idparada': paradaID,
+
+                                            
+                                        },
+                                        success: function(data) {
+                                        }
+                                        });
+                                });
+                                $('input[id=comentario'+ data.id +']').on('change',function () {
+                                        id = $(this).data("idparada");
+                                   
+                                        var id_produccion = $(this).data('id_produccion');
+                                        alert(id_produccion);
+                                        $.ajax({
+                                            type: 'PUT',
+                                            url: '/admin/control/' + data.id,
+                                            data: {
+                                                '_token': $('input[name=_token]').val(),
+                                                'id': id,
+                                                'comentario': document.getElementById('comentario'+ data.id).value,
+                                                'id_maquina': document.getElementById('id_maquina'+ data.id).value,
+                                                'id_causa': document.getElementById('id_causa'+ data.id).value,
+                                                'id_produccion': id_produccion,
+                                            },
+                                            success: function(data) {
+                                                  
+                                            }
+                                            });
+                                    });
 					    	});
 						}else{	
 							var consecutivo = $('input[id=consecutivo' + data.id + ']').val();
@@ -474,14 +503,12 @@
 			        			});
 			        			$('select[id=id_causa'+ data.id +']').on('change',function () {
 
-									//$('#id').val($(this).data('id'));
 									var id_produccion = $(this).data('id_produccion');
 							    	id = $(this).data("idparada");
 							    	var causaID = $(this).val();
 							    	var paradaID = $(this).data("idparada");
 						    		var maquinaID = $(this).data("id_maquina");
-						    		//alert(document.getElementById('id_maquina'+ data.id).value);
-						    		
+						    								    		
 									$.ajax({
 						                type: 'PUT',
 						                url: '/admin/control/' + id,
@@ -502,11 +529,12 @@
 								});
                                 $('input[id=comentario'+ data.id +']').on('change',function () {
                                         id = $(this).data("idparada");
-                                        
+                                   
                                         var id_produccion = $(this).data('id_produccion');
+                                        alert(id_produccion);
                                         $.ajax({
                                             type: 'PUT',
-                                            url: '/admin/control/' + id,
+                                            url: '/admin/control/' + data.id,
                                             data: {
                                                 '_token': $('input[name=_token]').val(),
                                                 'id': id,
@@ -516,11 +544,10 @@
                                                 'id_produccion': id_produccion,
                                             },
                                             success: function(data) {
+                                                  
                                             }
                                             });
                                     });
-
-			        			
 			    			});
 
 						}
