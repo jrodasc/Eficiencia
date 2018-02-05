@@ -175,7 +175,7 @@
 		</div>
 	</div>
 
-	    
+	   
     <link rel="stylesheet" href="{{asset('/css/bootstrap3.3.5.min.css') }}">
     <!-- icheck checkboxes -->
     <link rel="stylesheet" href="{{ asset('/icheck/square/yellow.css') }}">
@@ -186,12 +186,57 @@
 	
 	<script>
 	
-		var timestamp = null;
+	var timestamp = null;
 	$(document).ready(function()
-	{
+	{	
 		cargar_push();
 		cargar_push_produccion();
+		var app = @json($datos['MaquinasGraficas']);
+		
+		nombremaquina = CadenaGrafica(app,"nombre");
+		totalparadas = CadenaGrafica(app,"totalparadas");
+		minutos = CadenaGrafica(app,"minutos");
+		
+		
+ 
+		
+
+		GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
+		
+        
 	});	
+
+	function CadenaGrafica(cadenaJson,tipoAtributo){
+		var types = JSON.parse(cadenaJson);
+		
+		var concatenar = ""; var subCadena = "";
+		for(x=0; x<types.length; x++) {
+			if(tipoAtributo == "nombre"){
+		    	concatenar += '' + types[x].nombre + ',';
+			}
+		    else if(tipoAtributo == "totalparadas"){
+		    	concatenar += '' + types[x].totalparadas + ',';
+		    }
+		    else if(tipoAtributo == "minutos"){
+		    	var minutes = Math.floor( types[x].minutos / 60 );
+				var seconds = types[x].minutos % 60;
+				 
+				//Anteponiendo un 0 a los minutos si son menos de 10 
+				minutes = minutes < 10 ? '0' + minutes : minutes;
+				seconds = seconds < 10 ? '0' + seconds : seconds;
+				 
+				var result = minutes + "." + seconds;  // 161:30
+
+		  		concatenar += '' + result + ',';
+		    }
+
+		}
+		
+		subCadena = concatenar.substring(0, concatenar.length-1);
+        return(subCadena);
+
+
+	}
 	function cargar_push_produccion() 
 	{  var fecha_bd = $('input[id=fecha_bd]').val();
 	var id_produccion = $('input[id=idproduccion]').val();
@@ -367,6 +412,7 @@
 						        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
 						            var maquinaID = $(this).val();
 						            var paradaID = $(this).data("idparada");
+						            var id_produccion = $(this).data("id_produccion");
 
 						            if(maquinaID){ 
 						                $.ajax({
@@ -376,12 +422,18 @@
 						                    '_token': $('input[name=_token]').val(),
 						                   	'idparada': paradaID,
 						                   	'id_maquina': maquinaID,
+						                   	'id_produccion': id_produccion,
 						                   	},
 						                    dataType: 'json',
 						                    success: function(data){ 
+						                    	nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
+												totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
+												minutos = CadenaGrafica(data.maquinagraficas,"minutos");
+						                    	
+						                    	GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
                                                 $('select[id="id_causa'+ paradaID +'"]').empty(); 
                                                 
-						                        $.each(data, function(key, value){
+						                        $.each(data.causas, function(key, value){
                                                    
 						                            $('select[id="id_causa'+ paradaID +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 						                        });
@@ -440,6 +492,10 @@
                                     });
 					    	});
 						}else{	
+							myBarChart.datasets[0].bars[2].value = 50;
+							// Would update the first dataset's value of 'March' to be 50
+							myBarChart.update();
+							// Calling update now animates the position of March from 90 to 50.
 							var consecutivo = $('input[id=consecutivo' + data.id + ']').val();
 							toastr.success('¡Se ha inicializado una máquina!', 'Success Alert', {timeOut: 5000});
 							$('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td class='col1'>" + consecutivo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td>"+ data.minutos +"</td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' data-id_maquina="+ data.id_maquina +" name='causas'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario" + id +"' name='comentario" + id +"' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimo +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimo +" /></td></tr>");
@@ -472,6 +528,7 @@
 				        		$('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
 				            		var maquinaID = $(this).val(); 
 				            		var paradaID = $(this).data("idparada");
+				            		var id_produccion = $(this).data("id_produccion");
 
 				            		if(maquinaID){ 
 						                $.ajax({
@@ -484,12 +541,16 @@
 						                   	},
 						                    dataType: 'json',
 						                    success: function(data){ 
-                                                
+                                                nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
+												totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
+												minutos = CadenaGrafica(data.maquinagraficas,"minutos");
+						                    	
+						                    	GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
 						                	    $('select[id="id_causa'+ paradaID +'"]').empty(); 
                                             	$('select[id="id_causa' + paradaID +'"]').append('<option value=""><--Seleccione Causa--></option>'); 
 
 
-						                        $.each(data, function(key, value){
+						                        $.each(data.causas, function(key, value){
 
 						                            $('select[id="id_causa'+ paradaID +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 						                        });
@@ -616,6 +677,7 @@
 			        $('select[id="id_maquina{{$parada->idparada}}"]').on('change',function(e){
 			        	var maquinaID = $(this).val();
 			            var paradaID = $(this).data("idparada");    
+			            var id_produccion = $(this).data('id_produccion');
 			            
 			            if(maquinaID){
 
@@ -625,15 +687,23 @@
 			                    '_token': $('input[name=_token]').val(),
 			                   	'idparada': paradaID,
 			                   	'id_maquina': maquinaID,
+			                   	'id_produccion': id_produccion,
 			                   	},
 			                    type: 'GET',
 			                    dataType: 'json',
 			                    success: function(data) {
-
+			                    	
+									nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
+									totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
+									minutos = CadenaGrafica(data.maquinagraficas,"minutos");
+			                    	
+			                    	GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
+    								
+									// Calling update now animates the position of March from 90 to 50.
 		                			$('select[id="id_causa{{$parada->idparada}}"]').empty(); 
-                                   $('select[id="id_causa{{$parada->idparada}}"]').append('<option value=""><--Seleccione Causa--></option>'); 
+                                   	$('select[id="id_causa{{$parada->idparada}}"]').append('<option value=""><--Seleccione Causa--></option>'); 
                                    
-			                        $.each(data, function(key, value){
+			                        $.each(data.causas, function(key, value){
 			                        	
 			                            $('select[id="id_causa{{$parada->idparada}}"]').append('<option value="'+ key +'">'+ value + '</option>');
 			                        });
@@ -661,7 +731,7 @@
 		                			$('select[id="id_causa{{$parada->idparada}}"]').empty(); 
                                    $('select[id="id_causa{{$parada->idparada}}"]').append('<option value=""><--Seleccione Causa--></option>'); 
                                    
-			                        $.each(data, function(key, value){
+			                        $.each(data.causas, function(key, value){
 			                        	if({{$parada->id_causa}}==key)
 			                            $('select[id="id_causa{{$parada->idparada}}"]').append('<option selected="selected" value="'+ key +'">'+ value + '</option>');
 			                        	else
@@ -744,80 +814,73 @@
 	    /*----------------------------------------*/
 	    /*            Grafica de Barras           */
 	    /*----------------------------------------*/
-	    var barChartCanvas = $("#barrasChart").get(0).getContext("2d");
 
-	    var barChart = new Chart(barChartCanvas);
+	    function GenerarGráfica(labels,data1,data2){
+		    var barChartCanvas = $("#barrasChart").get(0).getContext("2d");
 
-	    var barChartData = {
-	        labels: [@foreach ($datos['MaquinasGraficas'] as $key => $x)
-			"Maquina "+
-	       {{ $x->idmaquina.= "," }}
-	       @endforeach
-	        ],
-	        datasets: [
-	            {
-                    label: "Total paradas",
-                    fillColor: "rgba(90, 186, 102, 1)",
-                    strokeColor: "rgba(90, 186, 102, 1)",
-                    pointColor: "rgba(90, 186, 102, 1)",
-                    pointStrokeColor: "#5ABA66",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: [@foreach ($datos['MaquinasGraficas'] as $key => $x)
-            
-           {{ $x->totalparadas.= "," }}
-           @endforeach]
-                },
-	            {
-	                label: "Total minutos",
-	                fillColor: "rgba(60,141,188,0.9)",
-	                strokeColor: "rgba(60,141,188,0.8)",
-	                pointColor: "#3b8bba",
-	                pointStrokeColor: "rgba(60,141,188,1)",
-	                pointHighlightFill: "#fff",
-	                pointHighlightStroke: "rgba(60,141,188,1)",
-	                data: [@foreach ($datos['MaquinasGraficas'] as $key => $x)
-	        {{ $x->minutos.= "," }}
-	       @endforeach]
-	            }
-	        ]
-	    };
+		    var barChart = new Chart(barChartCanvas);
+		    
+		    var barChartData = {
+		        labels: labels,
+		        datasets: [
+		            {
+	                    label: "Total paradas",
+	                    fillColor: "rgba(90, 186, 102, 1)",
+	                    strokeColor: "rgba(90, 186, 102, 1)",
+	                    pointColor: "rgba(90, 186, 102, 1)",
+	                    pointStrokeColor: "#5ABA66",
+	                    pointHighlightFill: "#fff",
+	                    pointHighlightStroke: "rgba(220,220,220,1)",
+	                    data: data1
+	                },
+		            {
+		                label: "Total minutos",
+		                fillColor: "rgba(60,141,188,0.9)",
+		                strokeColor: "rgba(60,141,188,0.8)",
+		                pointColor: "#3b8bba",
+		                pointStrokeColor: "rgba(60,141,188,1)",
+		                pointHighlightFill: "#fff",
+		                pointHighlightStroke: "rgba(60,141,188,1)",
+		                data: data2
+		            }
+		        ]
+		    };
 
-	    barChartData.datasets[0].fillColor = "#3FB4F1";
-	    barChartData.datasets[0].strokeColor = "#3FB4F1";
-	    barChartData.datasets[0].pointColor = "#3FB4F1";
-	    
-	    var barChartOptions = {
-	        //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-	        scaleBeginAtZero: true,
-	        //Boolean - Whether grid lines are shown across the chart
-	        scaleShowGridLines: true,
-	        //String - Colour of the grid lines
-	        scaleGridLineColor: "rgba(0,0,0,.05)",
-	        //Number - Width of the grid lines
-	        scaleGridLineWidth: 1,
-	        //Boolean - Whether to show horizontal lines (except X axis)
-	        scaleShowHorizontalLines: true,
-	        //Boolean - Whether to show vertical lines (except Y axis)
-	        scaleShowVerticalLines: true,
-	        //Boolean - If there is a stroke on each bar
-	        barShowStroke: true,
-	        //Number - Pixel width of the bar stroke
-	        barStrokeWidth: 2,
-	        //Number - Spacing between each of the X value sets
-	        barValueSpacing: 5,
-	        //Number - Spacing between data sets within X values
-	        barDatasetSpacing: 1,
-	        //String - A legend template
-	        legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
-	        //Boolean - whether to make the chart responsive
-	        responsive: true,
-	        maintainAspectRatio: true
-	    };
+		    barChartData.datasets[0].fillColor = "#3FB4F1";
+		    barChartData.datasets[0].strokeColor = "#3FB4F1";
+		    barChartData.datasets[0].pointColor = "#3FB4F1";
+		    
+		    var barChartOptions = {
+		        //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+		        scaleBeginAtZero: true,
+		        //Boolean - Whether grid lines are shown across the chart
+		        scaleShowGridLines: true,
+		        //String - Colour of the grid lines
+		        scaleGridLineColor: "rgba(0,0,0,.05)",
+		        //Number - Width of the grid lines
+		        scaleGridLineWidth: 1,
+		        //Boolean - Whether to show horizontal lines (except X axis)
+		        scaleShowHorizontalLines: true,
+		        //Boolean - Whether to show vertical lines (except Y axis)
+		        scaleShowVerticalLines: true,
+		        //Boolean - If there is a stroke on each bar
+		        barShowStroke: true,
+		        //Number - Pixel width of the bar stroke
+		        barStrokeWidth: 2,
+		        //Number - Spacing between each of the X value sets
+		        barValueSpacing: 5,
+		        //Number - Spacing between data sets within X values
+		        barDatasetSpacing: 1,
+		        //String - A legend template
+		        legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+		        //Boolean - whether to make the chart responsive
+		        responsive: true,
+		        maintainAspectRatio: true
+		    };
 
-	    barChartOptions.datasetFill = false;
-	    barChart.Bar(barChartData, barChartOptions);
-
+		    barChartOptions.datasetFill = false;
+		    barChart.Bar(barChartData, barChartOptions);
+	    }
 		
 		$('select[id=receta]').on('change',function () {
  			

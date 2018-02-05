@@ -11,7 +11,7 @@
                         
                     </div>
                     <div class="col-xs-13 col-sm-13 col-md-13 col-lg-10 m18 xs-scroll">
-                        <table id="dtContainer" class="display table table-bordered table-hover table-responsive compact" cellspacing="0" width="100%">
+                        <table id="postTable" class="display table table-bordered table-hover table-responsive compact" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -34,10 +34,10 @@
                             <tbody>
                                 @foreach($datos['Producciones'] as $key => $produccion)
                                     <tr class="item">
-                                        <td class="col1">{{(count($datos['Producciones']))-($key)}}</td>
+                                        <td >{{(count($datos['Producciones']))-($key)}}</td>
                                         <td>{{$produccion->id_linea}}</td>
-                                        <td>{{$produccion->fecha_inicio}}</td>
-                                        <td>{{$produccion->fecha_fin}}</td>
+                                        <td width="100">{{$produccion->fecha_inicio}}</td>
+                                        <td width="40">{{$produccion->fecha_fin}}</td>
                                         <td>{{$produccion->contador}}</td>
                                         <td></td>
                                         <td></td>

@@ -11,10 +11,7 @@ class ControlController extends Controller
     public function index($id)
     {
         $produccion = Produccion::orderBy("fecha_inicio","desc")->first();
-    	$maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'),DB::raw('TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'))
-        ->join("parada_maquinas","parada_maquinas.id_maquina","=","maquina.idmaquina")
-        ->where("parada_maquinas.id_produccion","=", $produccion->idproduccion)
-        ->groupBy("maquina.idmaquina")->take(7)->get();
+    	$maquinasgraficas = $this->LabelsGraficas($produccion->idproduccion);
 
 
         $maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
@@ -53,6 +50,17 @@ class ControlController extends Controller
         return view('control.index',compact('datos'));
     
     }
+    public function LabelsGraficas($IdProduccion)
+    {
+        $maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'),DB::raw('TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'))
+        ->join("parada_maquinas","parada_maquinas.id_maquina","=","maquina.idmaquina")
+        ->where("parada_maquinas.id_produccion","=", $IdProduccion)
+        ->groupBy("maquina.idmaquina")->take(7)->get();
+        
+      
+        
+        return ($maquinasgraficas->toJson());
+    }
     public function ajaxCausaMaquina(Request $request,$id)
     {
         $parada= DB::table('parada_maquinas')
@@ -70,8 +78,9 @@ class ControlController extends Controller
                         ->where('idmaquina',$id)
                         ->pluck("nombre","idcausa","idmaquina");
             $this->updatemaquina($request->id_maquina, $request->idparada);
-                 
-            return json_encode($causas);
+            $maquinasgraficas = $this->LabelsGraficas($request->id_produccion); 
+            return response()->json(array('causas' => $causas,'maquinagraficas' => $maquinasgraficas), 200); 
+          //  return json_encode($causas);
         }
     public function updatemaquina($idmaquina,$id)
     {
@@ -112,17 +121,7 @@ class ControlController extends Controller
     public function update(Request $request, $id)
     {
         $input = $request->all();
-    	//$parada = Paradas::where('idparada','=',$id)->first();
-        /*$parada =  DB::table('parada_maquinas')->select('comentario','id_maquina','id_causa')->where('idparada','=',$id)->first();
-    	       
-
-        //dd($parada->id_produccion);
-      //  dd($request->id_maquina);
-        $parada->comentario = $input['comentario'];
-        $parada->id_maquina = $input['id_maquina'];
-        $parada->id_causa = $input['id_causa'];
-
-    	$parada->update();  */
+    	
         $parada= DB::table('parada_maquinas')
             ->where('idparada', $id)
             ->update([
