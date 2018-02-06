@@ -40,11 +40,17 @@
     </style>
 	<div class="row">
 		<section class="content-header">
-			<h1>Informe'día</h1>
+			<h1>Informedía</h1>
 		</section>
 	</div>
+	
 	<div class="row m10">
-		
+		<div class="panel-heading">
+        <ul>
+            <a href="/admin/producciones" class=""><li>Regresar</li></a>
+           
+        </ul>
+    </div>
 		<div class="col-xs-18 col-sm-18 col-md-12 col-lg-12">
 			<div class="box box-primary">
 				<div class="box-header with-border">
@@ -104,13 +110,17 @@
 										<div id="clock{{$parada->idparada}}"><label id="minutes">00</label>:<label id="seconds">00</label></div>
 										@endif
 										</td>
-										<td>
-											 {!! Form::select('maquina', $datos['Maquinas'], $parada->id_maquina, ['class' => 'form-control gray-input', 'id' => "id_maquina".$parada->idparada, 'data-idparada' => $parada->idparada,  'data-id_produccion' => $parada->id_produccion]); !!}
+										<td> 
+											@if(!empty($parada->maquina))
+                                                {{$parada->maquina['nombre']}}
+                                            @endif
 										</td>
 										<td>
-											 {!! Form::select('causas', $datos['Causas'], $parada->id_causa, ['class' => 'form-control gray-input', 'id' => "id_causa".$parada->idparada,'data-idparada' => $parada->idparada, 'data-id_produccion' => $parada->id_produccion]); !!}
+											@if(!empty($parada->causas))
+                                                {{($parada->causas['nombre'])}}
+                                            @endif																						
 										</td>
-										<td> {!! Form::text('comentario', $parada->comentario, array('placeholder' => 'comentarios','class' => 'form-control gray-input', 'id' => 'comentario'.$parada->idparada, 'data-idparada' => $parada->idparada)) !!}<input type="hidden" name="id" id="id" value="{{$parada->idparada}}" /><input type="hidden" name="id_produccion" id="id_produccion" value="{{$parada->id_produccion}}" />
+										<td>{{$parada->comentario}} <input type="hidden" name="id" id="id" value="{{$parada->idparada}}" /><input type="hidden" name="id_produccion" id="id_produccion" value="{{$parada->id_produccion}}" />
 											<input type="hidden" name="consecutivo{{$parada->idparada}}" id="consecutivo{{$parada->idparada}}" value="{{(count($datos['Paradas']))-($key)}}" />
 
 										</td>
@@ -145,100 +155,49 @@
 		var timestamp = null;
 	$(document).ready(function()
 	{
-		cargar_push();
-		cargar_push_produccion();
+		
+		var app = @json($datos['MaquinasGraficas']);
+		console.log(app);
+		nombremaquina = CadenaGrafica(app,"nombre");
+		totalparadas = CadenaGrafica(app,"totalparadas");
+
+		GenerarGráfica(nombremaquina.split(","),totalparadas.split(","));
 
 	
 	});	
-	function cargar_push_produccion() 
-	{  var fecha_bd = $('input[id=fecha_bd]').val();
-	var id_produccion = $('input[id=idproduccion]').val();
-	var id_linea = $('input[id=id_linea]').val();
-	
+
+	function CadenaGrafica(cadenaJson,tipoAtributo){
+		var types = JSON.parse(cadenaJson);
 		
-		$.ajax({
-		async:	true, 
-    	type: "POST",
-	    url: "/admin/push/produccion",
-	    data: {
-                    '_token': $('input[name=_token]').val(),
-                   	timestamp: timestamp,
-                   	fecha_bd: fecha_bd,
-                   	id_produccion: id_produccion,
-                   	id_linea: id_linea
-
-              },
-		success: function(data)
-		{	
-			timestamp 		   = data.updated_at;
-			fecha_inicio       = data.fecha_inicio;
-			fecha_fin          = data.fecha_fin;
-			id_maquina         = data.id_maquina;
-			id_causa           = data.id_causa;
-			id        		   = data.id;
-			comentario     	   = data.comentario;
-			produccion    	   = data.produccion;
-			datos			   = data.datos;
-
-			if (fecha_fin == null)
-			{
-				fecha_fin ="";
+		var concatenar = ""; var subCadena = "";
+		for(x=0; x<types.length; x++) {
+			if(tipoAtributo == "nombre"){
+		    	concatenar += '' + types[x].nombre + ',';
 			}
-			if (comentario == null)
-			{
-				comentario ="";
-			} 
-		if(produccion == null)
-			{
-			
-			}else{
-				toastr.success('¡Se ha iniciado una nueva produccion!', 'Success Alert', {timeOut: 5000});
+		    else if(tipoAtributo == "totalparadas"){
+		    	concatenar += '' + types[x].totalparadas + ',';
+		    }
+		    else if(tipoAtributo == "minutos"){
+		    	var minutes = Math.floor( types[x].minutos / 60 );
+				var seconds = types[x].minutos % 60;
+				 
+				//Anteponiendo un 0 a los minutos si son menos de 10 
+				minutes = minutes < 10 ? '0' + minutes : minutes;
+				seconds = seconds < 10 ? '0' + seconds : seconds;
+				 
+				var result = minutes + "." + seconds;  // 161:30
 
-               $('.mygrid-wrapper-div').replaceWith("<div class='mygrid-wrapper-div'><table id='dtContainer' class='display table table-bordered table-hover table-responsive compact' cellspacing='0' width='100%'><thead><tr><th>No</th><th>Inicio</th><th>Fin</th><th>Total Min</th><th>Maquina</th><th>Causa</th><th>Comentarios</th></tr></thead><tbody></tbody></table></div>");
-              
-				
-				$.each(datos['Paradas'], function(index, val) {
-					 
-					 //console.log($(this).attr('idparada'));
-					 //console.log('div' + index + ':' + $(this).attr('id'));
-					// $('#dtContainer').prepend("<tr class='item" + $(this).attr('idparada') + "'><td class='col1'>" + $(this).attr('idparada') + "</td><td>" + $(this).attr('idparada') + "</td><td>" + $(this).attr('idparada') + "</td><td><div id='clock" + $(this).attr('idparada') +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + $(this).attr('idparada') +"' data-idparada='" + $(this).attr('idparada') +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + $(this).attr('idparada') +"' data-idparada='" + $(this).attr('idparada') +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + $(this).attr('idparada') + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + $(this).attr('idparada') +" /><input type='hidden' name='ultimo' id='ultimo' value='0' /><input type='hidden' name='consecutivo" + $(this).attr('idparada') + "' id='consecutivo" + $(this).attr('idparada') + "' value=" + $(this).attr('idparada') +" /></td></tr>");
-/*
-					      $('#dtContainer').prepend("<tr class='item" + data.id + "'><td class='col1'>" + ultimo + "</td><td>" + data.fecha_inicio + "</td><td>" + fecha_fin + "</td><td><div id='clock" + id +"'><label id='minutes'>00</label>:<label id='seconds'>00</label></div></td><td><select class='form-control gray-input' id='id_maquina" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><select class='form-control gray-input' id='id_causa" + id +"' data-idparada='" + id +"' data-id_produccion='1' name='maquina'></select></td><td><input placeholder='comentarios' class='form-control gray-input' id='comentario' name='comentario' type='text' value=" + comentario + "><input type='hidden' name='fecha_bd' id='fecha_bd' value=" + timestamp +" /><input type='hidden' name='ultimo' id='ultimo' value=" + ultimo +" /><input type='hidden' name='consecutivo" + data.id + "' id='consecutivo" + data.id + "' value=" + ultimo +" /></td></tr>");
-*/
-					
-				});
-				
-				$('#fecha_bd').val(data.updated_at);
-				$('#estatus').val(1);
+		  		concatenar += '' + result + ',';
+		    }
 
-				
-				$('#idproduccion').val(data.produccion);
-				$('#Disponibilidad').text(data.Disponibilidad + "%");
-				$('#Rendimiento').text(data.Rendimiento + "%");
-				$('#oeeCALIDAD').text(data.oeeCALIDAD + "%");
-				$('#OEE').text(data.OEE + "%");
-				$('#cantidadnominalpiezas').text(data.cantidadnominalpiezas );
-				$('#rechazomermas').text(data.rechazomermas );
-				$('#totalparada').text(data.totalparada );
-				$('#SumaParadas').text(data.SumaParadas );
-				$('#ProduccionFechaInicio').text(data.ProduccionFechaInicio );
-
-				var timestamp = null;
-
-				
-             
-             
-			
-    		
-               
-			}
+		}
 		
-		setTimeout('cargar_push_produccion()',5000);
-			    	
-			    	
-	    }
-		});		
+		subCadena = concatenar.substring(0, concatenar.length-1);
+        return(subCadena);
+
+
 	}
+	
 	function cargar_push() 
 	{  	var fecha_bd = $('input[id=fecha_bd]').val();
 		var consecutivo = $(this).find("td:col1").text();
@@ -323,14 +282,9 @@
 			                if(data.fecha_fin==null)
 			                {
 			                	
-			                	//alert(data.fecha_inicio_reloj);
-			                	
 				                var diff = data.fecha_actual - data.fecha_inicio_reloj;
-				                
 								var minute = Math.floor((diff /60));
-
 								clock(diff,id);	
-
 			                }
 
 			                $('#fecha_bd').val(data.updated_at);
@@ -579,68 +533,63 @@
 	    /*----------------------------------------*/
 	    /*            Grafica de Barras           */
 	    /*----------------------------------------*/
-	    var barChartCanvas = $("#barrasChart").get(0).getContext("2d");
+	    function GenerarGráfica(labels,data1){
+		    var barChartCanvas = $("#barrasChart").get(0).getContext("2d");
 
-	    var barChart = new Chart(barChartCanvas);
+		    var barChart = new Chart(barChartCanvas);
 
-	    var barChartData = {
-	        labels: [@foreach ($datos['MaquinasGraficas'] as $key => $x)
-			"Maquina "+
-	       {{ $x->idmaquina.= "," }}
-	       @endforeach
-	        ],
-	        datasets: [
-	            
-	            {
-	                label: "Total paradas",
-	                fillColor: "rgba(60,141,188,0.9)",
-	                strokeColor: "rgba(60,141,188,0.8)",
-	                pointColor: "#3b8bba",
-	                pointStrokeColor: "rgba(60,141,188,1)",
-	                pointHighlightFill: "#fff",
-	                pointHighlightStroke: "rgba(60,141,188,1)",
-	                data: [@foreach ($datos['MaquinasGraficas'] as $key => $x)
-	        
-	       {{ $x->totalparadas.= "," }}
-	       @endforeach]
-	            }
-	        ]
-	    };
+		    var barChartData = {
+		        labels: labels,
+		        datasets: [
+		            
+		            {
+		                label: "Total paradas",
+		                fillColor: "rgba(60,141,188,0.9)",
+		                strokeColor: "rgba(60,141,188,0.8)",
+		                pointColor: "#3b8bba",
+		                pointStrokeColor: "rgba(60,141,188,1)",
+		                pointHighlightFill: "#fff",
+		                pointHighlightStroke: "rgba(60,141,188,1)",
+		                data: data1
+		            }
+		        ]
+		    };
 
-	    barChartData.datasets[0].fillColor = "#3FB4F1";
-	    barChartData.datasets[0].strokeColor = "#3FB4F1";
-	    barChartData.datasets[0].pointColor = "#3FB4F1";
-	    
-	    var barChartOptions = {
-	        //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-	        scaleBeginAtZero: true,
-	        //Boolean - Whether grid lines are shown across the chart
-	        scaleShowGridLines: true,
-	        //String - Colour of the grid lines
-	        scaleGridLineColor: "rgba(0,0,0,.05)",
-	        //Number - Width of the grid lines
-	        scaleGridLineWidth: 1,
-	        //Boolean - Whether to show horizontal lines (except X axis)
-	        scaleShowHorizontalLines: true,
-	        //Boolean - Whether to show vertical lines (except Y axis)
-	        scaleShowVerticalLines: true,
-	        //Boolean - If there is a stroke on each bar
-	        barShowStroke: true,
-	        //Number - Pixel width of the bar stroke
-	        barStrokeWidth: 2,
-	        //Number - Spacing between each of the X value sets
-	        barValueSpacing: 5,
-	        //Number - Spacing between data sets within X values
-	        barDatasetSpacing: 1,
-	        //String - A legend template
-	        legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
-	        //Boolean - whether to make the chart responsive
-	        responsive: true,
-	        maintainAspectRatio: true
-	    };
+		    barChartData.datasets[0].fillColor = "#3FB4F1";
+		    barChartData.datasets[0].strokeColor = "#3FB4F1";
+		    barChartData.datasets[0].pointColor = "#3FB4F1";
+		    
+		    var barChartOptions = {
+		        //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+		        scaleBeginAtZero: true,
+		        //Boolean - Whether grid lines are shown across the chart
+		        scaleShowGridLines: true,
+		        //String - Colour of the grid lines
+		        scaleGridLineColor: "rgba(0,0,0,.05)",
+		        //Number - Width of the grid lines
+		        scaleGridLineWidth: 1,
+		        //Boolean - Whether to show horizontal lines (except X axis)
+		        scaleShowHorizontalLines: true,
+		        //Boolean - Whether to show vertical lines (except Y axis)
+		        scaleShowVerticalLines: true,
+		        //Boolean - If there is a stroke on each bar
+		        barShowStroke: true,
+		        //Number - Pixel width of the bar stroke
+		        barStrokeWidth: 2,
+		        //Number - Spacing between each of the X value sets
+		        barValueSpacing: 5,
+		        //Number - Spacing between data sets within X values
+		        barDatasetSpacing: 1,
+		        //String - A legend template
+		        legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+		        //Boolean - whether to make the chart responsive
+		        responsive: true,
+		        maintainAspectRatio: true
+		    };
 
-	    barChartOptions.datasetFill = false;
-	    barChart.Bar(barChartData, barChartOptions);
+		    barChartOptions.datasetFill = false;
+		    barChart.Bar(barChartData, barChartOptions);
+		}
 
 		
 		$('select[id=receta]').on('change',function () {

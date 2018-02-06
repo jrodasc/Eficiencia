@@ -44,6 +44,13 @@
 		</section>
 	</div>
 	<div class="row m10">
+        <div class="row m10">
+        <div class="panel-heading">
+        <ul>
+            <a href="/admin/lineas" class=""><li>Regresar</li></a>
+           
+        </ul>
+    </div>
 			<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
 			<div class="info-box">
             <div class="info-box-content">
@@ -197,13 +204,7 @@
 		totalparadas = CadenaGrafica(app,"totalparadas");
 		minutos = CadenaGrafica(app,"minutos");
 		
-		
- 
-		
-
 		GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
-		
-        
 	});	
 
 	function CadenaGrafica(cadenaJson,tipoAtributo){
@@ -581,8 +582,6 @@
 						                   	'id_causa': causaID,
 						                   	'id_produccion': id_produccion,
 						                   	'idparada': paradaID,
-
-						                    
 						                },
 						                success: function(data) {
 						                }
@@ -625,8 +624,6 @@
 			   	}
 		
 			setTimeout('cargar_push()',5000);
-			    	
-			    	
 	    }
 		});		
 	}
@@ -641,9 +638,7 @@
             ++totalSeconds;
             $('#clock'+ $id +' > #seconds').html(pad(totalSeconds%60));
             $('#clock'+ $id +' > #minutes').html(pad(parseInt(totalSeconds/60)));
-            //$('#clock'+ $id +' > #hrs').html(pad(parseInt(totalSeconds/3600)));
 
-          //  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
 
         }
         function pad(val)

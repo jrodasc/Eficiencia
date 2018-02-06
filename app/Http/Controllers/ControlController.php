@@ -27,23 +27,19 @@ class ControlController extends Controller
             ->where("parada_maquinas.id_produccion","=", $produccion->idproduccion)
             ->orderBy('parada_maquinas.fecha_inicio','desc')->get();
         
-       // $idproduccion = $produccion->idproduccion;
-
-        //dd($idproduccion);
         $graficas = DB::table('calculo_oee')->where("produccion","=",$produccion->idproduccion)->first();
         
         
         $total_paradas = DB::table('parada_maquinas')->select(DB::raw('count(idparada) as TotalParadas'))
         ->where("id_produccion","=",$produccion->idproduccion)
         ->where("maq_principal","=","1")->get();
-        //$suma_paradas = DB::table('calculo_oee')->select(DB::raw('SEC_TO_TIME(SUM(sumanet + sumatrue)) as SumaParadas'))->where("produccion","=",$produccion->idproduccion)->get();
-
+      
         $suma_paradas = DB::table('parada_maquinas')->select(DB::raw("SEC_TO_TIME(SUM(MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600))) as SumaParadas"))->where("id_produccion","=",$produccion->idproduccion)->whereNotNull('fecha_fin')->get();
 
 
         $paradaupdated_at_ = Paradas::where("maq_principal", "=", "1")->orderBy('updated_at_','desc')->first();
     	$causas = DB::table('causas')->where("idmaquina", "=", "1")->pluck("nombre","idcausa");
-
+        
         $datos = ['Maquinas' => $maquinas,'MaquinasGraficas' => $maquinasgraficas, 'Paradas' => $parada, 'Causas' => $causas, 'fecha_bd' => $paradaupdated_at_->updated_at_,'Graficas' => $graficas, 'Recetas' => $recetas, 'TotalParadas' => $total_paradas, 'SumaParadas' => $suma_paradas, 'ProduccionFechaInicio' => $produccion->fecha_inicio, 'Produccion' => $produccion->idproduccion, 'OEE' => $produccion->contador,  'id_linea' => $id
         ];
 
