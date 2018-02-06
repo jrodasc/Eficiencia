@@ -39,12 +39,36 @@
                                         <td width="100">{{$produccion->fecha_inicio}}</td>
                                         <td width="40">{{$produccion->fecha_fin}}</td>
                                         <td>{{$produccion->contador}}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>{{$produccion->OEE}}</td>
-                                        <td>{{$produccion->rendimiento}}</td>
-                                        <td>{{$produccion->oeeDISPONIBILIDAD}}</td> 
-                                        <td>{{$produccion->oeeCALIDAD}}</td>
+                                        <td>
+                                            @if(!empty($produccion->receta))
+                                                {{$produccion->receta['nombre']}}
+                                                
+                                            @endif
+                                        </td>
+                                        <td>@if(!empty($produccion->receta))
+                                                {{$produccion->receta['formato']}}
+                                                
+                                            @endif</td>
+                                        <td>
+                                            @if(!empty($produccion->calculo))
+                                                {{$produccion->calculo['OEE']}}
+                                            @endif
+                                            </td>
+                                        <td>
+                                            @if(!empty($produccion->calculo))
+                                                {{$produccion->calculo['rendimiento']}}
+                                            @endif
+                                            </td>
+                                        <td>
+                                            @if(!empty($produccion->calculo))
+                                                {{$produccion->calculo['oeeDISPONIBILIDAD']}}
+                                            @endif
+                                        </td> 
+                                        <td>
+                                            @if(!empty($produccion->calculo))
+                                                {{$produccion->calculo['oeeCALIDAD']}}
+                                            @endif
+                                        </td>
                                         <td>{{isset($produccion->finalizado) ? "SI":"NO"}}</td> 
                                         <td>
                                             <a class="show-modal btn btn-success" data-id="{{$produccion->idproduccion}}" href="/admin/informe-dia/{{$produccion->idproduccion}}">

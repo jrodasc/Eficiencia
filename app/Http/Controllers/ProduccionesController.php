@@ -10,9 +10,9 @@ class ProduccionesController extends Controller
 {
     public function index(Request $request)
     {
-        $produccion = Produccion::select('produccion.idproduccion','produccion.contador','produccion.fecha_inicio','produccion.fecha_fin','finalizado','produccion.observacion','produccion.id_receta','produccion.id_linea','calculo_oee.OEE','calculo_oee.rendimiento','calculo_oee.oeeDISPONIBILIDAD','calculo_oee.oeeCALIDAD')
-        ->join('calculo_oee','calculo_oee.produccion','=','produccion.idproduccion')
-        ->orderBy('idproduccion','desc')->get();
+        $produccion = Produccion::select('produccion.idproduccion','produccion.contador','produccion.fecha_inicio','produccion.fecha_fin','finalizado','produccion.observacion','produccion.id_receta','produccion.id_linea')
+        ->orderBy('produccion.fecha_inicio','desc')->get();
+        //'calculo_oee.OEE','calculo_oee.rendimiento','calculo_oee.oeeDISPONIBILIDAD','calculo_oee.oeeCALIDAD'
         $total = count($produccion);
        
         $datos=['Producciones' => $produccion,'Total' => $total];
@@ -24,7 +24,7 @@ class ProduccionesController extends Controller
     {
     	$maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'))
         ->join("parada_maquinas","parada_maquinas.id_maquina","=","maquina.idmaquina")->groupBy("maquina.idmaquina")->get();
-$maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
+		$maquinas = DB::table('maquina')->pluck("nombre","idmaquina");
     	
         $recetas = DB::table('receta')->where("linea", "=", $id)->pluck("nombre","idReceta");
         $produccion = Produccion::orderBy("fecha_inicio","desc")->first();
