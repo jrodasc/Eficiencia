@@ -417,7 +417,7 @@
 						            var maquinaID = $(this).val();
 						            var paradaID = $(this).data("idparada");
 						            
-						            alert(id_produccion);
+						            
 						            if(maquinaID){ 
 						                $.ajax({
 						                    url: '/admin/control/maquina/' + maquinaID,
@@ -430,7 +430,7 @@
 						                   	},
 						                    dataType: 'json',
 						                    success: function(data){ 
-						                    	console.log(data.maquinagraficas);
+						                    
 						                    	nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
 												totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
 												minutos = CadenaGrafica(data.maquinagraficas,"minutos");
