@@ -416,7 +416,7 @@
 						            var maquinaID = $(this).val();
 						            var paradaID = $(this).data("idparada");
 						            var id_produccion = $(this).data("id_produccion");
-
+						            alert(id_produccion);
 						            if(maquinaID){ 
 						                $.ajax({
 						                    url: '/admin/control/maquina/' + maquinaID,
