@@ -385,6 +385,7 @@
 			               $('select[id="id_causa' + id +'"]').empty();
 			                $('select[id="id_causa' + id +'"]').append('<option value=""><--Seleccione Causa--></option>');
 
+
 						        $.each(data.causas, function(key, value){
 						        $('select[id="id_causa' + id +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 						                        });
@@ -428,6 +429,7 @@
 						                   	},
 						                    dataType: 'json',
 						                    success: function(data){ 
+						                    	console.log(data.maquinagraficas);
 						                    	nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
 												totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
 												minutos = CadenaGrafica(data.maquinagraficas,"minutos");
@@ -502,7 +504,7 @@
 
 
 							$('select[id="id_maquina' + id +'"]').append('<option value=""><--Seleccione Maquina--></option>');
-
+							
 
 	                        $.each(data.maquinas, function(key, value){
 	                        	if(data.id_maquina==key)
