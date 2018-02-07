@@ -542,7 +542,7 @@
 						                   	'id_maquina': maquinaID,
 						                   	},
 						                    dataType: 'json',
-						                    success: function(data){ 
+						                    success: function(data){ console.log("Inicio pendiente");
                                                 nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
 												totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
 												minutos = CadenaGrafica(data.maquinagraficas,"minutos");
