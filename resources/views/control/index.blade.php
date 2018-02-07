@@ -280,6 +280,7 @@
 			{
 			
 			}else{
+				GenerarGráfica(0,0,0);
 				toastr.success('¡Se ha iniciado una nueva produccion!', 'Success Alert', {timeOut: 5000});
 
                $('.mygrid-wrapper-div').replaceWith("<div class='mygrid-wrapper-div'><table id='dtContainer' class='display table table-bordered table-hover table-responsive compact' cellspacing='0' width='100%'><thead><tr><th>No</th><th>Inicio</th><th>Fin</th><th>Total Min</th><th>Maquina</th><th>Causa</th><th>Comentarios</th></tr></thead><tbody></tbody></table></div>");
