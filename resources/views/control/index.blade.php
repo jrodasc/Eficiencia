@@ -347,6 +347,7 @@
 			comentario     	   = data.comentario;
 			ultimo			   = data.ultimo;
 			parada 			   = data.parada;
+			id_produccion      = data.id_produccion
 
 			if (fecha_fin == null)
 			{
@@ -415,7 +416,7 @@
 						        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
 						            var maquinaID = $(this).val();
 						            var paradaID = $(this).data("idparada");
-						            var id_produccion = $(this).data("id_produccion");
+						            
 						            alert(id_produccion);
 						            if(maquinaID){ 
 						                $.ajax({
@@ -530,7 +531,7 @@
 				        		$('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
 				            		var maquinaID = $(this).val(); 
 				            		var paradaID = $(this).data("idparada");
-				            		var id_produccion = $(this).data("id_produccion");
+				            		
 
 				            		if(maquinaID){ 
 						                $.ajax({
@@ -543,7 +544,7 @@
 						                   	'id_produccion': id_produccion,
 						                   	},
 						                    dataType: 'json',
-						                    success: function(data){ console.log("Inicio pendiente");
+						                    success: function(data){ 
                                                 nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
 												totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
 												minutos = CadenaGrafica(data.maquinagraficas,"minutos");
