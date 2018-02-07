@@ -540,6 +540,7 @@
 						                    '_token': $('input[name=_token]').val(),
 						                   	'idparada': paradaID,
 						                   	'id_maquina': maquinaID,
+						                   	'id_produccion': id_produccion,
 						                   	},
 						                    dataType: 'json',
 						                    success: function(data){ console.log("Inicio pendiente");
