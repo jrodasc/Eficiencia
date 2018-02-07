@@ -493,9 +493,7 @@
                                     });
 					    	});
 						}else{	
-							myBarChart.datasets[0].bars[2].value = 50;
-							// Would update the first dataset's value of 'March' to be 50
-							myBarChart.update();
+							
 							// Calling update now animates the position of March from 90 to 50.
 							var consecutivo = $('input[id=consecutivo' + data.id + ']').val();
 							toastr.success('¡Se ha inicializado una máquina!', 'Success Alert', {timeOut: 5000});
