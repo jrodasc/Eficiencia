@@ -52,28 +52,29 @@
                             <i class="fa fa-id-badge"></i>
                             <span>Perfiles</span>
                             </a>
-                        </li>  </ul>  
+                        </li>  
+                    </ul>  
             </li>
            
-           <!-- <li class="treeview">
+            <li class="treeview">
                 <a href="#">
                     <i class="fa  fa-file-archive-o"></i>
-                    <span>Articulos</span>
+                    <span>Líneas y Producción</span>
                     </a><ul class="treeview-menu"><a href="#">
-                    </a><li><a href="/admin/articulos">
-                            </a><a href="/admin/archivos">
+                    </a><li><a href="/admin/lineas">
+                            </a><a href="/admin/lineas">
                             <i class="fa  fa-arrow-up"></i>
-                            <span>Subir archivos</span>
+                            <span>Líneas</span>
                             </a>
                         </li>    
                         <li>
-                            <a href="/admin/articulos">
+                            <a href="/admin/producciones">
                             <i class="fa fa-id-badge"></i>
-                            <span>Articulos</span>
+                            <span>Producción</span>
                             </a>
                         </li>    
                             </ul>
-            </li>->
+            </li>
                 
                 
                 

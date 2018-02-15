@@ -18,7 +18,7 @@ Route::get('/', 'PagesController@home');
 
 Auth::routes();
 
-//Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('notes', 'NotesController@index');
 Route::get('notes/{id}/destroy', 'NotesController@destroy')->name('notes.destroy');
 
@@ -43,29 +43,12 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::resource('/admin/lineas','LineasController');
     Route::resource('/admin/producciones','ProduccionesController');
     Route::get('/admin/informe-dia/{id}', 'ProduccionesController@informe');
-   /* Route::get('/admin/archivos', 'StorageController@index');
-    Route::post('/admin/archivos/create', 'StorageController@save');
-    Route::get('/admin/archivos/{archivo}', function ($archivo) {
-        $public_path = public_path();
-        $url = $public_path.'/storage/'.$archivo;
-     //verificamos si el archivo existe y lo retornamos
-        if (Storage::exists($archivo))
-            {
-                return response()->download($url);
-            }
-     //si no se encuentra lanzamos un error 404.
-        abort(404);
-    /* Route::get('/admin/archivos', function(){
-		return view('archivos.index');
-	});*/
-//});*
+   
      Route::get('/admin/categorias', function(){
 		return view('categorias.index');
 	});
 
-     /*Route::get('/admin/articulos', function(){
-		return view('articulos.index');
-	});*/
+   
     Route::resource('/admin/articulos','ArticulosController');
     
     Route::get('/admin/articulos/notas/{id}','ArticulosController@notas')->name('articulos.notas');

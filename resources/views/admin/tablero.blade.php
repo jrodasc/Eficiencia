@@ -21,7 +21,7 @@
             <!-- /.info-box-content -->
           </div>
 		</div>
-		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+		<!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 		<div class="info-box">
             <span class="info-box-icon bg-yellow"><i class="fa fa-files-o"></i></span>
 
@@ -29,11 +29,11 @@
               <span class="info-box-text">Archivos</span>
               <span class="info-box-number">{{ $archivos}}</span>
             </div>
-            <!-- /.info-box-content -->
+           /.info-box-content 
           </div>
-        </div>
+        </div>-->
 		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-			
+			<!--
                 <div class="box box-solid">
                     <div class="box-body">
                         <h4 style="background-color:#f7f7f7; font-size: 18px; text-align: center; padding: 7px 10px; margin-top: 0;">
@@ -61,7 +61,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
             
 		</div>
 		
