@@ -51,6 +51,7 @@ class ControlController extends Controller
         $maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'),DB::raw('TIMESTAMPDIFF(SECOND, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin) as minutos'))
         ->join("parada_maquinas","parada_maquinas.id_maquina","=","maquina.idmaquina")
         ->where("parada_maquinas.id_produccion","=", $IdProduccion)
+        ->orderBy("minutos","desc")
         ->groupBy("maquina.idmaquina")->take(7)->get();
         
       

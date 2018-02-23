@@ -280,6 +280,7 @@
 			{
 			
 			}else{
+				$("#barrasChart").replaceWith('<canvas id="barrasChart" style="height: 150px; width: 787px;" height="150" width="787"></canvas>');
 				GenerarGráfica(0,0,0);
 				toastr.success('¡Se ha iniciado una nueva produccion!', 'Success Alert', {timeOut: 5000});
 
@@ -434,7 +435,7 @@
 						                    	nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
 												totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
 												minutos = CadenaGrafica(data.maquinagraficas,"minutos");
-						                    	
+						                    	$("#barrasChart").replaceWith('<canvas id="barrasChart" style="height: 150px; width: 787px;" height="150" width="787"></canvas>');
 						                    	GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
                                                 $('select[id="id_causa'+ paradaID +'"]').empty(); 
                                                 
@@ -548,7 +549,7 @@
                                                 nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
 												totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
 												minutos = CadenaGrafica(data.maquinagraficas,"minutos");
-						                    	
+						                    	$("#barrasChart").replaceWith('<canvas id="barrasChart" style="height: 150px; width: 787px;" height="150" width="787"></canvas>');
 						                    	GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
 						                	    $('select[id="id_causa'+ paradaID +'"]').empty(); 
                                             	$('select[id="id_causa' + paradaID +'"]').append('<option value=""><--Seleccione Causa--></option>'); 
@@ -694,7 +695,13 @@
 									nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
 									totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
 									minutos = CadenaGrafica(data.maquinagraficas,"minutos");
+			                    	alert("hola");
 			                    	
+			                    	
+       								$("#barrasChart").replaceWith('<canvas id="barrasChart" style="height: 150px; width: 787px;" height="150" width="787"></canvas>');
+
+
+							
 			                    	GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
     								
 									// Calling update now animates the position of March from 90 to 50.
@@ -877,7 +884,9 @@
 		    };
 
 		    barChartOptions.datasetFill = false;
-		    barChart.Bar(barChartData, barChartOptions);
+		    barChart.Bar(barChartData, barChartOptions).update();
+
+		    
 	    }
 		
 		$('select[id=receta]').on('change',function () {
