@@ -695,7 +695,7 @@
 									nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
 									totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
 									minutos = CadenaGrafica(data.maquinagraficas,"minutos");
-			                    	alert("hola");
+			                    	
 			                    	
 			                    	
        								$("#barrasChart").replaceWith('<canvas id="barrasChart" style="height: 150px; width: 787px;" height="150" width="787"></canvas>');
@@ -829,6 +829,15 @@
 		        labels: labels,
 		        datasets: [
 		            {
+                        label: "Total minutos",
+                        fillColor: "rgba(60,141,188,0.9)",
+                        strokeColor: "rgba(60,141,188,0.8)",
+                        pointColor: "#3b8bba",
+                        pointStrokeColor: "rgba(60,141,188,1)",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(60,141,188,1)",
+                        data: data2
+                    },{
 	                    label: "Total paradas",
 	                    fillColor: "rgba(90, 186, 102, 1)",
 	                    strokeColor: "rgba(90, 186, 102, 1)",
@@ -837,17 +846,8 @@
 	                    pointHighlightFill: "#fff",
 	                    pointHighlightStroke: "rgba(220,220,220,1)",
 	                    data: data1
-	                },
-		            {
-		                label: "Total minutos",
-		                fillColor: "rgba(60,141,188,0.9)",
-		                strokeColor: "rgba(60,141,188,0.8)",
-		                pointColor: "#3b8bba",
-		                pointStrokeColor: "rgba(60,141,188,1)",
-		                pointHighlightFill: "#fff",
-		                pointHighlightStroke: "rgba(60,141,188,1)",
-		                data: data2
-		            }
+	                }
+		            
 		        ]
 		    };
 
