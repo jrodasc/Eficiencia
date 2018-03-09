@@ -203,7 +203,6 @@
 		nombremaquina = CadenaGrafica(app,"nombre");
 		totalparadas = CadenaGrafica(app,"totalparadas");
 		minutos = CadenaGrafica(app,"minutos");
-		
 		GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
 	});	
 
@@ -506,7 +505,7 @@
 
 
 							$('select[id="id_maquina' + id +'"]').append('<option value=""><--Seleccione Maquina--></option>');
-							
+	
 
 	                        $.each(data.maquinas, function(key, value){
 	                        	if(data.id_maquina==key)
@@ -715,13 +714,11 @@
 		                		}
 			                
 			                });
-
-			              
+   
 			            }else{
 			                $('select[id="id_causa"]').empty();
 			            }
 			        });
-
 			        $.ajax({
 			                    url: '/admin/control/maquina/'+{{$parada->id_maquina}},
 			                    data: {
@@ -748,7 +745,7 @@
 			    });
 
 					$('select[id=id_causa{{$parada->idparada}}]').on('change',function () {
-					//$('#id').val($(this).data('id'));
+
 					var id_produccion = $(this).data('id_produccion');
 			    	id = $(this).data("idparada");
 			    	var causaID = $(this).val();
@@ -811,10 +808,6 @@
     		var formatted = ((HH < 10)?("0" + HH):HH) + ":" + ((MM < 10)?("0" + MM):MM)
     		return formatted;
  		}
-
-			
-
-	
 
 	    /*----------------------------------------*/
 	    /*            Grafica de Barras           */

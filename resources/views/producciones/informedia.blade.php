@@ -159,9 +159,9 @@
 		var app = @json($datos['MaquinasGraficas']);
 		console.log(app);
 		nombremaquina = CadenaGrafica(app,"nombre");
-		totalparadas = CadenaGrafica(app,"totalparadas");
+		minutos = CadenaGrafica(app,"minutos");
 
-		GenerarGráfica(nombremaquina.split(","),totalparadas.split(","));
+		GenerarGráfica(nombremaquina.split(","),minutos.split(","));
 
 	
 	});	
@@ -543,7 +543,7 @@
 		        datasets: [
 		            
 		            {
-		                label: "Total paradas",
+		                label: "Total minutos",
 		                fillColor: "rgba(60,141,188,0.9)",
 		                strokeColor: "rgba(60,141,188,0.8)",
 		                pointColor: "#3b8bba",
