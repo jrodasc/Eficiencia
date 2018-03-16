@@ -5,7 +5,7 @@ $(document).ready(function(){
 
   $('#postTable').DataTable({
     "paging":   true,
-    "order": [[ 3, "asc" ]],
+    "order": [[ 1, "asc" ]],
     "info":     true,
     "searching": true
   });

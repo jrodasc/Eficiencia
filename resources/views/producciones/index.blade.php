@@ -6,12 +6,8 @@
         <div class="row">
             <div class="col-xs-13 col-sm-13 col-md-13 col-lg-13">
                 <div class=" custom-wrapper">
-                    
-                        <h2 class="m0 text-uppercase pull-left xs-fix">Administrador de Producciones</h2>
-                        
-                    
-                    
-                        <table id="postTable" class="display table table-bordered table-hover table-responsive compact" cellspacing="0" >
+                    <h2 class="m0 text-uppercase pull-left xs-fix">Administrador de Producciones</h2>
+                       <table id="postTable" class="display table table-bordered table-hover table-responsive compact" cellspacing="0" >
                             <thead>
                                 <tr>
                                     <th>No</th>

@@ -202,7 +202,6 @@
 		nombremaquina = CadenaGrafica(app,"nombre");
 		totalparadas = CadenaGrafica(app,"totalparadas");
 		minutos = CadenaGrafica(app,"minutos");
-		
 		GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
 	});	
 
@@ -503,7 +502,7 @@
 
 
 							$('select[id="id_maquina' + id +'"]').append('<option value=""><--Seleccione Maquina--></option>');
-							
+	
 
 	                        $.each(data.maquinas, function(key, value){
 	                        	if(data.id_maquina==key)
@@ -692,7 +691,7 @@
 									nombremaquina = CadenaGrafica(data.maquinagraficas,"nombre");
 									totalparadas = CadenaGrafica(data.maquinagraficas,"totalparadas");
 									minutos = CadenaGrafica(data.maquinagraficas,"minutos");
-			                    	alert("hola");
+			                    	
 			                    	
 			                    	
        								$("#barrasChart").replaceWith('<canvas id="barrasChart" style="height: 150px; width: 787px;" height="150" width="787"></canvas>');
@@ -712,13 +711,11 @@
 		                		}
 			                
 			                });
-
-			              
+   
 			            }else{
 			                $('select[id="id_causa"]').empty();
 			            }
 			        });
-
 			        $.ajax({
 			                    url: '/admin/control/maquina/'+{{$parada->id_maquina}},
 			                    data: {
@@ -745,7 +742,7 @@
 			    });
 
 					$('select[id=id_causa{{$parada->idparada}}]').on('change',function () {
-					//$('#id').val($(this).data('id'));
+
 					var id_produccion = $(this).data('id_produccion');
 			    	id = $(this).data("idparada");
 			    	var causaID = $(this).val();
@@ -809,10 +806,6 @@
     		return formatted;
  		}
 
-			
-
-	
-
 	    /*----------------------------------------*/
 	    /*            Grafica de Barras           */
 	    /*----------------------------------------*/
@@ -826,6 +819,7 @@
 		        labels: labels,
 		        datasets: [
 		            {
+<<<<<<< HEAD
 		                label: "Total minutos",
 		                fillColor: "rgba(60,141,188,0.9)",
 		                strokeColor: "rgba(60,141,188,0.8)",
@@ -836,6 +830,17 @@
 		                data: data2
 		            },
 		            {
+=======
+                        label: "Total minutos",
+                        fillColor: "rgba(60,141,188,0.9)",
+                        strokeColor: "rgba(60,141,188,0.8)",
+                        pointColor: "#3b8bba",
+                        pointStrokeColor: "rgba(60,141,188,1)",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(60,141,188,1)",
+                        data: data2
+                    },{
+>>>>>>> fed2844fd22d13117d260ee0725a54c07bf45b8e
 	                    label: "Total paradas",
 	                    fillColor: "rgba(90, 186, 102, 1)",
 	                    strokeColor: "rgba(90, 186, 102, 1)",
@@ -845,6 +850,10 @@
 	                    pointHighlightStroke: "rgba(220,220,220,1)",
 	                    data: data1
 	                }
+<<<<<<< HEAD
+=======
+		            
+>>>>>>> fed2844fd22d13117d260ee0725a54c07bf45b8e
 		        ]
 		    };
 
