@@ -48,7 +48,6 @@
         <div class="panel-heading">
         <ul>
             <a href="/admin/lineas" class=""><li>Regresar</li></a>
-           
         </ul>
     </div>
 			<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
@@ -400,7 +399,6 @@
 								var minute = Math.floor((diff /60));
 								clock(diff,id);	
 			                }
-
 			                $('#fecha_bd').val(data.updated_at_);
 						    $('#estatus').val(0);
 							$('#Disponibilidad').text(data.Disponibilidad + "%");
@@ -417,7 +415,6 @@
 						        $('select[id="id_maquina'+ data.id +'"]').on('change',function(e){
 						            var maquinaID = $(this).val();
 						            var paradaID = $(this).data("idparada");
-						            
 						            
 						            if(maquinaID){ 
 						                $.ajax({
@@ -829,16 +826,6 @@
 		        labels: labels,
 		        datasets: [
 		            {
-	                    label: "Total paradas",
-	                    fillColor: "rgba(90, 186, 102, 1)",
-	                    strokeColor: "rgba(90, 186, 102, 1)",
-	                    pointColor: "rgba(90, 186, 102, 1)",
-	                    pointStrokeColor: "#5ABA66",
-	                    pointHighlightFill: "#fff",
-	                    pointHighlightStroke: "rgba(220,220,220,1)",
-	                    data: data1
-	                },
-		            {
 		                label: "Total minutos",
 		                fillColor: "rgba(60,141,188,0.9)",
 		                strokeColor: "rgba(60,141,188,0.8)",
@@ -847,7 +834,17 @@
 		                pointHighlightFill: "#fff",
 		                pointHighlightStroke: "rgba(60,141,188,1)",
 		                data: data2
-		            }
+		            },
+		            {
+	                    label: "Total paradas",
+	                    fillColor: "rgba(90, 186, 102, 1)",
+	                    strokeColor: "rgba(90, 186, 102, 1)",
+	                    pointColor: "rgba(90, 186, 102, 1)",
+	                    pointStrokeColor: "#5ABA66",
+	                    pointHighlightFill: "#fff",
+	                    pointHighlightStroke: "rgba(220,220,220,1)",
+	                    data: data1
+	                }
 		        ]
 		    };
 

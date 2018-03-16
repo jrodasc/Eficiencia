@@ -84,7 +84,9 @@
                                                 -
                                             @endif
                                         </td>
-                                        <td>{{isset($produccion->finalizado) ? "SI":"NO"}}</td> 
+                                        <td>{{($produccion->finalizado== 1) ? "SI":"NO"}}
+
+                                        </td> 
                                         <td>
                                             <a class="show-modal btn btn-success" data-id="{{$produccion->idproduccion}}" href="/admin/informe-dia/{{$produccion->idproduccion}}">
                                                     <span class="glyphicon glyphicon-eye-open"></span> Ver</a>

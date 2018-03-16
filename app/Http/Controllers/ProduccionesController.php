@@ -14,7 +14,7 @@ class ProduccionesController extends Controller
         ->orderBy('produccion.fecha_inicio','desc')->get();
         //'calculo_oee.OEE','calculo_oee.rendimiento','calculo_oee.oeeDISPONIBILIDAD','calculo_oee.oeeCALIDAD'
         $total = count($produccion);
-       
+        
         $datos=['Producciones' => $produccion,'Total' => $total];
 
         return view('producciones.index', compact('datos'));
