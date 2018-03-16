@@ -819,18 +819,6 @@
 		        labels: labels,
 		        datasets: [
 		            {
-<<<<<<< HEAD
-		                label: "Total minutos",
-		                fillColor: "rgba(60,141,188,0.9)",
-		                strokeColor: "rgba(60,141,188,0.8)",
-		                pointColor: "#3b8bba",
-		                pointStrokeColor: "rgba(60,141,188,1)",
-		                pointHighlightFill: "#fff",
-		                pointHighlightStroke: "rgba(60,141,188,1)",
-		                data: data2
-		            },
-		            {
-=======
                         label: "Total minutos",
                         fillColor: "rgba(60,141,188,0.9)",
                         strokeColor: "rgba(60,141,188,0.8)",
@@ -840,7 +828,6 @@
                         pointHighlightStroke: "rgba(60,141,188,1)",
                         data: data2
                     },{
->>>>>>> fed2844fd22d13117d260ee0725a54c07bf45b8e
 	                    label: "Total paradas",
 	                    fillColor: "rgba(90, 186, 102, 1)",
 	                    strokeColor: "rgba(90, 186, 102, 1)",
@@ -850,10 +837,7 @@
 	                    pointHighlightStroke: "rgba(220,220,220,1)",
 	                    data: data1
 	                }
-<<<<<<< HEAD
-=======
-		            
->>>>>>> fed2844fd22d13117d260ee0725a54c07bf45b8e
+
 		        ]
 		    };
 
