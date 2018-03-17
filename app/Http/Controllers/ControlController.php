@@ -48,7 +48,7 @@ class ControlController extends Controller
     }
     public function LabelsGraficas($IdProduccion)
     {
-        $maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'), DB::raw("(SUM(MOD(TIMESTAMPDIFF(second, parada_maquinas.fecha_inicio, parada_maquinas.fecha_fin),3600))) as minutos"))
+        $maquinasgraficas = DB::table("maquina")->select('idmaquina','maquina.nombre',DB::raw('count(parada_maquinas.idparada) AS totalparadas'), DB::raw("(TIME_TO_SEC(TIMEDIFF( parada_maquinas.fecha_fin, parada_maquinas.fecha_inicio))) as minutos"))
         ->join("parada_maquinas","parada_maquinas.id_maquina","=","maquina.idmaquina")
         ->where("parada_maquinas.id_produccion","=", $IdProduccion)
         ->orderBy("minutos","desc")

@@ -202,6 +202,7 @@
 		nombremaquina = CadenaGrafica(app,"nombre");
 		totalparadas = CadenaGrafica(app,"totalparadas");
 		minutos = CadenaGrafica(app,"minutos");
+
 		GenerarGráfica(nombremaquina.split(","),totalparadas.split(","),minutos.split(","));
 	});	
 
@@ -216,15 +217,21 @@
 		    else if(tipoAtributo == "totalparadas"){
 		    	concatenar += '' + types[x].totalparadas + ',';
 		    }
-		    else if(tipoAtributo == "minutos"){
+		    else if(tipoAtributo == "minutos"){ 
+		    	 
+		    	
 		    	var minutes = Math.floor( types[x].minutos / 60 );
+		    	//var minutes = Math.floor( types[x].minutos / 60 );
 				var seconds = types[x].minutos % 60;
-				 
+
+				
 				//Anteponiendo un 0 a los minutos si son menos de 10 
+			
+	
 				minutes = minutes < 10 ? '0' + minutes : minutes;
 				seconds = seconds < 10 ? '0' + seconds : seconds;
-				 
-				var result = minutes + "." + seconds;  // 161:30
+				
+					var result =  minutes + "." + seconds;  // 161:30
 
 		  		concatenar += '' + result + ',';
 		    }
@@ -232,6 +239,7 @@
 		}
 		
 		subCadena = concatenar.substring(0, concatenar.length-1);
+
         return(subCadena);
 
 
@@ -464,8 +472,6 @@
                                             'id_causa': causaID,
                                             'id_produccion': id_produccion,
                                             'idparada': paradaID,
-
-                                            
                                         },
                                         success: function(data) {
                                         }
@@ -555,8 +561,6 @@
 
 						                            $('select[id="id_causa'+ paradaID +'"]').append('<option value="'+ key +'">'+ value + '</option>');
 						                        });
-
-
 						                    }
 						                });
 						            }else{
@@ -785,10 +789,6 @@
 		                }
 		                });
 				});
-
-
-
-				
 			@endforeach	
 		});		
 
@@ -876,7 +876,6 @@
 		    barChartOptions.datasetFill = false;
 		    barChart.Bar(barChartData, barChartOptions).update();
 
-		    
 	    }
 		
 		$('select[id=receta]').on('change',function () {
